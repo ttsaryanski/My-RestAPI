@@ -10,7 +10,7 @@ export default function expressInit(app) {
     app.use(cookieParser());
     app.use(
         cors({
-            origin: "http://localhost:5173",
+            origin: "https://classbook-react-project.web.app",
             credentials: true,
         })
     );

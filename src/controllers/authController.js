@@ -50,7 +50,11 @@ router.post("/register", upload.single("profilePicture"), async (req, res) => {
         );
 
         res.status(200)
-            .cookie("auth", accessToken, { httpOnly: true })
+            .cookie("auth", accessToken, {
+                httpOnly: true,
+                sameSite: "None",
+                secure: true,
+            })
             .send(accessToken.user)
             .end();
     } catch (error) {
@@ -80,7 +84,11 @@ router.post("/login", async (req, res) => {
         const accessToken = await authService.login(email, password);
 
         res.status(200)
-            .cookie("auth", accessToken, { httpOnly: true })
+            .cookie("auth", accessToken, {
+                httpOnly: true,
+                sameSite: "None",
+                secure: true,
+            })
             .send(accessToken.user)
             .end();
     } catch (error) {
@@ -109,7 +117,13 @@ router.post("/logout", async (req, res) => {
 
     try {
         await authService.logout(token);
-        res.status(204).clearCookie("auth").end();
+        res.status(204)
+            .clearCookie("auth", {
+                httpOnly: true,
+                sameSite: "None",
+                secure: true,
+            })
+            .end();
     } catch (error) {
         res.status(500)
             .json({ message: createErrorMsg(error) })
