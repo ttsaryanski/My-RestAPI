@@ -51,5 +51,5 @@ If everything is set up correctly, you should see output similar to:
 
 ```
 Server running on http://localhost:3000
-Successfully connected to the local(cloud) DB!
+Successfully connected to the cloud DB!
 ```
