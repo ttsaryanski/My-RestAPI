@@ -17,33 +17,26 @@ jobs:
         environment: Secrets environments
 
         steps:
-            # Стъпка 1: Checkout на кода
             - name: Checkout
               uses: actions/checkout@v3
 
-            # Стъпка 2: Аутентикация в Google Cloud
             - name: Authenticate to Google Cloud
               uses: google-github-actions/auth@v1
               with:
-                  credentials_json: ${{ secrets.GCP_SA_KEY }} # Ще добавим това в следващата стъпка
+                  credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-            # Стъпка 3: Конфигуриране на gcloud CLI
             - name: Set up gcloud CLI
               uses: google-github-actions/setup-gcloud@v1
 
-            # Стъпка 4: Конфигуриране на Docker за Artifact Registry
             - name: Configure Docker
               run: gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
 
-            # Стъпка 5: Билд на Docker имиджа
             - name: Build Docker Image
               run: docker build -t ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.SERVICE_NAME }}:latest .
 
-            # Стъпка 6: Пуш на имиджа в Artifact Registry
             - name: Push Docker Image
               run: docker push ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.SERVICE_NAME }}:latest
 
-            # Стъпка 7: Деплой в Cloud Run
             - name: Deploy to Cloud Run
               run: |
                   gcloud run deploy ${{ env.SERVICE_NAME }} \
