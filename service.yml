@@ -1,0 +1,33 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+    name: my-rest-api
+    namespace: classbook-react-project
+spec:
+    template:
+        metadata:
+        spec:
+            serviceAccountName: cloud-run-runtime@classbook-react-project.iam.gserviceaccount.com
+            containers:
+                - image: europe-west4-docker.pkg.dev/classbook-react-project/ttsar-restapi-server-artifact-repo/my-rest-api-artifact
+                  env:
+                      - name: JWT_SECRET
+                        valueFrom:
+                            secretKeyRef:
+                                name: jwt-secret
+                                key: latest
+                      - name: CLOUD_DB_URL
+                        valueFrom:
+                            secretKeyRef:
+                                name: cloud-db-url
+                                key: latest
+                      - name: AWS_ACCESS_KEY
+                        valueFrom:
+                            secretKeyRef:
+                                name: aws-access-key
+                                key: latest
+                      - name: AWS_SECRET_ACCESS_KEY
+                        valueFrom:
+                            secretKeyRef:
+                                name: aws-secret-access-key
+                                key: latest

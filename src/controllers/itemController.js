@@ -21,14 +21,12 @@ router.get("/", async (req, res) => {
     }
 });
 
-//router.post("/", authMiddleware, async (req, res) => {
-router.post("/", async (req, res) => {
-    //const userId = await req.cookies?.auth?.user?._id;
+router.post("/", authMiddleware, async (req, res) => {
+    const userId = await req.cookies?.auth?.user?._id;
     const data = req.body;
 
     try {
-        //const item = await itemService.create(data, userId);
-        const item = await itemService.create(data);
+        const item = await itemService.create(data, userId);
 
         res.status(201).json(item).end();
     } catch (error) {
@@ -48,71 +46,71 @@ router.post("/", async (req, res) => {
     }
 });
 
-// router.get("/paginated", async (req, res) => {
-//     const query = req.query;
+router.get("/paginated", async (req, res) => {
+    const query = req.query;
 
-//     try {
-//         const result = await itemService.getAllPaginated(query);
-//         const payload = {
-//             items: result.items,
-//             totalCount: result.totalCount,
-//             totalPages: result.totalPages,
-//             currentPage: result.currentPage,
-//         };
+    try {
+        const result = await itemService.getAllPaginated(query);
+        const payload = {
+            items: result.items,
+            totalCount: result.totalCount,
+            totalPages: result.totalPages,
+            currentPage: result.currentPage,
+        };
 
-//         res.status(200).json(payload).end();
-//     } catch (error) {
-//         res.status(500).json({ message: createErrorMsg(error) });
-//     }
-// });
+        res.status(200).json(payload).end();
+    } catch (error) {
+        res.status(500).json({ message: createErrorMsg(error) });
+    }
+});
 
-// router.get("/top-three", async (req, res) => {
-//     try {
-//         const items = await itemService.topThree();
+router.get("/top-three", async (req, res) => {
+    try {
+        const items = await itemService.topThree();
 
-//         res.status(200).json(items).end();
-//     } catch (error) {
-//         res.status(500).json({ message: createErrorMsg(error) });
-//     }
-// });
+        res.status(200).json(items).end();
+    } catch (error) {
+        res.status(500).json({ message: createErrorMsg(error) });
+    }
+});
 
-// router.get("/profileItem", async (req, res) => {
-//     const userId = await req.cookies?.auth?.user?._id;
-//     const query = req.query;
+router.get("/profileItem", async (req, res) => {
+    const userId = await req.cookies?.auth?.user?._id;
+    const query = req.query;
 
-//     try {
-//         const result = await itemService.getByOwnerId(userId, query);
-//         const payload = {
-//             items: result.items,
-//             totalCount: result.totalCount,
-//             totalPages: result.totalPages,
-//             currentPage: result.currentPage,
-//         };
+    try {
+        const result = await itemService.getByOwnerId(userId, query);
+        const payload = {
+            items: result.items,
+            totalCount: result.totalCount,
+            totalPages: result.totalPages,
+            currentPage: result.currentPage,
+        };
 
-//         res.status(200).json(payload).end();
-//     } catch (error) {
-//         res.status(500).json({ message: createErrorMsg(error) });
-//     }
-// });
+        res.status(200).json(payload).end();
+    } catch (error) {
+        res.status(500).json({ message: createErrorMsg(error) });
+    }
+});
 
-// router.get("/profileLiked", async (req, res) => {
-//     const userId = await req.cookies?.auth?.user?._id;
-//     const query = req.query;
+router.get("/profileLiked", async (req, res) => {
+    const userId = await req.cookies?.auth?.user?._id;
+    const query = req.query;
 
-//     try {
-//         const result = await itemService.getByLikedId(userId, query);
-//         const payload = {
-//             items: result.items,
-//             totalCount: result.totalCount,
-//             totalPages: result.totalPages,
-//             currentPage: result.currentPage,
-//         };
+    try {
+        const result = await itemService.getByLikedId(userId, query);
+        const payload = {
+            items: result.items,
+            totalCount: result.totalCount,
+            totalPages: result.totalPages,
+            currentPage: result.currentPage,
+        };
 
-//         res.status(200).json(payload).end();
-//     } catch (error) {
-//         res.status(500).json({ message: createErrorMsg(error) });
-//     }
-// });
+        res.status(200).json(payload).end();
+    } catch (error) {
+        res.status(500).json({ message: createErrorMsg(error) });
+    }
+});
 
 router.get("/:itemId", async (req, res) => {
     const itemId = req.params.itemId;

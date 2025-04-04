@@ -10,7 +10,10 @@ export default function expressInit(app) {
     app.use(cookieParser());
     app.use(
         cors({
-            origin: "https://classbook-react-project.web.app",
+            origin: [
+                "https://classbook-react-project.web.app",
+                "https://test-client-hgl0.onrender.com",
+            ],
             credentials: true,
         })
     );

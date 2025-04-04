@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import directorController from "./controllers/directorController.js";
 import authController from "./controllers/authController.js";
+import authControllerAngular from "./controllers/authControllerAngular.js";
 import itemController from "./controllers/itemController.js";
 import clssController from "./controllers/clssController.js";
 import studentController from "./controllers/studentController.js";
@@ -11,6 +12,7 @@ const routes = Router();
 
 routes.use("/director", directorController);
 routes.use("/auth", authController);
+routes.use("/authAngular", authControllerAngular);
 routes.use("/item", itemController);
 routes.use("/clss", clssController);
 routes.use("/student", studentController);
