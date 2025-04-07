@@ -1,7 +1,6 @@
 import bcrypt from "bcrypt";
 
 import User from "../models/User.js";
-import File from "../models/File.js";
 import Setting from "../models/Setting.js";
 import Student from "../models/Student.js";
 
@@ -100,8 +99,6 @@ const logout = (token) => InvalidToken.create({ token });
 
 const getUserById = (id) => User.findById(id);
 
-const saveUserFile = (fileName, fileUrl) => File.create({ fileName, fileUrl });
-
 const editUser = (userId, data) => {
     data.dateUpdate = Date.now();
 
@@ -135,6 +132,5 @@ export default {
     login,
     logout,
     getUserById,
-    saveUserFile,
     editUser,
 };
