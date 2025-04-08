@@ -13,6 +13,7 @@ export default function expressInit(app) {
             origin: [
                 "https://classbook-react-project.web.app",
                 "https://test-client-hgl0.onrender.com",
+                "https://cooking-together-782b1.web.app",
             ],
             credentials: true,
         })
