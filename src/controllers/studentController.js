@@ -46,6 +46,24 @@ router.post("/", async (req, res) => {
     }
 });
 
+router.post("/paginated", async (req, res) => {
+    const query = req.body;
+
+    try {
+        const result = await studentService.getAllPaginated(query);
+        const payload = {
+            students: result.students,
+            totalCount: result.totalCount,
+            totalPages: result.totalPages,
+            currentPage: result.currentPage,
+        };
+
+        res.status(200).json(payload).end();
+    } catch (error) {
+        res.status(500).json({ message: createErrorMsg(error) });
+    }
+});
+
 router.get("/:studentId", async (req, res) => {
     const studentId = req.params.studentId;
 

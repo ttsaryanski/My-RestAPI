@@ -19,7 +19,7 @@ const getAllPaginated = async (query = {}) => {
     const skip = (page - 1) * limit;
 
     const [students, totalCount] = await Promise.all([
-        Student.find().skip(skip).limit(limit).sort({ dateUpdated: -1 }),
+        Student.find().skip(skip).limit(limit),
         Student.countDocuments(),
     ]);
 
