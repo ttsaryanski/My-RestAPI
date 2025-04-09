@@ -12,8 +12,8 @@ const routes = Router();
 
 routes.use("/director", directorController);
 routes.use("/auth", authController);
-routes.use("/authAngular", authControllerAngular);
-routes.use("/item", itemController);
+routes.use("/coocking/authAngular", authControllerAngular);
+routes.use("/coocking/item", itemController);
 routes.use("/clss", clssController);
 routes.use("/student", studentController);
 routes.use("/teacher", teacherController);

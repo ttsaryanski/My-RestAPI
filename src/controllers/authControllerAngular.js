@@ -46,7 +46,7 @@ router.post("/register", upload.single("profilePicture"), async (req, res) => {
         );
 
         res.status(200)
-            .cookie("auth", accessToken, {
+            .cookie("auth_coocking", accessToken, {
                 httpOnly: true,
                 sameSite: "None",
                 secure: true,
@@ -77,7 +77,7 @@ router.post("/login", async (req, res) => {
         const accessToken = await authServiceAngular.login(email, password);
 
         res.status(200)
-            .cookie("auth", accessToken, {
+            .cookie("auth_coocking", accessToken, {
                 httpOnly: true,
                 sameSite: "None",
                 secure: true,
@@ -106,12 +106,12 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/logout", async (req, res) => {
-    const token = req.cookies["auth"]?.accessToken;
+    const token = req.cookies["auth_coocking"]?.accessToken;
 
     try {
         await authServiceAngular.logout(token);
         res.status(204)
-            .clearCookie("auth", {
+            .clearCookie("auth_coocking", {
                 httpOnly: true,
                 sameSite: "None",
                 secure: true,
