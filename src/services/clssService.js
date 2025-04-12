@@ -19,7 +19,7 @@ const getAllPaginated = async (query = {}) => {
     const skip = (page - 1) * limit;
 
     const [classes, totalCount] = await Promise.all([
-        Clss.find().skip(skip).limit(limit).sort({ dateUpdated: -1 }),
+        Clss.find().skip(skip).limit(limit),
         Clss.countDocuments(),
     ]);
 
@@ -79,10 +79,7 @@ const getByOwnerId = async (ownerId, query = {}) => {
     const skip = (page - 1) * limit;
 
     const [classes, totalCount] = await Promise.all([
-        Clss.find({ _ownerId: ownerId })
-            .skip(skip)
-            .limit(limit)
-            .sort({ dateUpdated: -1 }),
+        Clss.find({ _ownerId: ownerId }).skip(skip).limit(limit),
         Clss.countDocuments({ _ownerId: ownerId }),
     ]);
 
@@ -98,10 +95,7 @@ const getByLikedId = async (userId, query = {}) => {
     const skip = (page - 1) * limit;
 
     const [classes, totalCount] = await Promise.all([
-        Clss.find({ likes: userId })
-            .skip(skip)
-            .limit(limit)
-            .sort({ dateUpdated: -1 }),
+        Clss.find({ likes: userId }).skip(skip).limit(limit),
         Clss.countDocuments({ likes: userId }),
     ]);
 

@@ -12,8 +12,10 @@ export default function expressInit(app) {
         cors({
             origin: [
                 "https://classbook-react-project.web.app",
-                "https://test-client-hgl0.onrender.com",
                 "https://cooking-together-782b1.web.app",
+                "http://localhost:4200",
+                "http://localhost:5173",
+                "http://localhost:4173",
             ],
             credentials: true,
         })

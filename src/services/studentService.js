@@ -93,10 +93,7 @@ const getByOwnerId = async (ownerId, query = {}) => {
     const skip = (page - 1) * limit;
 
     const [students, totalCount] = await Promise.all([
-        Student.find({ _ownerId: ownerId })
-            .skip(skip)
-            .limit(limit)
-            .sort({ dateUpdated: -1 }),
+        Student.find({ _ownerId: ownerId }).skip(skip).limit(limit),
         Student.countDocuments({ _ownerId: ownerId }),
     ]);
 
@@ -112,10 +109,7 @@ const getByLikedId = async (userId, query = {}) => {
     const skip = (page - 1) * limit;
 
     const [students, totalCount] = await Promise.all([
-        Student.find({ likes: userId })
-            .skip(skip)
-            .limit(limit)
-            .sort({ dateUpdated: -1 }),
+        Student.find({ likes: userId }).skip(skip).limit(limit),
         Student.countDocuments({ likes: userId }),
     ]);
 

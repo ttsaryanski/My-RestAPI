@@ -19,7 +19,7 @@ const getAllPaginated = async (query = {}) => {
     const skip = (page - 1) * limit;
 
     const [items, totalCount] = await Promise.all([
-        Item.find().skip(skip).limit(limit).sort({ dateUpdated: -1 }),
+        Item.find().skip(skip).limit(limit),
         Item.countDocuments(),
     ]);
 
@@ -76,10 +76,7 @@ const getByOwnerId = async (ownerId, query = {}) => {
     const skip = (page - 1) * limit;
 
     const [items, totalCount] = await Promise.all([
-        Item.find({ _ownerId: ownerId })
-            .skip(skip)
-            .limit(limit)
-            .sort({ dateUpdated: -1 }),
+        Item.find({ _ownerId: ownerId }).skip(skip).limit(limit),
         Item.countDocuments({ _ownerId: ownerId }),
     ]);
 
@@ -95,10 +92,7 @@ const getByLikedId = async (userId, query = {}) => {
     const skip = (page - 1) * limit;
 
     const [items, totalCount] = await Promise.all([
-        Item.find({ likes: userId })
-            .skip(skip)
-            .limit(limit)
-            .sort({ dateUpdated: -1 }),
+        Item.find({ likes: userId }).skip(skip).limit(limit),
         Item.countDocuments({ likes: userId }),
     ]);
 

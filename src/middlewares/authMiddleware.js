@@ -3,9 +3,9 @@ import InvaliToken from "../models/InvalidToken.js";
 
 const authMiddleware = async (req, res, next) => {
     let token;
-    if (req.path.includes("/coocking")) {
+    if (req.originalUrl.includes("/coocking")) {
         token = req.cookies["auth_coocking"]?.accessToken;
-    } else {
+    } else if (req.originalUrl.includes("/class")) {
         token = req.cookies["auth"]?.accessToken;
     }
 

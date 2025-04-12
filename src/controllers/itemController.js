@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", authMiddleware, async (req, res) => {
-    const userId = await req.cookies?.auth?.user?._id;
+    const userId = await req.cookies?.auth_coocking?.user?._id;
     const data = req.body;
 
     try {
@@ -75,7 +75,7 @@ router.get("/top-three", async (req, res) => {
 });
 
 router.get("/profileItem", async (req, res) => {
-    const userId = await req.cookies?.auth?.user?._id;
+    const userId = await req.cookies?.auth_coocking?.user?._id;
     const query = req.query;
 
     try {
@@ -94,7 +94,7 @@ router.get("/profileItem", async (req, res) => {
 });
 
 router.get("/profileLiked", async (req, res) => {
-    const userId = await req.cookies?.auth?.user?._id;
+    const userId = await req.cookies?.auth_coocking?.user?._id;
     const query = req.query;
 
     try {

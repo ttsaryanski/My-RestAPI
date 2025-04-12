@@ -10,12 +10,12 @@ import teacherController from "./controllers/teacherController.js";
 
 const routes = Router();
 
-routes.use("/director", directorController);
-routes.use("/auth", authController);
 routes.use("/coocking/authAngular", authControllerAngular);
 routes.use("/coocking/item", itemController);
-routes.use("/clss", clssController);
-routes.use("/student", studentController);
-routes.use("/teacher", teacherController);
+routes.use("/class/auth", authController);
+routes.use("/class/clss", clssController);
+routes.use("/class/director", directorController);
+routes.use("/class/student", studentController);
+routes.use("/class/teacher", teacherController);
 
 export default routes;
