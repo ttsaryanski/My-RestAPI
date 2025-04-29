@@ -7,6 +7,7 @@ import itemController from "./controllers/itemController.js";
 import clssController from "./controllers/clssController.js";
 import studentController from "./controllers/studentController.js";
 import teacherController from "./controllers/teacherController.js";
+import gameController from "./controllers/gameController.js";
 
 const routes = Router();
 
@@ -17,5 +18,6 @@ routes.use("/class/clss", clssController);
 routes.use("/class/director", directorController);
 routes.use("/class/student", studentController);
 routes.use("/class/teacher", teacherController);
+routes.use("/games_play/games", gameController);
 
 export default routes;
