@@ -7,6 +7,8 @@ const authMiddleware = async (req, res, next) => {
         token = req.cookies["auth_coocking"]?.accessToken;
     } else if (req.originalUrl.includes("/class")) {
         token = req.cookies["auth"]?.accessToken;
+    } else if (req.originalUrl.includes("/games_play")) {
+        token = req.cookies["auth_GamesPlay"]?.accessToken;
     }
 
     if (!token) {
@@ -29,6 +31,7 @@ const authMiddleware = async (req, res, next) => {
     } catch (error) {
         res.clearCookie("auth")
             .clearCookie("auth_coocking")
+            .clearCookie("auth_GamesPlay")
             .status(401)
             .send({ message: "Token verification failed" })
             .end();
