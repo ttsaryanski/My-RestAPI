@@ -2,8 +2,8 @@ import { Router } from "express";
 
 import itemService from "../services/itemService.js";
 
-import { createErrorMsg } from "../utils/errorUtil.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { createErrorMsg } from "../utils/errorUtil.js";
 
 const router = Router();
 

@@ -2,6 +2,12 @@ import { Router } from "express";
 
 import gameService from "../services/gameService.js";
 
+import { authMiddleware } from "../middlewares/authMiddleware.js";
+import isOwner from "../middlewares/ownerMiddleware.js";
+
+import { createErrorMsg } from "../utils/errorUtil.js";
+import Game from "../models/Game.js";
+
 const router = Router();
 
 router.get("/", async (req, res) => {
@@ -18,10 +24,8 @@ router.get("/", async (req, res) => {
     }
 });
 
-//router.post("/", authMiddleware, async (req, res) => {
-router.post("/", async (req, res) => {
-    //const userId = await req.cookies?.auth_coocking?.user?._id;
-    const userId = null;
+router.post("/", authMiddleware, async (req, res) => {
+    const userId = req.user._id;
     const data = req.body;
 
     try {
@@ -72,5 +76,46 @@ router.get("/:gameId", async (req, res) => {
         res.status(500).json({ message: createErrorMsg(error) });
     }
 });
+
+router.put(
+    "/:gameId",
+    authMiddleware,
+    isOwner(Game, "gameId"),
+    async (req, res) => {
+        const gameId = req.params.gameId;
+        const data = req.body;
+
+        try {
+            const game = await gameService.edit(gameId, data);
+
+            res.status(201).json(game).end();
+        } catch (error) {
+            if (error.message.includes("validation")) {
+                res.status(400).json({ message: createErrorMsg(error) });
+            } else if (error.message === "Missing or invalid data!") {
+                res.status(404).json({ message: createErrorMsg(error) });
+            } else {
+                res.status(500).json({ message: createErrorMsg(error) });
+            }
+        }
+    }
+);
+
+router.delete(
+    "/:gameId",
+    authMiddleware,
+    isOwner(Game, "gameId"),
+    async (req, res) => {
+        const gameId = req.params.gameId;
+
+        try {
+            await gameService.remove(gameId);
+
+            res.status(204).end();
+        } catch (error) {
+            res.status(500).json({ message: createErrorMsg(error) });
+        }
+    }
+);
 
 export default router;
