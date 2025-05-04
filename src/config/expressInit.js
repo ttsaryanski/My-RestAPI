@@ -13,7 +13,7 @@ export default function expressInit(app) {
             origin: [
                 "https://classbook-react-project.web.app",
                 "https://cooking-together-782b1.web.app",
-                "https://gamesplay-13281.web.app",
+                "https://gamesplay-54b41.web.app",
                 "http://localhost:4200",
                 "http://localhost:5173",
                 "http://localhost:4173",

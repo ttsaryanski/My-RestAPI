@@ -1,15 +1,9 @@
 import jwt from "../lib/jwt.js";
 import InvaliToken from "../models/InvalidToken.js";
+import { getTokenFromRequest } from "../utils/getToken.js";
 
 const authMiddleware = async (req, res, next) => {
-    let token;
-    if (req.originalUrl.includes("/coocking")) {
-        token = req.cookies["auth_coocking"]?.accessToken;
-    } else if (req.originalUrl.includes("/class")) {
-        token = req.cookies["auth"]?.accessToken;
-    } else if (req.originalUrl.includes("/games_play")) {
-        token = req.cookies["auth_GamesPlay"]?.accessToken;
-    }
+    const token = getTokenFromRequest(req);
 
     if (!token) {
         return res.status(401).send({ message: "Invalid token!" }).end();
@@ -33,8 +27,7 @@ const authMiddleware = async (req, res, next) => {
             .clearCookie("auth_coocking")
             .clearCookie("auth_GamesPlay")
             .status(401)
-            .send({ message: "Token verification failed" })
-            .end();
+            .send({ message: "Token verification failed" });
     }
 };
 
