@@ -1,7 +1,7 @@
 import { Schema, Types, model } from "mongoose";
 import bcrypt from "bcrypt";
 
-import { SALT_ROUNDS } from "../config/constans.js";
+import { SALT_ROUNDS } from "../../config/constans.js";
 
 const userSchema = new Schema({
     username: {

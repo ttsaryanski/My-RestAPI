@@ -1,9 +1,9 @@
 import { Router } from "express";
 
-import teacherService from "../services/teacherService.js";
+import teacherService from "../../services/classBook/teacherService.js";
 
-import { createErrorMsg } from "../utils/errorUtil.js";
-import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { createErrorMsg } from "../../utils/errorUtil.js";
+import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
 const router = Router();
 
@@ -39,7 +39,7 @@ router.get("/:teacherId", async (req, res) => {
     }
 });
 
-router.put("/:teacherId", async (req, res) => {
+router.put("/:teacherId", authMiddleware, async (req, res) => {
     const teacherId = req.params.teacherId;
     const data = req.body;
 

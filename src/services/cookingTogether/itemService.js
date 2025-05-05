@@ -1,4 +1,4 @@
-import Item from "../models/Item.js";
+import Item from "../../models/cookingTogether/Item.js";
 
 const getAll = (query = {}) => {
     let items = Item.find();

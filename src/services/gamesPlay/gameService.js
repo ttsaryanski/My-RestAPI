@@ -1,4 +1,4 @@
-import Game from "../models/Game.js";
+import Game from "../../models/gamesPlay/Game.js";
 
 const getAll = (query = {}) => {
     let games = Game.find().sort({ updatedAt: -1 });

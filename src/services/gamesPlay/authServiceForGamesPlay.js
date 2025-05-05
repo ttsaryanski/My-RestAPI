@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt";
 
-import jwt from "../lib/jwt.js";
-import UserGames from "../models/UserForGamesPlay.js";
-import InvalidToken from "../models/InvalidToken.js";
+import jwt from "../../lib/jwt.js";
+import UserGames from "../../models/gamesPlay/UserForGamesPlay.js";
+import InvalidToken from "../../models/InvalidToken.js";
 
 const register = async (email, password) => {
     const existingUser = await UserGames.findOne({ email });

@@ -22,4 +22,4 @@ const isOwner = (model, idParam = "id") => {
     };
 };
 
-export default isOwner;
+export { isOwner };

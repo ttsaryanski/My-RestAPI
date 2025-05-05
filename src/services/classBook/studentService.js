@@ -1,4 +1,4 @@
-import Student from "../models/Student.js";
+import Student from "../../models/classBook/Student.js";
 
 const getAll = (query = {}) => {
     let students = Student.find();

@@ -1,4 +1,4 @@
-import Setting from "../models/Setting.js";
+import Setting from "../../models/classBook/Setting.js";
 
 const create = (data) => Setting.create(data);
 

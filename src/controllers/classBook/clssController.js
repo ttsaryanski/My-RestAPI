@@ -1,9 +1,11 @@
 import { Router } from "express";
 
-import clssService from "../services/clssService.js";
+import clssService from "../../services/classBook/clssService.js";
 
-import { createErrorMsg } from "../utils/errorUtil.js";
-import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { createErrorMsg } from "../../utils/errorUtil.js";
+import { authMiddleware } from "../../middlewares/authMiddleware.js";
+import { isOwner } from "../../middlewares/ownerMiddleware.js";
+import Clss from "../../models/classBook/Clss.js";
 
 const router = Router();
 
@@ -22,13 +24,11 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", authMiddleware, async (req, res) => {
-    //router.post("/", async (req, res) => {
-    const userId = await req.cookies?.auth?.user?._id;
+    const userId = req.user._id;
     const data = req.body;
 
     try {
         const item = await clssService.create(data, userId);
-        //const item = await itemService.create(data);
 
         res.status(201).json(item).end();
     } catch (error) {
@@ -84,7 +84,7 @@ router.get("/:clssId/populate", async (req, res) => {
     }
 });
 
-router.put("/:clssId", async (req, res) => {
+router.put("/:clssId", authMiddleware, async (req, res) => {
     const clssId = req.params.clssId;
     const data = req.body;
 
@@ -103,7 +103,7 @@ router.put("/:clssId", async (req, res) => {
     }
 });
 
-router.delete("/:clssId", async (req, res) => {
+router.delete("/:clssId", authMiddleware, async (req, res) => {
     const clssId = req.params.clssId;
 
     try {

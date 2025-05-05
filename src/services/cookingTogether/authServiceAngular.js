@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
 
-import UserAngular from "../models/UserAngular.js";
+import UserAngular from "../../models/cookingTogether/UserAngular.js";
 
-import InvalidToken from "../models/InvalidToken.js";
-import jwt from "../lib/jwt.js";
+import InvalidToken from "../../models/InvalidToken.js";
+import jwt from "../../lib/jwt.js";
 
 const register = async (username, email, password, profilePicture) => {
     const user = await UserAngular.findOne({ $or: [{ username }, { email }] });

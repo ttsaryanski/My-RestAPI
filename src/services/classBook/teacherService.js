@@ -1,4 +1,4 @@
-import Teacher from "../models/Teacher.js";
+import Teacher from "../../models/classBook/Teacher.js";
 
 const getAll = (query = {}) => {
     let teachers = Teacher.find();

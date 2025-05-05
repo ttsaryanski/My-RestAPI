@@ -1,4 +1,4 @@
-import Clss from "../models/Clss.js";
+import Clss from "../../models/classBook/Clss.js";
 
 const getAll = (query = {}) => {
     let classes = Clss.find();

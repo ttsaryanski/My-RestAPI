@@ -1,12 +1,12 @@
 import { Router } from "express";
 
-import gameService from "../services/gameService.js";
+import gameService from "../../services/gamesPlay/gameService.js";
 
-import { authMiddleware } from "../middlewares/authMiddleware.js";
-import isOwner from "../middlewares/ownerMiddleware.js";
+import { authMiddleware } from "../../middlewares/authMiddleware.js";
+import { isOwner } from "../../middlewares/ownerMiddleware.js";
+import Game from "../../models/gamesPlay/Game.js";
 
-import { createErrorMsg } from "../utils/errorUtil.js";
-import Game from "../models/Game.js";
+import { createErrorMsg } from "../../utils/errorUtil.js";
 
 const router = Router();
 

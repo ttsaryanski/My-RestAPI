@@ -1,11 +1,11 @@
 import bcrypt from "bcrypt";
 
-import User from "../models/User.js";
-import Setting from "../models/Setting.js";
-import Student from "../models/Student.js";
+import User from "../../models/classBook/User.js";
+import Setting from "../../models/classBook/Setting.js";
+import Student from "../../models/classBook/Student.js";
 
-import jwt from "../lib/jwt.js";
-import InvalidToken from "../models/InvalidToken.js";
+import jwt from "../../lib/jwt.js";
+import InvalidToken from "../../models/InvalidToken.js";
 import teacherService from "./teacherService.js";
 
 const register = async (

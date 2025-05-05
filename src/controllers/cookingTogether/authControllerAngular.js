@@ -1,23 +1,52 @@
 import { Router } from "express";
+import fs from "fs";
+import path from "path";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 
-import authServiceForGamesPlay from "../services/authServiceForGamesPlay.js";
+import authServiceAngular from "../../services/cookingTogether/authServiceAngular.js";
 
-import { createErrorMsg } from "../utils/errorUtil.js";
-import { authMiddleware } from "../middlewares/authMiddleware.js";
+import s3 from "../../utils/AWS S3 client.js";
+import upload from "../../utils/multerStorage.js";
+import { createErrorMsg } from "../../utils/errorUtil.js";
+import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
 const router = Router();
 
-router.post("/register", async (req, res) => {
-    const { email, password } = req.body;
+router.post("/register", upload.single("profilePicture"), async (req, res) => {
+    const { username, email, password, rePassword } = req.body;
+    let profilePicture = null;
+
+    if (req.file) {
+        const filePath = req.file.path;
+
+        const uploadParams = {
+            Bucket: "test-client-bucket-app",
+            Key: path.basename(filePath),
+            Body: fs.createReadStream(filePath),
+        };
+
+        const command = new PutObjectCommand(uploadParams);
+        const s3Response = await s3.send(command);
+
+        const fileName = req.file.originalname;
+        const fileUrl = `https://${uploadParams.Bucket}.s3.amazonaws.com/${uploadParams.Key}`;
+        profilePicture = { fileName, fileUrl };
+
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
+    }
 
     try {
-        const accessToken = await authServiceForGamesPlay.register(
+        const accessToken = await authServiceAngular.register(
+            username,
             email,
-            password
+            password,
+            profilePicture
         );
 
         res.status(200)
-            .cookie("auth_GamesPlay", accessToken, {
+            .cookie("auth_cooking", accessToken, {
                 httpOnly: true,
                 sameSite: "None",
                 secure: true,
@@ -25,7 +54,7 @@ router.post("/register", async (req, res) => {
             .send(accessToken.user)
             .end();
     } catch (error) {
-        if (error.message === "This email already registered!") {
+        if (error.message === "This username or email already registered!") {
             res.status(409)
                 .json({ message: createErrorMsg(error) })
                 .end();
@@ -45,13 +74,10 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const accessToken = await authServiceForGamesPlay.login(
-            email,
-            password
-        );
+        const accessToken = await authServiceAngular.login(email, password);
 
         res.status(200)
-            .cookie("auth_GamesPlay", accessToken, {
+            .cookie("auth_cooking", accessToken, {
                 httpOnly: true,
                 sameSite: "None",
                 secure: true,
@@ -80,12 +106,12 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/logout", async (req, res) => {
-    const token = req.cookies["auth_GamesPlay"]?.accessToken;
+    const token = req.cookies["auth_cooking"]?.accessToken;
 
     try {
-        await authServiceForGamesPlay.logout(token);
+        await authServiceAngular.logout(token);
         res.status(204)
-            .clearCookie("auth_GamesPlay", {
+            .clearCookie("auth_cooking", {
                 httpOnly: true,
                 sameSite: "None",
                 secure: true,
@@ -102,7 +128,7 @@ router.get("/profile", authMiddleware, async (req, res) => {
     const { _id: userId } = req.user;
 
     try {
-        const user = await authServiceForGamesPlay.getUserById(userId);
+        const user = await authServiceAngular.getUserById(userId);
 
         res.status(200).json(user).end();
     } catch (error) {

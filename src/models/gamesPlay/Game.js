@@ -30,7 +30,7 @@ const gameSchema = new Schema({
     },
     _ownerId: {
         type: Types.ObjectId,
-        ref: "User",
+        ref: "UserGames",
     },
     createdAt: {
         type: Date,
