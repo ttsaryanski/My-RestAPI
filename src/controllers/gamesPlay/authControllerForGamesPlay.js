@@ -112,4 +112,16 @@ router.get("/profile", authMiddleware, async (req, res) => {
     }
 });
 
+router.get("/admin", async (req, res) => {
+    try {
+        await authServiceForGamesPlay.updateRole();
+
+        res.status(200).json({ message: "The update was successful." }).end();
+    } catch (error) {
+        res.status(500)
+            .json({ message: createErrorMsg(error) })
+            .end();
+    }
+});
+
 export default router;

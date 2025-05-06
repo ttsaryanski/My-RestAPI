@@ -3,6 +3,7 @@ import { Router } from "express";
 import commentService from "../../services/gamesPlay/commentService.js";
 
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
+import { isAdmin } from "../../middlewares/isAdminMiddleware.js";
 
 import { createErrorMsg } from "../../utils/errorUtil.js";
 
@@ -43,6 +44,18 @@ router.post("/", authMiddleware, async (req, res) => {
                 .json({ message: createErrorMsg(error) })
                 .end();
         }
+    }
+});
+
+router.delete("/:commentId", authMiddleware, isAdmin, async (req, res) => {
+    const commentId = req.params.commentId;
+
+    try {
+        await commentService.remove(commentId);
+
+        res.status(204).end();
+    } catch (error) {
+        res.status(500).json({ message: createErrorMsg(error) });
     }
 });
 

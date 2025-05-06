@@ -43,6 +43,7 @@ async function createAccessToken(user) {
     const payload = {
         _id: user._id,
         email: user.email,
+        role: user.role,
     };
 
     const token = await jwt.sign(payload, process.env.JWT_SECRET, {
@@ -55,9 +56,16 @@ async function createAccessToken(user) {
     };
 }
 
+const updateRole = () =>
+    UserGames.updateMany(
+        { role: { $exists: false } },
+        { $set: { role: "user" } }
+    );
+
 export default {
     register,
     login,
     logout,
     getUserById,
+    updateRole,
 };

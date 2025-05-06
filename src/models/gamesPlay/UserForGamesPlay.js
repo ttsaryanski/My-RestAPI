@@ -18,6 +18,11 @@ const userGamesSchema = new Schema({
         required: [true, "Password is required!"],
         minLength: [3, "Password should be at least 3 characters long!"],
     },
+    role: {
+        type: String,
+        enum: ["user", "admin"],
+        default: "user",
+    },
     dateCreated: {
         type: Date,
         default: Date.now,
