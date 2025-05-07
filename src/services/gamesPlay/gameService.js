@@ -19,7 +19,7 @@ const getInfinity = async (query = {}) => {
     const skip = (page - 1) * limit;
 
     const [games] = await Promise.all([
-        Game.find().skip(skip).limit(limit),
+        Game.find().sort({ createdAt: -1 }).skip(skip).limit(limit),
         Game.countDocuments(),
     ]);
 
