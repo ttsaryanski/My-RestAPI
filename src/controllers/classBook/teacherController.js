@@ -31,7 +31,7 @@ router.get("/:teacherId", async (req, res) => {
             res.status(200).json(teacher).end();
         } else {
             res.status(404)
-                .json({ message: "There is no item with this id." })
+                .json({ message: "There is no teacher with this id." })
                 .end();
         }
     } catch (error) {

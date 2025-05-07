@@ -13,6 +13,19 @@ const getAll = (query = {}) => {
     return games;
 };
 
+const getInfinity = async (query = {}) => {
+    const page = parseInt(query.page) || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+
+    const [games] = await Promise.all([
+        Game.find().skip(skip).limit(limit),
+        Game.countDocuments(),
+    ]);
+
+    return { games };
+};
+
 const lastThree = () => {
     const lastThreeGames = Game.find().sort({ createdAt: -1 }).limit(3);
 
@@ -36,6 +49,7 @@ const edit = (gameId, data) => {
 
 export default {
     getAll,
+    getInfinity,
     lastThree,
     create,
     getById,

@@ -24,6 +24,20 @@ router.get("/", async (req, res) => {
     }
 });
 
+router.get("/infinity", async (req, res) => {
+    const query = req.query;
+
+    try {
+        const games = await gameService.getInfinity(query);
+
+        res.status(200).json(games).end();
+    } catch (error) {
+        res.status(500)
+            .json({ message: createErrorMsg(error) })
+            .end();
+    }
+});
+
 router.post("/", authMiddleware, async (req, res) => {
     const userId = req.user._id;
     const data = req.body;

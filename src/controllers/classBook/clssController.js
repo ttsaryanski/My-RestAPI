@@ -58,7 +58,7 @@ router.get("/:clssId", async (req, res) => {
             res.status(200).json(clss).end();
         } else {
             res.status(404)
-                .json({ message: "There is no item with this id." })
+                .json({ message: "There is no class with this id." })
                 .end();
         }
     } catch (error) {
