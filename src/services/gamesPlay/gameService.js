@@ -1,7 +1,7 @@
 import Game from "../../models/gamesPlay/Game.js";
 
 const getAll = (query = {}) => {
-    let games = Game.find().sort({ updatedAt: -1 });
+    let games = Game.find().sort({ updatedAt: -1 }).populate("_ownerId");
 
     if (query.search) {
         games.find({ title: { $regex: query.search, $options: "i" } });
@@ -19,18 +19,18 @@ const getInfinity = async (query = {}) => {
     const skip = (page - 1) * limit;
 
     const [games] = await Promise.all([
-        Game.find().sort({ createdAt: -1 }).skip(skip).limit(limit),
+        Game.find()
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit)
+            .populate("_ownerId"),
         Game.countDocuments(),
     ]);
 
     return { games };
 };
 
-const lastThree = () => {
-    const lastThreeGames = Game.find().sort({ createdAt: -1 }).limit(3);
-
-    return lastThreeGames;
-};
+const lastThree = () => Game.find().sort({ createdAt: -1 }).limit(3);
 
 const create = (data, userId) => Game.create({ ...data, _ownerId: userId });
 

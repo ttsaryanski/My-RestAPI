@@ -1,5 +1,8 @@
 import { Router } from "express";
 
+import { authMiddleware } from "./middlewares/authMiddleware.js";
+import { isAdmin } from "./middlewares/isAdminMiddleware.js";
+
 import authControllerAngular from "./controllers/cookingTogether/authControllerAngular.js";
 import itemController from "./controllers/cookingTogether/itemController.js";
 
@@ -9,6 +12,7 @@ import clssController from "./controllers/classBook/clssController.js";
 import studentController from "./controllers/classBook/studentController.js";
 import teacherController from "./controllers/classBook/teacherController.js";
 
+import adminController from "./controllers/gamesPlay/adminController.js";
 import authGameController from "./controllers/gamesPlay/authControllerForGamesPlay.js";
 import gameController from "./controllers/gamesPlay/gameController.js";
 import commentController from "./controllers/gamesPlay/commentController.js";
@@ -24,6 +28,7 @@ routes.use("/class/clss", clssController);
 routes.use("/class/student", studentController);
 routes.use("/class/teacher", teacherController);
 
+routes.use("/games_play/admin", authMiddleware, isAdmin, adminController);
 routes.use("/games_play/authGame", authGameController);
 routes.use("/games_play/games", gameController);
 routes.use("/games_play/comments", commentController);

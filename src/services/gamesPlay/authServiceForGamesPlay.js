@@ -35,9 +35,36 @@ const login = async (email, password) => {
     return createAccessToken(user);
 };
 
+const getAllUsers = async (query = {}) => {
+    const page = parseInt(query.page) || 1;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+
+    const users = await UserGames.aggregate([
+        {
+            $addFields: {
+                roleOrder: {
+                    $cond: [{ $eq: ["$role", "admin"] }, 0, 1],
+                },
+            },
+        },
+        { $sort: { roleOrder: 1, _id: -1 } },
+        { $skip: skip },
+        { $limit: limit },
+        { $project: { roleOrder: 0 } },
+    ]);
+
+    return { users };
+};
+
 const logout = (token) => InvalidToken.create({ token });
 
 const getUserById = (id) => UserGames.findById(id);
+
+const remove = (userId) => UserGames.findByIdAndDelete(userId);
+
+const makeAdmin = (userId) =>
+    UserGames.findByIdAndUpdate(userId, { role: "admin" }, { new: true });
 
 async function createAccessToken(user) {
     const payload = {
@@ -68,4 +95,7 @@ export default {
     logout,
     getUserById,
     updateRole,
+    getAllUsers,
+    remove,
+    makeAdmin,
 };

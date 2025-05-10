@@ -1,10 +1,12 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
-import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { requestLogger } from "../middlewares/requestLogger.js";
+import morgan from "morgan";
 
 export default function expressInit(app) {
+    // app.use(requestLogger);
+    app.use(morgan("dev"));
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
     app.use(cookieParser());
@@ -21,6 +23,4 @@ export default function expressInit(app) {
             credentials: true,
         })
     );
-
-    // app.use(authMiddleware);
 }
