@@ -8,7 +8,7 @@ import { PORT } from "./config/constans.js";
 import expressInit from "./config/expressInit.js";
 import mongooseInit from "./config/mongooseInit.js";
 
-import routes from "./routes.js";
+import routes from "./routes/routes.js";
 
 const app = express();
 

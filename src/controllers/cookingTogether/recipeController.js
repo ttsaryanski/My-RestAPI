@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import itemService from "../../services/cookingTogether/itemService.js";
+import recipeService from "../../services/cookingTogether/recipeService.js";
 
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { isOwner } from "../../middlewares/ownerMiddleware.js";
@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
     const query = req.query;
 
     try {
-        const items = await itemService.getAll(query);
+        const items = await recipeService.getAll(query);
 
         res.status(200).json(items).end();
     } catch (error) {
@@ -30,7 +30,7 @@ router.post("/", authMiddleware, async (req, res) => {
     const data = req.body;
 
     try {
-        const item = await itemService.create(data, userId);
+        const item = await recipeService.create(data, userId);
 
         res.status(201).json(item).end();
     } catch (error) {
@@ -54,7 +54,7 @@ router.get("/paginated", async (req, res) => {
     const query = req.query;
 
     try {
-        const result = await itemService.getAllPaginated(query);
+        const result = await recipeService.getAllPaginated(query);
         const payload = {
             items: result.items,
             totalCount: result.totalCount,
@@ -70,7 +70,7 @@ router.get("/paginated", async (req, res) => {
 
 router.get("/top-three", async (req, res) => {
     try {
-        const items = await itemService.topThree();
+        const items = await recipeService.topThree();
 
         res.status(200).json(items).end();
     } catch (error) {
@@ -84,7 +84,7 @@ router.get("/profileItem", async (req, res) => {
 
     if (userId) {
         try {
-            const result = await itemService.getByOwnerId(userId, query);
+            const result = await recipeService.getByOwnerId(userId, query);
             const payload = {
                 items: result.items,
                 totalCount: result.totalCount,
@@ -107,7 +107,7 @@ router.get("/profileLiked", async (req, res) => {
 
     if (userId) {
         try {
-            const result = await itemService.getByLikedId(userId, query);
+            const result = await recipeService.getByLikedId(userId, query);
             const payload = {
                 items: result.items,
                 totalCount: result.totalCount,
@@ -128,7 +128,7 @@ router.get("/:itemId", async (req, res) => {
     const itemId = req.params.itemId;
 
     try {
-        const item = await itemService.getById(itemId);
+        const item = await recipeService.getById(itemId);
 
         if (item !== null) {
             res.status(200).json(item).end();
@@ -150,7 +150,7 @@ router.delete(
         const itemId = req.params.itemId;
 
         try {
-            await itemService.remove(itemId);
+            await recipeService.remove(itemId);
 
             res.status(204).end();
         } catch (error) {
@@ -168,7 +168,7 @@ router.put(
         const data = req.body;
 
         try {
-            const item = await itemService.edit(itemId, data);
+            const item = await recipeService.edit(itemId, data);
 
             res.status(201).json(item).end();
         } catch (error) {
@@ -188,7 +188,7 @@ router.post("/:itemId/like", authMiddleware, async (req, res) => {
     const userId = req.user._id;
 
     try {
-        const item = await itemService.like(itemId, userId);
+        const item = await recipeService.like(itemId, userId);
 
         res.status(200).json(item).end();
     } catch (error) {

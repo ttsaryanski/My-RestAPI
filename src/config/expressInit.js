@@ -6,7 +6,7 @@ import morgan from "morgan";
 
 export default function expressInit(app) {
     // app.use(requestLogger);
-    app.use(morgan("dev"));
+    // app.use(morgan("dev"));
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
     app.use(cookieParser());
