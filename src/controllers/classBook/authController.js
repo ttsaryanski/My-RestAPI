@@ -18,7 +18,7 @@ export function authController(authService) {
     router.post(
         "/register",
         upload.single("profilePicture"),
-        async (req, res) => {
+        asyncErrorHandler(async (req, res) => {
             const {
                 firstName,
                 lastName,
@@ -27,6 +27,7 @@ export function authController(authService) {
                 secretKey,
                 password,
             } = req.body;
+
             let profilePicture = null;
 
             if (req.file) {
@@ -50,44 +51,24 @@ export function authController(authService) {
                 }
             }
 
-            try {
-                const accessToken = await authService.register(
-                    firstName,
-                    lastName,
-                    email,
-                    identifier,
-                    secretKey,
-                    password,
-                    profilePicture
-                );
+            const accessToken = await authService.register(
+                firstName,
+                lastName,
+                email,
+                identifier,
+                secretKey,
+                password,
+                profilePicture
+            );
 
-                res.status(200)
-                    .cookie(cookiesNames.classBook, accessToken, {
-                        httpOnly: true,
-                        sameSite: "None",
-                        secure: true,
-                    })
-                    .send(accessToken.user)
-                    .end();
-            } catch (error) {
-                if (
-                    error.message ===
-                    "A user with this email or identifier is already registered!"
-                ) {
-                    res.status(409)
-                        .json({ message: createErrorMsg(error) })
-                        .end();
-                } else if (error.message.includes("validation")) {
-                    res.status(400)
-                        .json({ message: createErrorMsg(error) })
-                        .end();
-                } else {
-                    res.status(500)
-                        .json({ message: createErrorMsg(error) })
-                        .end();
-                }
-            }
-        }
+            res.status(200)
+                .cookie(cookiesNames.classBook, accessToken, {
+                    httpOnly: true,
+                    sameSite: "None",
+                    secure: true,
+                })
+                .send(accessToken.user);
+        })
     );
 
     router.post(
