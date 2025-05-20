@@ -1,3 +1,5 @@
+import { CustomError } from "../../utils/customError.js";
+
 import Game from "../../models/gamesPlay/Game.js";
 
 export const gameService = {
@@ -43,24 +45,45 @@ export const gameService = {
     },
 
     async create(data, userId) {
-        return await Game.create({ ...data, _ownerId: userId });
+        const newGame = await Game.create({ ...data, _ownerId: userId });
+
+        if (!newGame) {
+            throw new CustomError("Missing or invalid data!", 400);
+        }
+
+        return newGame;
     },
 
     async getById(gameId) {
-        return await Game.findById(gameId);
+        const game = await Game.findById(gameId);
+
+        if (!game) {
+            throw new CustomError("There is no game with this id!", 404);
+        }
+
+        return game;
     },
 
     async remove(gameId) {
         const result = await Game.findByIdAndDelete(gameId);
-        if (!result) throw new Error("Game not found");
+        if (!result) {
+            throw new CustomError("Game not found", 404);
+        }
     },
 
     async edit(gameId, data) {
-        data.dateUpdate = Date.now();
-
-        return await Game.findByIdAndUpdate(gameId, data, {
+        const editedGame = await Game.findByIdAndUpdate(gameId, data, {
             runValidators: true,
             new: true,
         });
+
+        if (!editedGame) {
+            throw new CustomError(
+                "Game not found or missing or invalid data!",
+                400
+            );
+        }
+
+        return editedGame;
     },
 };

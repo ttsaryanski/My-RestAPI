@@ -1,30 +1,23 @@
 import { Router } from "express";
 
-import { createErrorMsg } from "../../utils/errorUtil.js";
+import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
 
 export function directorController(directorService) {
     const router = Router();
 
-    router.post("/", async (req, res) => {
-        const { teacherKey, directorKey } = req.body;
+    router.post(
+        "/",
+        asyncErrorHandler(async (req, res) => {
+            const { teacherKey, directorKey } = req.body;
 
-        try {
             const keys = await directorService.create({
                 teacherKey,
                 directorKey,
             });
 
-            res.json(keys).end();
-        } catch (error) {
-            if (error.message.includes("validation")) {
-                res.status(400).json({ message: createErrorMsg(error) });
-            } else if (error.message === "Missing or invalid data!") {
-                res.status(400).json({ message: createErrorMsg(error) });
-            } else {
-                res.status(500).json({ message: createErrorMsg(error) });
-            }
-        }
-    });
+            res.status(201).json(keys);
+        })
+    );
 
     return router;
 }

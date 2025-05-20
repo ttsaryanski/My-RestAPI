@@ -1,91 +1,75 @@
 import { Router } from "express";
 
-import { createErrorMsg } from "../../utils/errorUtil.js";
+import { CustomError } from "../../utils/customError.js";
+import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
 
 export function adminController(authService, gameService) {
     const router = Router();
 
-    router.get("/games", async (req, res) => {
-        const query = req.query;
+    router.get(
+        "/games",
+        asyncErrorHandler(async (req, res) => {
+            const query = req.query;
 
-        try {
             const games = await gameService.getInfinity(query);
 
-            res.status(200).json(games).end();
-        } catch (error) {
-            res.status(500)
-                .json({ message: createErrorMsg(error) })
-                .end();
-        }
-    });
+            res.status(200).json(games);
+        })
+    );
 
-    router.delete("/games/:gameId", async (req, res) => {
-        const gameId = req.params.gameId;
+    router.delete(
+        "/games/:gameId",
+        asyncErrorHandler(async (req, res) => {
+            const gameId = req.params.gameId;
 
-        try {
             await gameService.remove(gameId);
 
             res.status(204).end();
-        } catch (error) {
-            res.status(500).json({ message: createErrorMsg(error) });
-        }
-    });
+        })
+    );
 
-    router.get("/users", async (req, res) => {
-        const query = req.query;
+    router.get(
+        "/users",
+        asyncErrorHandler(async (req, res) => {
+            const query = req.query;
 
-        try {
             const users = await authService.getAllUsers(query);
 
-            res.status(200).json(users).end();
-        } catch (error) {
-            res.status(500)
-                .json({ message: createErrorMsg(error) })
-                .end();
-        }
-    });
+            res.status(200).json(users);
+        })
+    );
 
-    router.get("/users/:userId", async (req, res) => {
-        const userId = req.params.userId;
+    router.get(
+        "/users/:userId",
+        asyncErrorHandler(async (req, res) => {
+            const userId = req.params.userId;
 
-        try {
             const user = await authService.makeAdmin(userId);
 
-            res.status(200).json(user).end();
-        } catch (error) {
-            res.status(500)
-                .json({ message: createErrorMsg(error) })
-                .end();
-        }
-    });
+            res.status(200).json(user);
+        })
+    );
 
-    router.delete("/users/:userId", async (req, res) => {
-        const userId = req.params.userId;
+    router.delete(
+        "/users/:userId",
+        asyncErrorHandler(async (req, res) => {
+            const userId = req.params.userId;
 
-        try {
             const user = await authService.getUserById(userId);
 
             if (!user) {
-                return res.status(404).json({ message: "User not found" });
+                throw new CustomError("User not found", 404);
             }
 
             if (user.role === "admin") {
-                return res
-                    .status(403)
-                    .json({ message: "Cannot delete admin account" });
+                throw new CustomError("Cannot delete admin account", 401);
             }
 
-            try {
-                await authService.remove(userId);
+            await authService.remove(userId);
 
-                res.status(204).end();
-            } catch (error) {
-                res.status(500).json({ message: createErrorMsg(error) });
-            }
-        } catch (error) {
-            res.status(500).json({ message: createErrorMsg(error) });
-        }
-    });
+            res.status(204).end();
+        })
+    );
 
     return router;
 }

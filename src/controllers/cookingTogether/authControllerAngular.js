@@ -7,8 +7,8 @@ import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
 import s3 from "../../utils/AWS S3 client.js";
 import upload from "../../utils/multerStorage.js";
-import { createErrorMsg } from "../../utils/errorUtil.js";
 import { getUserIdFromCookie } from "../../utils/getUserIdFromCookie.js";
+import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
 import { cookiesNames } from "../../config/constans.js";
 
 export function authController(authService) {
@@ -17,7 +17,7 @@ export function authController(authService) {
     router.post(
         "/register",
         upload.single("profilePicture"),
-        async (req, res) => {
+        asyncErrorHandler(async (req, res) => {
             const { username, email, password, rePassword } = req.body;
             let profilePicture = null;
 
@@ -42,47 +42,28 @@ export function authController(authService) {
                 }
             }
 
-            try {
-                const accessToken = await authService.register(
-                    username,
-                    email,
-                    password,
-                    profilePicture
-                );
+            const accessToken = await authService.register(
+                username,
+                email,
+                password,
+                profilePicture
+            );
 
-                res.status(200)
-                    .cookie(cookiesNames.cookingTogether, accessToken, {
-                        httpOnly: true,
-                        sameSite: "None",
-                        secure: true,
-                    })
-                    .send(accessToken.user)
-                    .end();
-            } catch (error) {
-                if (
-                    error.message ===
-                    "This username or email already registered!"
-                ) {
-                    res.status(409)
-                        .json({ message: createErrorMsg(error) })
-                        .end();
-                } else if (error.message.includes("validation")) {
-                    res.status(400)
-                        .json({ message: createErrorMsg(error) })
-                        .end();
-                } else {
-                    res.status(500)
-                        .json({ message: createErrorMsg(error) })
-                        .end();
-                }
-            }
-        }
+            res.status(200)
+                .cookie(cookiesNames.cookingTogether, accessToken, {
+                    httpOnly: true,
+                    sameSite: "None",
+                    secure: true,
+                })
+                .send(accessToken.user);
+        })
     );
 
-    router.post("/login", async (req, res) => {
-        const { email, password } = req.body;
+    router.post(
+        "/login",
+        asyncErrorHandler(async (req, res) => {
+            const { email, password } = req.body;
 
-        try {
             const accessToken = await authService.login(email, password);
 
             res.status(200)
@@ -91,33 +72,16 @@ export function authController(authService) {
                     sameSite: "None",
                     secure: true,
                 })
-                .send(accessToken.user)
-                .end();
-        } catch (error) {
-            if (error.message === "User does not exist!") {
-                res.status(404)
-                    .json({ message: createErrorMsg(error) })
-                    .end();
-            } else if (error.message === "Password does not match!") {
-                res.status(401)
-                    .json({ message: createErrorMsg(error) })
-                    .end();
-            } else if (error.message.includes("validation")) {
-                res.status(400)
-                    .json({ message: createErrorMsg(error) })
-                    .end();
-            } else {
-                res.status(500)
-                    .json({ message: createErrorMsg(error) })
-                    .end();
-            }
-        }
-    });
+                .send(accessToken.user);
+        })
+    );
 
-    router.post("/logout", async (req, res) => {
-        const token = req.cookies[cookiesNames.cookingTogether]?.accessToken;
+    router.post(
+        "/logout",
+        asyncErrorHandler(async (req, res) => {
+            const token =
+                req.cookies[cookiesNames.cookingTogether]?.accessToken;
 
-        try {
             await authService.logout(token);
             res.status(204)
                 .clearCookie(cookiesNames.cookingTogether, {
@@ -126,29 +90,23 @@ export function authController(authService) {
                     secure: true,
                 })
                 .end();
-        } catch (error) {
-            res.status(500)
-                .json({ message: createErrorMsg(error) })
-                .end();
-        }
-    });
+        })
+    );
 
-    router.get("/profile", authMiddleware, async (req, res) => {
-        const userId = await getUserIdFromCookie(
-            req,
-            cookiesNames.cookingTogether
-        );
+    router.get(
+        "/profile",
+        authMiddleware,
+        asyncErrorHandler(async (req, res) => {
+            const userId = await getUserIdFromCookie(
+                req,
+                cookiesNames.cookingTogether
+            );
 
-        try {
             const user = await authService.getUserById(userId);
 
-            res.status(200).json(user).end();
-        } catch (error) {
-            res.status(500)
-                .json({ message: createErrorMsg(error) })
-                .end();
-        }
-    });
+            res.status(200).json(user);
+        })
+    );
 
     return router;
 }

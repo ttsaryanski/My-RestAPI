@@ -39,9 +39,11 @@ const userSchema = new Schema({
 });
 
 userSchema.pre("save", async function () {
-    const hash = await bcrypt.hash(this.password, SALT_ROUNDS);
+    if (this.isModified("password")) {
+        const hash = await bcrypt.hash(this.password, SALT_ROUNDS);
 
-    this.password = hash;
+        this.password = hash;
+    }
 });
 
 const UserAngular = model("UserAngular", userSchema);

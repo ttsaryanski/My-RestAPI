@@ -1,21 +1,32 @@
 export const createErrorMsg = (err) => {
-  let errorMsg = null;
+    if (!err) return "Unknown error";
 
-  switch (err?.name) {
-    case "ValidationError":
-      errorMsg = Object.values(err.errors)
-        .map((err) => err.message)
-        .join(", ");
-      break;
-    case "CastError":
-      errorMsg = "Missing or invalid data!";
-      break;
-    case "MongooseError":
-      errorMsg = "Server is busy, please try again later!";
-      break;
-    default:
-      errorMsg = err?.message || null;
-  }
+    if (err?.name === "ValidationError") {
+        return Object.values(err.errors)
+            .map((e) => e.message)
+            .join(", ");
+    }
 
-  return errorMsg;
+    if (err?.name === "CastError") {
+        return "Missing or invalid data!";
+    }
+
+    if (err?.name === "MongooseError") {
+        return "Server is busy, please try again later!";
+    }
+
+    if (err?.name === "MongoServerError" && err.code === 11000) {
+        const field = Object.keys(err.keyValue)[0];
+        return `Duplicate ${field}: "${err.keyValue[field]}" already exists.`;
+    }
+
+    if (err?.name === "CustomError" && err.message) {
+        return err.message;
+    }
+
+    if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
+        return "Invalid JSON input!";
+    }
+
+    return err.message || "Something went wrong";
 };

@@ -1,3 +1,5 @@
+import { CustomError } from "../../utils/customError.js";
+
 import Item from "../../models/cookingTogether/Item.js";
 
 export const recipeService = {
@@ -36,11 +38,23 @@ export const recipeService = {
     },
 
     async create(data, userId) {
-        return await Item.create({ ...data, _ownerId: userId });
+        const newRecipe = await Item.create({ ...data, _ownerId: userId });
+
+        if (!newRecipe) {
+            throw new CustomError("Missing or invalid data!", 400);
+        }
+
+        return newRecipe;
     },
 
     async getById(itemId) {
-        return await Item.findById(itemId);
+        const recipe = await Item.findById(itemId);
+
+        if (!recipe) {
+            throw new CustomError("There is no recipe with this id!", 404);
+        }
+
+        return recipe;
     },
 
     async remove(itemId) {
@@ -51,10 +65,16 @@ export const recipeService = {
     async edit(itemId, data) {
         data.dateUpdate = Date.now();
 
-        return await Item.findByIdAndUpdate(itemId, data, {
+        const editedRecipe = await Item.findByIdAndUpdate(itemId, data, {
             runValidators: true,
             new: true,
         });
+
+        if (!editedRecipe) {
+            throw new CustomError("Missing or invalid data!", 400);
+        }
+
+        return editedRecipe;
     },
 
     async like(itemId, userId) {

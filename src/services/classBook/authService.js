@@ -1,12 +1,15 @@
 import bcrypt from "bcrypt";
 
+import jwt from "../../lib/jwt.js";
+
+import { teacherService } from "./teacherService.js";
+
+import { CustomError } from "../../utils/customError.js";
+
 import User from "../../models/classBook/User.js";
 import Setting from "../../models/classBook/Setting.js";
 import Student from "../../models/classBook/Student.js";
-
-import jwt from "../../lib/jwt.js";
 import InvalidToken from "../../models/InvalidToken.js";
-import { teacherService } from "./teacherService.js";
 
 export const authService = {
     async register(
@@ -21,14 +24,14 @@ export const authService = {
         const existingUser = await User.findOne({ email });
 
         if (existingUser) {
-            throw new Error("This email already registered!");
+            throw new CustomError("This email already registered!", 409);
         }
 
         let role = "";
 
         const settings = await Setting.findOne();
         if (!settings) {
-            throw new Error("Settings not found!");
+            throw new CustomError("Settings not found!", 404);
         }
 
         if (secretKey === settings.teacherKey) {
@@ -84,13 +87,13 @@ export const authService = {
         const user = await User.findOne({ email });
 
         if (!user) {
-            throw new Error("User does not exist!");
+            throw new CustomError("User does not exist!", 404);
         }
 
         const isValid = await bcrypt.compare(password, user.password);
 
         if (!isValid) {
-            throw new Error("Password does not match!");
+            throw new CustomError("Password does not match!", 401);
         }
 
         return createAccessToken(user);

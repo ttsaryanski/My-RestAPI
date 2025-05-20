@@ -1,3 +1,5 @@
+import { CustomError } from "../../utils/customError.js";
+
 import Student from "../../models/classBook/Student.js";
 
 export const studentService = {
@@ -35,19 +37,34 @@ export const studentService = {
     },
 
     async getById(studentId) {
-        return await Student.findById(studentId);
+        const student = await Student.findById(studentId);
+
+        if (!student) {
+            throw new CustomError("There is no student with this id!", 404);
+        }
+
+        return student;
     },
 
     async getByIdPopulate(studentId) {
-        return await Student.findById(studentId)
+        const student = await Student.findById(studentId)
             .populate("grades")
             .populate("grades.class")
             .populate("grades.teacher");
+
+        if (!student) {
+            throw new CustomError("There is no student with this id!", 404);
+        }
+
+        return student;
     },
 
     async remove(studentId) {
         const result = Student.findByIdAndDelete(studentId);
-        if (!result) throw new Error("Student not found");
+
+        if (!result) {
+            throw new CustomError("Student not found", 404);
+        }
     },
 
     async edit(studentId, data) {

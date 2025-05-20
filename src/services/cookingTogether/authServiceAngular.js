@@ -2,6 +2,8 @@ import bcrypt from "bcrypt";
 
 import jwt from "../../lib/jwt.js";
 
+import { CustomError } from "../../utils/customError.js";
+
 import UserAngular from "../../models/cookingTogether/UserAngular.js";
 import InvalidToken from "../../models/InvalidToken.js";
 
@@ -12,7 +14,10 @@ export const authService = {
         });
 
         if (user) {
-            throw new Error("This username or email already registered!");
+            throw new CustomError(
+                "This username or email already registered!",
+                409
+            );
         }
 
         const createdUser = await UserAngular.create({
@@ -29,13 +34,13 @@ export const authService = {
         const user = await UserAngular.findOne({ email });
 
         if (!user) {
-            throw new Error("User does not exist!");
+            throw new CustomError("User does not exist!", 404);
         }
 
         const isValid = await bcrypt.compare(password, user.password);
 
         if (!isValid) {
-            throw new Error("Password does not match!");
+            throw new CustomError("Password does not match!", 401);
         }
 
         return createAccessToken(user);

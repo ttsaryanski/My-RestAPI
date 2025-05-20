@@ -1,54 +1,41 @@
 import { Router } from "express";
 
-import { createErrorMsg } from "../../utils/errorUtil.js";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
+
+import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
 
 export function studentController(studentService) {
     const router = Router();
 
-    router.get("/", async (req, res) => {
-        const query = req.query;
+    router.get(
+        "/",
+        asyncErrorHandler(async (req, res) => {
+            const query = req.query;
 
-        try {
             const students = await studentService.getAll(query);
 
-            res.status(200).json(students).end();
-        } catch (error) {
-            res.status(500)
-                .json({ message: createErrorMsg(error) })
-                .end();
-        }
-    });
+            res.status(200).json(students);
+        })
+    );
 
-    router.post("/", async (req, res) => {
-        const userId = await req.cookies?.auth?.user?._id;
-        const data = req.body;
+    router.post(
+        "/",
+        authMiddleware,
+        asyncErrorHandler(async (req, res) => {
+            const userId = req.user._id;
+            const data = req.body;
 
-        try {
             const item = await studentService.create(data, userId);
 
-            res.status(201).json(item).end();
-        } catch (error) {
-            if (error.message.includes("validation")) {
-                res.status(400)
-                    .json({ message: createErrorMsg(error) })
-                    .end();
-            } else if (error.message === "Missing or invalid data!") {
-                res.status(400)
-                    .json({ message: createErrorMsg(error) })
-                    .end();
-            } else {
-                res.status(500)
-                    .json({ message: createErrorMsg(error) })
-                    .end();
-            }
-        }
-    });
+            res.status(201).json(item);
+        })
+    );
 
-    router.post("/paginated", async (req, res) => {
-        const query = req.body;
+    router.post(
+        "/paginated",
+        asyncErrorHandler(async (req, res) => {
+            const query = req.body;
 
-        try {
             const result = await studentService.getAllPaginated(query);
             const payload = {
                 students: result.students,
@@ -57,66 +44,44 @@ export function studentController(studentService) {
                 currentPage: result.currentPage,
             };
 
-            res.status(200).json(payload).end();
-        } catch (error) {
-            res.status(500).json({ message: createErrorMsg(error) });
-        }
-    });
+            res.status(200).json(payload);
+        })
+    );
 
-    router.get("/:studentId", async (req, res) => {
-        const studentId = req.params.studentId;
+    router.get(
+        "/:studentId",
+        asyncErrorHandler(async (req, res) => {
+            const studentId = req.params.studentId;
 
-        try {
             const student = await studentService.getById(studentId);
 
-            if (student !== null) {
-                res.status(200).json(student).end();
-            } else {
-                res.status(404)
-                    .json({ message: "There is no student with this id." })
-                    .end();
-            }
-        } catch (error) {
-            res.status(500).json({ message: createErrorMsg(error) });
-        }
-    });
+            res.status(200).json(student);
+        })
+    );
 
-    router.get("/:studentId/populate", async (req, res) => {
-        const studentId = req.params.studentId;
+    router.get(
+        "/:studentId/populate",
+        asyncErrorHandler(async (req, res) => {
+            const studentId = req.params.studentId;
 
-        try {
             const student = await studentService.getByIdPopulate(studentId);
 
-            if (student !== null) {
-                res.status(200).json(student).end();
-            } else {
-                res.status(404)
-                    .json({ message: "There is no student with this id." })
-                    .end();
-            }
-        } catch (error) {
-            res.status(500).json({ message: createErrorMsg(error) });
-        }
-    });
+            res.status(200).json(student);
+        })
+    );
 
-    router.put("/:studentId", authMiddleware, async (req, res) => {
-        const studentId = req.params.studentId;
-        const data = req.body;
+    router.put(
+        "/:studentId",
+        authMiddleware,
+        asyncErrorHandler(async (req, res) => {
+            const studentId = req.params.studentId;
+            const data = req.body;
 
-        try {
             const student = await studentService.edit(studentId, data);
 
-            res.status(201).json(student).end();
-        } catch (error) {
-            if (error.message.includes("validation")) {
-                res.status(400).json({ message: createErrorMsg(error) });
-            } else if (error.message === "Missing or invalid data!") {
-                res.status(400).json({ message: createErrorMsg(error) });
-            } else {
-                res.status(500).json({ message: createErrorMsg(error) });
-            }
-        }
-    });
+            res.status(201).json(student);
+        })
+    );
 
     return router;
 }

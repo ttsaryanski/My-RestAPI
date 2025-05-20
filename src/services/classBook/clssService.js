@@ -1,3 +1,5 @@
+import { CustomError } from "../../utils/customError.js";
+
 import Clss from "../../models/classBook/Clss.js";
 
 export const classService = {
@@ -40,18 +42,33 @@ export const classService = {
     },
 
     async getById(itemId) {
-        return await Clss.findById(itemId);
+        const clss = await Clss.findById(itemId);
+
+        if (!clss) {
+            throw new CustomError("There is no class with this id!", 404);
+        }
+
+        return clss;
     },
 
     async getByIdPopulate(itemId) {
-        return await Clss.findById(itemId)
+        const clss = await Clss.findById(itemId)
             .populate("teacher")
             .populate("students");
+
+        if (!clss) {
+            throw new CustomError("There is no class with this id!", 404);
+        }
+
+        return clss;
     },
 
     async remove(itemId) {
         const result = await Clss.findByIdAndDelete(itemId);
-        if (!result) throw new Error("Class not found");
+
+        if (!result) {
+            throw new CustomError("Class not found", 404);
+        }
     },
 
     async edit(itemId, data) {

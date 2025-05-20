@@ -2,6 +2,8 @@ import bcrypt from "bcrypt";
 
 import jwt from "../../lib/jwt.js";
 
+import { CustomError } from "../../utils/customError.js";
+
 import UserGames from "../../models/gamesPlay/UserForGamesPlay.js";
 import InvalidToken from "../../models/InvalidToken.js";
 
@@ -10,7 +12,7 @@ export const authService = {
         const existingUser = await UserGames.findOne({ email });
 
         if (existingUser) {
-            throw new Error("This email already registered!");
+            throw new CustomError("This email already registered!", 409);
         }
 
         const createdUser = await UserGames.create({
@@ -25,13 +27,13 @@ export const authService = {
         const user = await UserGames.findOne({ email });
 
         if (!user) {
-            throw new Error("User does not exist!");
+            throw new CustomError("User does not exist!", 404);
         }
 
         const isValid = await bcrypt.compare(password, user.password);
 
         if (!isValid) {
-            throw new Error("Password does not match!");
+            throw new CustomError("Password does not match!", 401);
         }
 
         return createAccessToken(user);
@@ -69,7 +71,9 @@ export const authService = {
 
     async remove(userId) {
         const result = await UserGames.findByIdAndDelete(userId);
-        if (!result) throw new Error("User not found");
+        if (!result) {
+            throw new CustomError("User not found", 404);
+        }
     },
 
     async makeAdmin(userId) {
@@ -89,6 +93,10 @@ export const authService = {
 };
 
 async function createAccessToken(user) {
+    if (!process.env.JWT_SECRET) {
+        throw new CustomError("JWT secret is not configured", 500);
+    }
+
     const payload = {
         _id: user._id,
         email: user.email,
@@ -99,8 +107,10 @@ async function createAccessToken(user) {
         expiresIn: "1d",
     });
 
+    const { password, ...filteredUser } = user.toObject?.() || user;
+
     return {
-        user,
+        user: filteredUser,
         accessToken: token,
     };
 }
