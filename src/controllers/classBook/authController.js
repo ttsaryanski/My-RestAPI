@@ -9,7 +9,6 @@ import s3 from "../../utils/AWS S3 client.js";
 import upload from "../../utils/multerStorage.js";
 import { getUserIdFromCookie } from "../../utils/getUserIdFromCookie.js";
 import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
-import { createErrorMsg } from "../../utils/errorUtil.js";
 import { cookiesNames } from "../../config/constans.js";
 
 export function authController(authService) {
@@ -124,7 +123,10 @@ export function authController(authService) {
         authMiddleware,
         upload.single("profilePicture"),
         asyncErrorHandler(async (req, res) => {
-            const userId = getUserIdFromCookie(req, cookiesNames.classBook);
+            const userId = await getUserIdFromCookie(
+                req,
+                cookiesNames.classBook
+            );
             let data = req.body;
 
             if (req.file) {

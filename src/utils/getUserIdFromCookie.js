@@ -7,6 +7,7 @@ export const getUserIdFromCookie = async (req, cookieName) => {
 
     try {
         const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+
         return decoded._id || null;
     } catch (err) {
         return null;
