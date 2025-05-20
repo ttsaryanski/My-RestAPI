@@ -1,58 +1,66 @@
 import Game from "../../models/gamesPlay/Game.js";
 
-const getAll = (query = {}) => {
-    let games = Game.find().sort({ updatedAt: -1 }).populate("_ownerId");
+export const gameService = {
+    async getAll(query = {}) {
+        let filter = {};
 
-    if (query.search) {
-        games.find({ title: { $regex: query.search, $options: "i" } });
-    }
-    if (query.limit) {
-        games.find().limit(query.limit).sort({ dateUpdate: -1 });
-    }
+        if (query.search) {
+            filter.title = { $regex: query.search, $options: "i" };
+        }
 
-    return games;
-};
+        let gamesQuery = Game.find(filter)
+            .sort({ updatedAt: -1 })
+            .populate("_ownerId");
 
-const getInfinity = async (query = {}) => {
-    const page = parseInt(query.page) || 1;
-    const limit = 5;
-    const skip = (page - 1) * limit;
+        if (query.limit) {
+            const limit = Number(query.limit);
+            gamesQuery = gamesQuery.limit(limit);
+        }
 
-    const [games] = await Promise.all([
-        Game.find()
-            .sort({ createdAt: -1 })
-            .skip(skip)
-            .limit(limit)
-            .populate("_ownerId"),
-        Game.countDocuments(),
-    ]);
+        const games = await gamesQuery;
+        return games;
+    },
 
-    return { games };
-};
+    async getInfinity(query = {}) {
+        const page = parseInt(query.page) || 1;
+        const limit = 5;
+        const skip = (page - 1) * limit;
 
-const lastThree = () => Game.find().sort({ createdAt: -1 }).limit(3);
+        const [games] = await Promise.all([
+            Game.find()
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit)
+                .populate("_ownerId"),
+            Game.countDocuments(),
+        ]);
 
-const create = (data, userId) => Game.create({ ...data, _ownerId: userId });
+        return { games };
+    },
 
-const getById = (gameId) => Game.findById(gameId);
+    async lastThree() {
+        return await Game.find().sort({ createdAt: -1 }).limit(3);
+    },
 
-const remove = (gameId) => Game.findByIdAndDelete(gameId);
+    async create(data, userId) {
+        return await Game.create({ ...data, _ownerId: userId });
+    },
 
-const edit = (gameId, data) => {
-    data.dateUpdate = Date.now();
+    async getById(gameId) {
+        return await Game.findById(gameId);
+    },
 
-    return Game.findByIdAndUpdate(gameId, data, {
-        runValidators: true,
-        new: true,
-    });
-};
+    async remove(gameId) {
+        const result = await Game.findByIdAndDelete(gameId);
+        if (!result) throw new Error("Game not found");
+    },
 
-export default {
-    getAll,
-    getInfinity,
-    lastThree,
-    create,
-    getById,
-    remove,
-    edit,
+    async edit(gameId, data) {
+        data.dateUpdate = Date.now();
+
+        return await Game.findByIdAndUpdate(gameId, data, {
+            runValidators: true,
+            new: true,
+        });
+    },
 };

@@ -1,120 +1,65 @@
 import Clss from "../../models/classBook/Clss.js";
 
-const getAll = (query = {}) => {
-    let classes = Clss.find();
+export const classService = {
+    async getAll(query = {}) {
+        let filter = {};
 
-    if (query.search) {
-        classes.find({ title: { $regex: query.search, $options: "i" } });
-    }
-    if (query.limit) {
-        classes.find().limit(query.limit).sort({ dateUpdate: -1 });
-    }
+        if (query.search) {
+            filter.title = { $regex: query.search, $options: "i" };
+        }
 
-    return classes;
-};
+        let classQuery = Clss.find(filter);
 
-const getAllPaginated = async (query = {}) => {
-    const page = parseInt(query.page) || 1;
-    const limit = parseInt(query.limit) || 9;
-    const skip = (page - 1) * limit;
+        if (query.limit) {
+            const limit = Number(query.limit);
+            classQuery = classQuery.limit(limit);
+        }
 
-    const [classes, totalCount] = await Promise.all([
-        Clss.find().skip(skip).limit(limit),
-        Clss.countDocuments(),
-    ]);
+        const classes = await classQuery;
+        return classes;
+    },
 
-    const totalPages = Math.ceil(totalCount / limit);
-    const currentPage = page;
+    async getAllPaginated(query = {}) {
+        const page = parseInt(query.page) || 1;
+        const limit = parseInt(query.limit) || 9;
+        const skip = (page - 1) * limit;
 
-    return { classes, totalCount, totalPages, currentPage };
-};
+        const [classes, totalCount] = await Promise.all([
+            Clss.find().skip(skip).limit(limit),
+            Clss.countDocuments(),
+        ]);
 
-const create = (data, userId) => Clss.create({ ...data, _createdBy: userId });
+        const totalPages = Math.ceil(totalCount / limit);
+        const currentPage = page;
 
-const getById = (itemId) => Clss.findById(itemId);
+        return { classes, totalCount, totalPages, currentPage };
+    },
 
-const getByIdPopulate = (itemId) =>
-    Clss.findById(itemId).populate("teacher").populate("students");
+    async create(data, userId) {
+        return await Clss.create({ ...data, _createdBy: userId });
+    },
 
-const remove = (itemId) => Clss.findByIdAndDelete(itemId);
+    async getById(itemId) {
+        return await Clss.findById(itemId);
+    },
 
-const edit = (itemId, data) => {
-    data.dateUpdate = Date.now();
+    async getByIdPopulate(itemId) {
+        return await Clss.findById(itemId)
+            .populate("teacher")
+            .populate("students");
+    },
 
-    return Clss.findByIdAndUpdate(itemId, data, {
-        runValidators: true,
-        new: true,
-    });
-};
+    async remove(itemId) {
+        const result = await Clss.findByIdAndDelete(itemId);
+        if (!result) throw new Error("Class not found");
+    },
 
-const like = (clssId, userId) =>
-    Clss.findByIdAndUpdate(clssId, {
-        $addToSet: { likes: userId, new: true },
-    });
+    async edit(itemId, data) {
+        data.dateUpdate = Date.now();
 
-const topThree = () => {
-    const topClasses = Clss.aggregate([
-        {
-            $addFields: {
-                likesCount: { $size: "$likes" },
-            },
-        },
-        {
-            $sort: {
-                likesCount: -1,
-                dateUpdate: -1,
-            },
-        },
-        {
-            $limit: 3,
-        },
-    ]);
-
-    return topClasses;
-};
-
-const getByOwnerId = async (ownerId, query = {}) => {
-    const page = parseInt(query.page) || 1;
-    const limit = parseInt(query.limit) || 5;
-    const skip = (page - 1) * limit;
-
-    const [classes, totalCount] = await Promise.all([
-        Clss.find({ _ownerId: ownerId }).skip(skip).limit(limit),
-        Clss.countDocuments({ _ownerId: ownerId }),
-    ]);
-
-    const totalPages = Math.ceil(totalCount / limit);
-    const currentPage = page;
-
-    return { classes, totalCount, totalPages, currentPage };
-};
-
-const getByLikedId = async (userId, query = {}) => {
-    const page = parseInt(query.page) || 1;
-    const limit = parseInt(query.limit) || 5;
-    const skip = (page - 1) * limit;
-
-    const [classes, totalCount] = await Promise.all([
-        Clss.find({ likes: userId }).skip(skip).limit(limit),
-        Clss.countDocuments({ likes: userId }),
-    ]);
-
-    const totalPages = Math.ceil(totalCount / limit);
-    const currentPage = page;
-
-    return { classes, totalCount, totalPages, currentPage };
-};
-
-export default {
-    getAll,
-    getAllPaginated,
-    create,
-    getById,
-    getByIdPopulate,
-    remove,
-    edit,
-    like,
-    topThree,
-    getByOwnerId,
-    getByLikedId,
+        return await Clss.findByIdAndUpdate(itemId, data, {
+            runValidators: true,
+            new: true,
+        });
+    },
 };

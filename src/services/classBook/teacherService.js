@@ -1,130 +1,44 @@
 import Teacher from "../../models/classBook/Teacher.js";
 
-const getAll = (query = {}) => {
-    let teachers = Teacher.find();
+export const teacherService = {
+    async getAll(query = {}) {
+        let filter = {};
 
-    if (query.search) {
-        teachers.find({ title: { $regex: query.search, $options: "i" } });
-    }
-    if (query.limit) {
-        teachers.find().limit(query.limit).sort({ dateUpdate: -1 });
-    }
-    if (query.email) {
-        teachers.find({ email: query.email });
-    }
+        if (query.email) {
+            filter.email = { email: query.email };
+        }
 
-    return teachers;
-};
+        let teacherQuery = Teacher.find(filter);
 
-const getAllPaginated = async (query = {}) => {
-    const page = parseInt(query.page) || 1;
-    const limit = parseInt(query.limit) || 9;
-    const skip = (page - 1) * limit;
+        const teachers = await teacherQuery;
+        return teachers;
+    },
 
-    const [teachers, totalCount] = await Promise.all([
-        Teacher.find().skip(skip).limit(limit),
-        Teacher.countDocuments(),
-    ]);
+    async create(data, userId) {
+        return await Teacher.create({ ...data, _ownerId: userId });
+    },
 
-    const totalPages = Math.ceil(totalCount / limit);
-    const currentPage = page;
+    async getById(teacherId) {
+        return await Teacher.findById(teacherId);
+    },
 
-    return { teachers, totalCount, totalPages, currentPage };
-};
+    async edit(teacherId, data) {
+        data.dateUpdate = Date.now();
+        const updateQuery = { ...data };
 
-const create = (data, userId) => Teacher.create({ ...data, _ownerId: userId });
+        if (data.clssToAdd) {
+            updateQuery.$push = { clss: data.clssToAdd };
+            delete updateQuery.clssToAdd;
+        }
 
-const getById = (teacherId) => Teacher.findById(teacherId);
+        if (data.clssToRemove) {
+            updateQuery.$pull = { clss: data.clssToRemove };
+            delete updateQuery.clssToRemove;
+        }
 
-const remove = (teacherId) => Teacher.findByIdAndDelete(teacherId);
-
-const edit = async (teacherId, data) => {
-    data.dateUpdate = Date.now();
-    const updateQuery = { ...data };
-
-    if (data.clssToAdd) {
-        updateQuery.$push = { clss: data.clssToAdd };
-        delete updateQuery.clssToAdd;
-    }
-
-    if (data.clssToRemove) {
-        updateQuery.$pull = { clss: data.clssToRemove };
-        delete updateQuery.clssToRemove;
-    }
-
-    return Teacher.findByIdAndUpdate(teacherId, updateQuery, {
-        runValidators: true,
-        new: true,
-    });
-};
-
-const like = (teacherId, userId) =>
-    Teacher.findByIdAndUpdate(teacherId, {
-        $addToSet: { likes: userId, new: true },
-    });
-
-const topThree = () => {
-    const topRecipes = Teacher.aggregate([
-        {
-            $addFields: {
-                likesCount: { $size: "$likes" },
-            },
-        },
-        {
-            $sort: {
-                likesCount: -1,
-                dateUpdate: -1,
-            },
-        },
-        {
-            $limit: 3,
-        },
-    ]);
-
-    return topRecipes;
-};
-
-const getByOwnerId = async (ownerId, query = {}) => {
-    const page = parseInt(query.page) || 1;
-    const limit = parseInt(query.limit) || 5;
-    const skip = (page - 1) * limit;
-
-    const [teachers, totalCount] = await Promise.all([
-        Teacher.find({ _ownerId: ownerId }).skip(skip).limit(limit),
-        Teacher.countDocuments({ _ownerId: ownerId }),
-    ]);
-
-    const totalPages = Math.ceil(totalCount / limit);
-    const currentPage = page;
-
-    return { teachers, totalCount, totalPages, currentPage };
-};
-
-const getByLikedId = async (userId, query = {}) => {
-    const page = parseInt(query.page) || 1;
-    const limit = parseInt(query.limit) || 5;
-    const skip = (page - 1) * limit;
-
-    const [teachers, totalCount] = await Promise.all([
-        Teacher.find({ likes: userId }).skip(skip).limit(limit),
-        Teacher.countDocuments({ likes: userId }),
-    ]);
-
-    const totalPages = Math.ceil(totalCount / limit);
-    const currentPage = page;
-
-    return { teachers, totalCount, totalPages, currentPage };
-};
-
-export default {
-    getAll,
-    getAllPaginated,
-    create,
-    getById,
-    remove,
-    edit,
-    like,
-    topThree,
-    getByOwnerId,
-    getByLikedId,
+        return await Teacher.findByIdAndUpdate(teacherId, updateQuery, {
+            runValidators: true,
+            new: true,
+        });
+    },
 };

@@ -1,116 +1,118 @@
 import Item from "../../models/cookingTogether/Item.js";
 
-const getAll = (query = {}) => {
-    let items = Item.find();
+export const recipeService = {
+    async getAll(query = {}) {
+        let filter = {};
 
-    if (query.search) {
-        items.find({ title: { $regex: query.search, $options: "i" } });
-    }
-    if (query.limit) {
-        items.find().limit(query.limit).sort({ dateUpdate: -1 });
-    }
+        if (query.search) {
+            filter.title = { $regex: query.search, $options: "i" };
+        }
 
-    return items;
-};
+        let recipeQuery = Item.find(filter).sort({ dateUpdate: -1 });
 
-const getAllPaginated = async (query = {}) => {
-    const page = parseInt(query.page) || 1;
-    const limit = parseInt(query.limit) || 9;
-    const skip = (page - 1) * limit;
+        if (query.limit) {
+            const limit = Number(query.limit);
+            recipeQuery = recipeQuery.limit(limit);
+        }
 
-    const [items, totalCount] = await Promise.all([
-        Item.find().skip(skip).limit(limit),
-        Item.countDocuments(),
-    ]);
+        const recipes = await recipeQuery;
+        return recipes;
+    },
 
-    const totalPages = Math.ceil(totalCount / limit);
-    const currentPage = page;
+    async getAllPaginated(query = {}) {
+        const page = parseInt(query.page) || 1;
+        const limit = parseInt(query.limit) || 9;
+        const skip = (page - 1) * limit;
 
-    return { items, totalCount, totalPages, currentPage };
-};
+        const [items, totalCount] = await Promise.all([
+            Item.find().skip(skip).limit(limit),
+            Item.countDocuments(),
+        ]);
 
-const create = (data, userId) => Item.create({ ...data, _ownerId: userId });
+        const totalPages = Math.ceil(totalCount / limit);
+        const currentPage = page;
 
-const getById = (itemId) => Item.findById(itemId);
+        return { items, totalCount, totalPages, currentPage };
+    },
 
-const remove = (itemId) => Item.findByIdAndDelete(itemId);
+    async create(data, userId) {
+        return await Item.create({ ...data, _ownerId: userId });
+    },
 
-const edit = (itemId, data) => {
-    data.dateUpdate = Date.now();
+    async getById(itemId) {
+        return await Item.findById(itemId);
+    },
 
-    return Item.findByIdAndUpdate(itemId, data, {
-        runValidators: true,
-        new: true,
-    });
-};
+    async remove(itemId) {
+        const result = await Item.findByIdAndDelete(itemId);
+        if (!result) throw new Error("Recipe not found");
+    },
 
-const like = (itemId, userId) =>
-    Item.findByIdAndUpdate(itemId, {
-        $addToSet: { likes: userId, new: true },
-    });
+    async edit(itemId, data) {
+        data.dateUpdate = Date.now();
 
-const topThree = () => {
-    const topRecipes = Item.aggregate([
-        {
-            $addFields: {
-                likesCount: { $size: "$likes" },
+        return await Item.findByIdAndUpdate(itemId, data, {
+            runValidators: true,
+            new: true,
+        });
+    },
+
+    async like(itemId, userId) {
+        return await Item.findByIdAndUpdate(itemId, {
+            $addToSet: { likes: userId, new: true },
+        });
+    },
+
+    async topThree() {
+        const topRecipes = await Item.aggregate([
+            {
+                $addFields: {
+                    likesCount: { $size: "$likes" },
+                },
             },
-        },
-        {
-            $sort: {
-                likesCount: -1,
-                dateUpdate: -1,
+            {
+                $sort: {
+                    likesCount: -1,
+                    dateUpdate: -1,
+                },
             },
-        },
-        {
-            $limit: 3,
-        },
-    ]);
+            {
+                $limit: 3,
+            },
+        ]);
 
-    return topRecipes;
-};
+        return topRecipes;
+    },
 
-const getByOwnerId = async (ownerId, query = {}) => {
-    const page = parseInt(query.page) || 1;
-    const limit = parseInt(query.limit) || 5;
-    const skip = (page - 1) * limit;
+    async getByOwnerId(ownerId, query = {}) {
+        const page = parseInt(query.page) || 1;
+        const limit = parseInt(query.limit) || 5;
+        const skip = (page - 1) * limit;
 
-    const [items, totalCount] = await Promise.all([
-        Item.find({ _ownerId: ownerId }).skip(skip).limit(limit),
-        Item.countDocuments({ _ownerId: ownerId }),
-    ]);
+        const [items, totalCount] = await Promise.all([
+            Item.find({ _ownerId: ownerId }).skip(skip).limit(limit),
+            Item.countDocuments({ _ownerId: ownerId }),
+        ]);
 
-    const totalPages = Math.ceil(totalCount / limit);
-    const currentPage = page;
+        const totalPages = Math.ceil(totalCount / limit);
+        const currentPage = page;
 
-    return { items, totalCount, totalPages, currentPage };
-};
+        return { items, totalCount, totalPages, currentPage };
+    },
 
-const getByLikedId = async (userId, query = {}) => {
-    const page = parseInt(query.page) || 1;
-    const limit = parseInt(query.limit) || 5;
-    const skip = (page - 1) * limit;
+    async getByLikedId(userId, query = {}) {
+        const page = parseInt(query.page) || 1;
+        const limit = parseInt(query.limit) || 5;
+        const skip = (page - 1) * limit;
 
-    const [items, totalCount] = await Promise.all([
-        Item.find({ likes: userId }).skip(skip).limit(limit),
-        Item.countDocuments({ likes: userId }),
-    ]);
+        const [items, totalCount] = await Promise.all([
+            Item.find({ likes: userId }).skip(skip).limit(limit),
+            Item.countDocuments({ likes: userId }),
+        ]);
 
-    const totalPages = Math.ceil(totalCount / limit);
-    const currentPage = page;
+        const totalPages = Math.ceil(totalCount / limit);
+        const currentPage = page;
 
-    return { items, totalCount, totalPages, currentPage };
-};
-
-export default {
-    getAll,
-    getAllPaginated,
-    create,
-    getById,
-    remove,
-    edit,
-    like,
-    topThree,
-    getByOwnerId,
-    getByLikedId,
+        return { items, totalCount, totalPages, currentPage };
+    },
 };

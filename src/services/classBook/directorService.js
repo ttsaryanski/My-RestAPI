@@ -1,7 +1,7 @@
 import Setting from "../../models/classBook/Setting.js";
 
-const create = (data) => Setting.create(data);
-
-export default {
-    create,
+export const directorService = {
+    async create(data) {
+        return await Setting.create(data);
+    },
 };

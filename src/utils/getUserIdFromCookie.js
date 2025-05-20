@@ -1,10 +1,7 @@
 import jwt from "../lib/jwt.js";
 
-export const getUserIdFromCookie = async (req) => {
-    const token =
-        req.cookies["auth_cooking"]?.accessToken ||
-        req.cookies["auth"]?.accessToken ||
-        req.cookies["auth_GamesPlay"]?.accessToken;
+export const getUserIdFromCookie = async (req, cookieName) => {
+    const token = req.cookies[cookieName]?.accessToken;
 
     if (!token) return null;
 

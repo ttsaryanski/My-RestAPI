@@ -1,6 +1,9 @@
 import jwt from "../lib/jwt.js";
-import InvaliToken from "../models/InvalidToken.js";
+
 import { getTokenFromRequest } from "../utils/getToken.js";
+import { cookiesNames } from "../config/constans.js";
+
+import InvaliToken from "../models/InvalidToken.js";
 
 const authMiddleware = async (req, res, next) => {
     const token = getTokenFromRequest(req);
@@ -23,9 +26,9 @@ const authMiddleware = async (req, res, next) => {
 
         next();
     } catch (error) {
-        res.clearCookie("auth")
-            .clearCookie("auth_cooking")
-            .clearCookie("auth_GamesPlay")
+        res.clearCookie(cookiesNames.cookingTogether)
+            .clearCookie(cookiesNames.classBook)
+            .clearCookie(cookiesNames.gamesPlay)
             .status(401)
             .send({ message: "Token verification failed" });
     }

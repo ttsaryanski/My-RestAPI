@@ -1,19 +1,23 @@
 import Comment from "../../models/gamesPlay/Comment.js";
 
-const getAll = (gameId) =>
-    Comment.find({ gameId: gameId })
-        .sort({ updatedAt: -1 })
-        .populate("_ownerId");
+export const commentService = {
+    async getAll(gameId) {
+        return await Comment.find({ gameId: gameId })
+            .sort({ updatedAt: -1 })
+            .populate("_ownerId");
+    },
 
-const create = async (data, userId) => {
-    const newComment = await Comment.create({ ...data, _ownerId: userId });
-    return newComment.populate("_ownerId");
-};
+    async create(data, userId) {
+        const newComment = await Comment.create({
+            ...data,
+            _ownerId: userId,
+        });
 
-const remove = (commentId) => Comment.findByIdAndDelete(commentId);
+        return await newComment.populate("_ownerId");
+    },
 
-export default {
-    getAll,
-    create,
-    remove,
+    async remove(commentId) {
+        const result = await Comment.findByIdAndDelete(commentId);
+        if (!result) throw new Error("Comment not found");
+    },
 };
