@@ -10,14 +10,14 @@ export const classService = {
             filter.title = { $regex: query.search, $options: "i" };
         }
 
-        let classQuery = Clss.find(filter);
+        let classesQuery = Clss.find(filter);
 
         if (query.limit) {
             const limit = Number(query.limit);
-            classQuery = classQuery.limit(limit);
+            classesQuery = classesQuery.limit(limit);
         }
 
-        const classes = await classQuery;
+        const classes = await classesQuery;
         return classes;
     },
 

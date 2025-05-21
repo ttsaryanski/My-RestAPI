@@ -4,15 +4,14 @@ import Student from "../../models/classBook/Student.js";
 
 export const studentService = {
     async getAll(query = {}) {
-        let students = Student.find();
+        let studentsQuery = Student.find();
 
-        if (query.search) {
-            students.find({ title: { $regex: query.search, $options: "i" } });
-        }
         if (query.limit) {
-            students.find().limit(query.limit).sort({ dateUpdate: -1 });
+            const limit = Number(query.limit);
+            studentsQuery = studentsQuery.limit(limit);
         }
 
+        const students = await studentsQuery;
         return students;
     },
 

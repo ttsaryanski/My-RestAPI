@@ -10,14 +10,14 @@ export const recipeService = {
             filter.title = { $regex: query.search, $options: "i" };
         }
 
-        let recipeQuery = Item.find(filter).sort({ dateUpdate: -1 });
+        let recipesQuery = Item.find(filter).sort({ dateUpdate: -1 });
 
         if (query.limit) {
             const limit = Number(query.limit);
-            recipeQuery = recipeQuery.limit(limit);
+            recipesQuery = recipesQuery.limit(limit);
         }
 
-        const recipes = await recipeQuery;
+        const recipes = await recipesQuery;
         return recipes;
     },
 
@@ -38,13 +38,7 @@ export const recipeService = {
     },
 
     async create(data, userId) {
-        const newRecipe = await Item.create({ ...data, _ownerId: userId });
-
-        if (!newRecipe) {
-            throw new CustomError("Missing or invalid data!", 400);
-        }
-
-        return newRecipe;
+        return await Item.create({ ...data, _ownerId: userId });
     },
 
     async getById(itemId) {
@@ -59,22 +53,19 @@ export const recipeService = {
 
     async remove(itemId) {
         const result = await Item.findByIdAndDelete(itemId);
-        if (!result) throw new Error("Recipe not found");
+
+        if (!result) {
+            throw new CustomError("Recipe not found");
+        }
     },
 
     async edit(itemId, data) {
         data.dateUpdate = Date.now();
 
-        const editedRecipe = await Item.findByIdAndUpdate(itemId, data, {
+        return await Item.findByIdAndUpdate(itemId, data, {
             runValidators: true,
             new: true,
         });
-
-        if (!editedRecipe) {
-            throw new CustomError("Missing or invalid data!", 400);
-        }
-
-        return editedRecipe;
     },
 
     async like(itemId, userId) {

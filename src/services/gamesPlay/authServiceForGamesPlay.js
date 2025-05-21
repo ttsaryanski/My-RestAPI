@@ -71,6 +71,7 @@ export const authService = {
 
     async remove(userId) {
         const result = await UserGames.findByIdAndDelete(userId);
+
         if (!result) {
             throw new CustomError("User not found", 404);
         }

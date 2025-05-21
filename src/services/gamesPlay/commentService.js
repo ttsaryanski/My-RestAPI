@@ -15,10 +15,6 @@ export const commentService = {
             _ownerId: userId,
         });
 
-        if (!newComment) {
-            throw new CustomError("Missing or invalid data!", 400);
-        }
-
         return await newComment.populate("_ownerId");
     },
 

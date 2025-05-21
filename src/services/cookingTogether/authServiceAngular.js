@@ -56,6 +56,10 @@ export const authService = {
 };
 
 async function createAccessToken(user) {
+    if (!process.env.JWT_SECRET) {
+        throw new CustomError("JWT secret is not configured", 500);
+    }
+
     const payload = {
         _id: user._id,
         username: user.username,
@@ -66,8 +70,10 @@ async function createAccessToken(user) {
         expiresIn: "1d",
     });
 
+    const { password, ...filteredUser } = user.toObject?.() || user;
+
     return {
-        user,
+        user: filteredUser,
         accessToken: token,
     };
 }
