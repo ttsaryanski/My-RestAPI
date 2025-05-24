@@ -3,7 +3,7 @@ import { Router } from "express";
 import { CustomError } from "../../utils/customError.js";
 import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
 
-export function adminController(authService, gameService) {
+export function adminController(authService, gameService, visitService) {
     const router = Router();
 
     router.get(
@@ -68,6 +68,21 @@ export function adminController(authService, gameService) {
             await authService.remove(userId);
 
             res.status(204).end();
+        })
+    );
+
+    router.get(
+        "/stats",
+        asyncErrorHandler(async (req, res) => {
+            const query = req.query;
+
+            const result = await visitService.getStats(query);
+            const payload = {
+                stats: result.filtered,
+                totalCount: result.totalCount,
+            };
+
+            res.status(200).json(payload);
         })
     );
 

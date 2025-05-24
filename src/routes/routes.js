@@ -13,6 +13,7 @@ import adminGamesPlayRoutes from "./gamesPlay/admin.routes.js";
 import authGamesPlayRoutes from "./gamesPlay/auth.routes.js";
 import gameGamesPlayRoutes from "./gamesPlay/game.routes.js";
 import commentGamesPlayRoutes from "./gamesPlay/comment.routes.js";
+import visitGamesPlayRoutes from "./gamesPlay/visit.routes.js";
 
 const routes = Router();
 
@@ -29,5 +30,6 @@ routes.use("/games_play/admin", adminGamesPlayRoutes);
 routes.use("/games_play/authGame", authGamesPlayRoutes);
 routes.use("/games_play/games", gameGamesPlayRoutes);
 routes.use("/games_play/comments", commentGamesPlayRoutes);
+routes.use("/games_play/visit", visitGamesPlayRoutes);
 
 export default routes;
