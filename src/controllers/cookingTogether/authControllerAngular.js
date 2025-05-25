@@ -5,8 +5,10 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
-import { userRegisterDto } from "../../validators/cookingTogether/userRegisterDto.js";
-import { userLoginDto } from "../../validators/cookingTogether/userLoginDto.js";
+import {
+    userRegisterDto,
+    userLoginDto,
+} from "../../validators/cookingTogether/userDto.js";
 
 import s3 from "../../utils/AWS S3 client.js";
 import upload from "../../utils/multerStorage.js";

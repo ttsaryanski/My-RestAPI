@@ -17,8 +17,8 @@ import visitGamesPlayRoutes from "./gamesPlay/visit.routes.js";
 
 const routes = Router();
 
-routes.use("/coocking/authAngular", authCookingRoutes);
-routes.use("/coocking/recipes", recipeCookingRoutes);
+routes.use("/cooking/authAngular", authCookingRoutes);
+routes.use("/cooking/recipes", recipeCookingRoutes);
 
 routes.use("/class/auth", authClassBookRoutes);
 routes.use("/class/director", directorClassBookRoutes);

@@ -5,10 +5,17 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
+import {
+    userRegisterDto,
+    userLoginDto,
+    userEditDto,
+} from "../../validators/classBook/userDto.js";
+
 import s3 from "../../utils/AWS S3 client.js";
 import upload from "../../utils/multerStorage.js";
 import { getUserIdFromCookie } from "../../utils/getUserIdFromCookie.js";
 import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
+import { CustomError } from "../../utils/customError.js";
 import { cookiesNames } from "../../config/constans.js";
 
 export function authController(authService) {
@@ -18,6 +25,11 @@ export function authController(authService) {
         "/register",
         upload.single("profilePicture"),
         asyncErrorHandler(async (req, res) => {
+            const { error } = userRegisterDto.validate(req.body);
+            if (error) {
+                throw new CustomError(error.details[0].message, 400);
+            }
+
             const {
                 firstName,
                 lastName,
@@ -73,6 +85,11 @@ export function authController(authService) {
     router.post(
         "/login",
         asyncErrorHandler(async (req, res) => {
+            const { error } = userLoginDto.validate(req.body);
+            if (error) {
+                throw new CustomError(error.details[0].message, 400);
+            }
+
             const { email, password } = req.body;
 
             const accessToken = await authService.login(email, password);
@@ -123,6 +140,11 @@ export function authController(authService) {
         authMiddleware,
         upload.single("profilePicture"),
         asyncErrorHandler(async (req, res) => {
+            const { error } = userEditDto.validate(req.body);
+            if (error) {
+                throw new CustomError(error.details[0].message, 400);
+            }
+
             const userId = await getUserIdFromCookie(
                 req,
                 cookiesNames.classBook

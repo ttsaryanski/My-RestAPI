@@ -2,7 +2,10 @@ import { Router } from "express";
 
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
+import { classDto } from "../../validators/classBook/classDto.js";
+
 import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
+import { CustomError } from "../../utils/customError.js";
 
 export function classController(classService) {
     const router = Router();
@@ -22,6 +25,11 @@ export function classController(classService) {
         "/",
         authMiddleware,
         asyncErrorHandler(async (req, res) => {
+            const { error } = classDto.validate(req.body);
+            if (error) {
+                throw new CustomError(error.details[0].message, 400);
+            }
+
             const userId = req.user._id;
             const data = req.body;
 
@@ -57,6 +65,11 @@ export function classController(classService) {
         "/:clssId",
         authMiddleware,
         asyncErrorHandler(async (req, res) => {
+            const { error } = classDto.validate(req.body);
+            if (error) {
+                throw new CustomError(error.details[0].message, 400);
+            }
+
             const clssId = req.params.clssId;
             const data = req.body;
 

@@ -2,7 +2,13 @@ import { Router } from "express";
 
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
+import {
+    createStudentDto,
+    editStudentDto,
+} from "../../validators/classBook/studentDto.js";
+
 import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
+import { CustomError } from "../../utils/customError.js";
 
 export function studentController(studentService) {
     const router = Router();
@@ -22,6 +28,11 @@ export function studentController(studentService) {
         "/",
         authMiddleware,
         asyncErrorHandler(async (req, res) => {
+            const { error } = createStudentDto.validate(req.body);
+            if (error) {
+                throw new CustomError(error.details[0].message, 400);
+            }
+
             const userId = req.user._id;
             const data = req.body;
 
@@ -74,6 +85,11 @@ export function studentController(studentService) {
         "/:studentId",
         authMiddleware,
         asyncErrorHandler(async (req, res) => {
+            const { error } = editStudentDto.validate(req.body);
+            if (error) {
+                throw new CustomError(error.details[0].message, 400);
+            }
+
             const studentId = req.params.studentId;
             const data = req.body;
 

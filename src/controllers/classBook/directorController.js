@@ -1,6 +1,9 @@
 import { Router } from "express";
 
+import { secretsDto } from "../../validators/classBook/secretDto.js";
+
 import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
+import { CustomError } from "../../utils/customError.js";
 
 export function directorController(directorService) {
     const router = Router();
@@ -8,6 +11,11 @@ export function directorController(directorService) {
     router.post(
         "/",
         asyncErrorHandler(async (req, res) => {
+            const { error } = secretsDto.validate(req.body);
+            if (error) {
+                throw new CustomError(error.details[0].message, 400);
+            }
+
             const { teacherKey, directorKey } = req.body;
 
             const keys = await directorService.create({
