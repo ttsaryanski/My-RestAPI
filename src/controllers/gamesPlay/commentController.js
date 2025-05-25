@@ -3,7 +3,10 @@ import { Router } from "express";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { isAdmin } from "../../middlewares/isAdminMiddleware.js";
 
+import { commentDto } from "../../validators/gamesPlay/commentDto.js";
+
 import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
+import { CustomError } from "../../utils/customError.js";
 
 export function commentController(commentService) {
     const router = Router();
@@ -23,6 +26,11 @@ export function commentController(commentService) {
         "/",
         authMiddleware,
         asyncErrorHandler(async (req, res) => {
+            const { error } = commentDto.validate(req.body);
+            if (error) {
+                throw new CustomError(error.details[0].message, 400);
+            }
+
             const userId = req.user._id;
             const data = req.body;
 

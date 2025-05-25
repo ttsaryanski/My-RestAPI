@@ -2,8 +2,11 @@ import { Router } from "express";
 
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
+import { userDto } from "../../validators/gamesPlay/userDto.js";
+
 import { getUserIdFromCookie } from "../../utils/getUserIdFromCookie.js";
 import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
+import { CustomError } from "../../utils/customError.js";
 import { cookiesNames } from "../../config/constans.js";
 
 export function authController(authService) {
@@ -12,6 +15,11 @@ export function authController(authService) {
     router.post(
         "/register",
         asyncErrorHandler(async (req, res) => {
+            const { error } = userDto.validate(req.body);
+            if (error) {
+                throw new CustomError(error.details[0].message, 400);
+            }
+
             const { email, password } = req.body;
 
             const accessToken = await authService.register(email, password);
@@ -22,13 +30,18 @@ export function authController(authService) {
                     sameSite: "None",
                     secure: true,
                 })
-                .send(accessToken.user);
+                .json(accessToken.user);
         })
     );
 
     router.post(
         "/login",
         asyncErrorHandler(async (req, res) => {
+            const { error } = userDto.validate(req.body);
+            if (error) {
+                throw new CustomError(error.details[0].message, 400);
+            }
+
             const { email, password } = req.body;
 
             const accessToken = await authService.login(email, password);
@@ -39,7 +52,7 @@ export function authController(authService) {
                     sameSite: "None",
                     secure: true,
                 })
-                .send(accessToken.user);
+                .json(accessToken.user);
         })
     );
 

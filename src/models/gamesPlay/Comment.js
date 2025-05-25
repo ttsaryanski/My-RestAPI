@@ -3,12 +3,13 @@ import { Schema, Types, model } from "mongoose";
 const commentSchema = new Schema({
     gameId: {
         type: Types.ObjectId,
+        required: [true, "GameId is required!"],
         ref: "Game",
     },
     content: {
         type: String,
-        required: [true, "Content is required!"],
-        minLength: [10, "Content should be at least 10 characters long!"],
+        required: [true, "Comment is required!"],
+        minLength: [10, "Comment should be at least 10 characters long!"],
         trim: true,
     },
     _ownerId: {

@@ -4,7 +4,10 @@ import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { isOwner } from "../../middlewares/ownerMiddleware.js";
 import Game from "../../models/gamesPlay/Game.js";
 
+import { gameDto } from "../../validators/gamesPlay/gameDto.js";
+
 import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
+import { CustomError } from "../../utils/customError.js";
 
 export function gameController(gameService) {
     const router = Router();
@@ -35,6 +38,11 @@ export function gameController(gameService) {
         "/",
         authMiddleware,
         asyncErrorHandler(async (req, res) => {
+            const { error } = gameDto.validate(req.body);
+            if (error) {
+                throw new CustomError(error.details[0].message, 400);
+            }
+
             const userId = req.user._id;
             const data = req.body;
 
@@ -69,6 +77,11 @@ export function gameController(gameService) {
         authMiddleware,
         isOwner(Game, "gameId"),
         asyncErrorHandler(async (req, res) => {
+            const { error } = gameDto.validate(req.body);
+            if (error) {
+                throw new CustomError(error.details[0].message, 400);
+            }
+
             const gameId = req.params.gameId;
             const data = req.body;
 
