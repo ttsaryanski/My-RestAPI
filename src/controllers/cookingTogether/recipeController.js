@@ -4,6 +4,8 @@ import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { isOwner } from "../../middlewares/ownerMiddleware.js";
 import Item from "../../models/cookingTogether/Item.js";
 
+import { recipeDto } from "../../validators/cookingTogether/recipeDto.js";
+
 import { getUserIdFromCookie } from "../../utils/getUserIdFromCookie.js";
 import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
 import { CustomError } from "../../utils/customError.js";
@@ -27,6 +29,11 @@ export function recipeController(recipeService) {
         "/",
         authMiddleware,
         asyncErrorHandler(async (req, res) => {
+            const { error } = recipeDto.validate(req.body);
+            if (error) {
+                throw new CustomError(error.details[0].message, 400);
+            }
+
             const userId = req.user._id;
             const data = req.body;
 
@@ -141,6 +148,11 @@ export function recipeController(recipeService) {
         authMiddleware,
         isOwner(Item, "itemId"),
         asyncErrorHandler(async (req, res) => {
+            const { error } = recipeDto.validate(req.body);
+            if (error) {
+                throw new CustomError(error.details[0].message, 400);
+            }
+
             const itemId = req.params.itemId;
             const data = req.body;
 
