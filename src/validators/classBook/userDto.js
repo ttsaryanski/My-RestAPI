@@ -27,7 +27,10 @@ export const userRegisterDto = Joi.object({
         "string.empty": "Password is required",
         "any.required": "Password is required",
     }),
-    secretKey: Joi.string().optional(),
+    secretKey: Joi.string().optional().messages({
+        "string.base": "Secret key must be a string",
+        "string.empty": "Secret key is required for teachers",
+    }),
     identifier: Joi.string()
         .pattern(/^\d{10}$/)
         .optional()
@@ -38,7 +41,13 @@ export const userRegisterDto = Joi.object({
         fileName: Joi.string().required(),
         fileUrl: Joi.string().uri().required(),
     }).optional(),
-}).xor("secretKey", "identifier");
+})
+    .xor("secretKey", "identifier")
+    .messages({
+        "object.missing":
+            "You must provide either a secret key (for teachers) or an identifier (for students)",
+        "object.xor": "Only one of secret key or identifier must be provided",
+    });
 
 export const userLoginDto = Joi.object({
     email: Joi.string()
