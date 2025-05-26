@@ -26,9 +26,17 @@ const authMiddleware = async (req, res, next) => {
 
         next();
     } catch (error) {
-        res.clearCookie(cookiesNames.cookingTogether)
-            .clearCookie(cookiesNames.classBook)
-            .clearCookie(cookiesNames.gamesPlay);
+        if (req.cookies[cookiesNames.cookingTogether]) {
+            res.clearCookie(cookiesNames.cookingTogether);
+        }
+
+        if (req.cookies[cookiesNames.classBook]) {
+            res.clearCookie(cookiesNames.classBook);
+        }
+
+        if (req.cookies[cookiesNames.gamesPlay]) {
+            res.clearCookie(cookiesNames.gamesPlay);
+        }
 
         next(error);
     }

@@ -7,7 +7,7 @@ import { realIp } from "../middlewares/realIp.js";
 import { requestLogger } from "../middlewares/requestLogger.js";
 import morgan from "morgan";
 
-const isDev = process.env.NODE_ENV.trim() === "development";
+const isDev = process.env.NODE_ENV === "development";
 
 const allowedOrigins = [
     "https://classbook-react-project.web.app",
@@ -42,8 +42,9 @@ export default function expressInit(app) {
         csurf({
             cookie: {
                 httpOnly: true,
-                secure: process.env.NODE_ENV.trim() === "production",
-                sameSite: "Strict",
+                secure: process.env.NODE_ENV === "production",
+                sameSite:
+                    process.env.NODE_ENV === "production" ? "None" : "Lax",
             },
         })
     );
