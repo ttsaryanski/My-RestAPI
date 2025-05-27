@@ -24,13 +24,13 @@ export function authController(authService) {
 
             const accessToken = await authService.register(email, password);
 
-            res.status(200)
+            res.status(204)
                 .cookie(cookiesNames.gamesPlay, accessToken, {
                     httpOnly: true,
                     sameSite: "None",
                     secure: true,
                 })
-                .json(accessToken.user);
+                .end();
         })
     );
 
@@ -46,13 +46,13 @@ export function authController(authService) {
 
             const accessToken = await authService.login(email, password);
 
-            res.status(200)
+            res.status(204)
                 .cookie(cookiesNames.gamesPlay, accessToken, {
                     httpOnly: true,
                     sameSite: "None",
                     secure: true,
                 })
-                .json(accessToken.user);
+                .end();
         })
     );
 

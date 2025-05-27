@@ -108,10 +108,7 @@ async function createAccessToken(user) {
         expiresIn: "1d",
     });
 
-    const { password, ...filteredUser } = user.toObject?.() || user;
-
     return {
-        user: filteredUser,
         accessToken: token,
     };
 }

@@ -60,13 +60,13 @@ export function authController(authService) {
                 profilePicture
             );
 
-            res.status(200)
+            res.status(204)
                 .cookie(cookiesNames.cookingTogether, accessToken, {
                     httpOnly: true,
                     sameSite: "None",
                     secure: true,
                 })
-                .send(accessToken.user);
+                .end();
         })
     );
 
@@ -82,13 +82,13 @@ export function authController(authService) {
 
             const accessToken = await authService.login(email, password);
 
-            res.status(200)
+            res.status(204)
                 .cookie(cookiesNames.cookingTogether, accessToken, {
                     httpOnly: true,
                     sameSite: "None",
                     secure: true,
                 })
-                .send(accessToken.user);
+                .end();
         })
     );
 
