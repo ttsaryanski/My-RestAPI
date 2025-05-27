@@ -5,8 +5,8 @@ import { isAdmin } from "../../middlewares/isAdminMiddleware.js";
 
 import { commentDto } from "../../validators/gamesPlay/commentDto.js";
 
-import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
-import { CustomError } from "../../utils/customError.js";
+import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
+import { CustomError } from "../../utils/errorUtils/customError.js";
 
 export function commentController(commentService) {
     const router = Router();

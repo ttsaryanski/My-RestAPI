@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-import { CustomError } from "../../utils/customError.js";
-import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
+import { CustomError } from "../../utils/errorUtils/customError.js";
+import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
 
 export function adminController(authService, gameService, visitService) {
     const router = Router();

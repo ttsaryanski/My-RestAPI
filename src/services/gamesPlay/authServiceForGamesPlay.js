@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 
 import jwt from "../../lib/jwt.js";
 
-import { CustomError } from "../../utils/customError.js";
+import { CustomError } from "../../utils/errorUtils/customError.js";
 
 import UserGames from "../../models/gamesPlay/UserForGamesPlay.js";
 import InvalidToken from "../../models/InvalidToken.js";

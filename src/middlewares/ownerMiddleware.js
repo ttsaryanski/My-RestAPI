@@ -1,4 +1,4 @@
-import { CustomError } from "../utils/customError.js";
+import { CustomError } from "../utils/errorUtils/customError.js";
 
 const isOwner = (model, idParam = "id") => {
     return async (req, res, next) => {

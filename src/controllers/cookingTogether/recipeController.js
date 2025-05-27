@@ -6,9 +6,9 @@ import Item from "../../models/cookingTogether/Item.js";
 
 import { recipeDto } from "../../validators/cookingTogether/recipeDto.js";
 
-import { getUserIdFromCookie } from "../../utils/getUserIdFromCookie.js";
-import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
-import { CustomError } from "../../utils/customError.js";
+import { getUserIdFromCookie } from "../../utils/getUtils/getUserIdFromCookie.js";
+import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
+import { CustomError } from "../../utils/errorUtils/customError.js";
 import { cookiesNames } from "../../config/constans.js";
 
 export function recipeController(recipeService) {

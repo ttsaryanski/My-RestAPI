@@ -1,4 +1,4 @@
-import { CustomError } from "../utils/customError.js";
+import { CustomError } from "../utils/errorUtils/customError.js";
 
 const isAdmin = (req, res, next) => {
     if (req.user?.role !== "admin") {

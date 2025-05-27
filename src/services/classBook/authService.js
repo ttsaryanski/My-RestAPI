@@ -4,7 +4,7 @@ import jwt from "../../lib/jwt.js";
 
 import { teacherService } from "./teacherService.js";
 
-import { CustomError } from "../../utils/customError.js";
+import { CustomError } from "../../utils/errorUtils/customError.js";
 
 import User from "../../models/classBook/User.js";
 import Setting from "../../models/classBook/Setting.js";

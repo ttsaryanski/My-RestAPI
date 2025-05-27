@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 
 import jwt from "../../lib/jwt.js";
 
-import { CustomError } from "../../utils/customError.js";
+import { CustomError } from "../../utils/errorUtils/customError.js";
 
 import UserAngular from "../../models/cookingTogether/UserAngular.js";
 import InvalidToken from "../../models/InvalidToken.js";

@@ -1,4 +1,4 @@
-import jwt from "../lib/jwt.js";
+import jwt from "../../lib/jwt.js";
 
 export const getUserIdFromCookie = async (req, cookieName) => {
     const token = req.cookies[cookieName]?.accessToken;

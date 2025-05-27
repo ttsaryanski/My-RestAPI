@@ -1,4 +1,4 @@
-import { createErrorMsg } from "../utils/errorUtil.js";
+import { createErrorMsg } from "../utils/errorUtils/errorUtil.js";
 
 export function errorHandler(err, req, res, next) {
     console.error("ErrorHandler middleware error", err);

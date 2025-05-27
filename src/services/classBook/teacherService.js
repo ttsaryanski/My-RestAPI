@@ -1,4 +1,4 @@
-import { CustomError } from "../../utils/customError.js";
+import { CustomError } from "../../utils/errorUtils/customError.js";
 
 import Teacher from "../../models/classBook/Teacher.js";
 

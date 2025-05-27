@@ -1,4 +1,4 @@
-import { CustomError } from "../../utils/customError.js";
+import { CustomError } from "../../utils/errorUtils/customError.js";
 
 import Item from "../../models/cookingTogether/Item.js";
 

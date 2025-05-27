@@ -7,8 +7,8 @@ import {
     editStudentDto,
 } from "../../validators/classBook/studentDto.js";
 
-import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
-import { CustomError } from "../../utils/customError.js";
+import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
+import { CustomError } from "../../utils/errorUtils/customError.js";
 
 export function studentController(studentService) {
     const router = Router();

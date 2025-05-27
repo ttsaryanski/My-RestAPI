@@ -1,7 +1,7 @@
 import jwt from "../lib/jwt.js";
 
-import { getTokenFromRequest } from "../utils/getToken.js";
-import { CustomError } from "../utils/customError.js";
+import { getTokenFromRequest } from "../utils/getUtils/getToken.js";
+import { CustomError } from "../utils/errorUtils/customError.js";
 import { cookiesNames } from "../config/constans.js";
 
 import InvaliToken from "../models/InvalidToken.js";

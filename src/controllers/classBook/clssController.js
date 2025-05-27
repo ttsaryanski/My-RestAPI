@@ -4,8 +4,8 @@ import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
 import { classDto } from "../../validators/classBook/classDto.js";
 
-import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
-import { CustomError } from "../../utils/customError.js";
+import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
+import { CustomError } from "../../utils/errorUtils/customError.js";
 
 export function classController(classService) {
     const router = Router();

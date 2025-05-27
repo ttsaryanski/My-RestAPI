@@ -1,4 +1,4 @@
-import { cookiesNames } from "../config/constans.js";
+import { cookiesNames } from "../../config/constans.js";
 
 export const getTokenFromRequest = (req) => {
     const path = req.originalUrl;

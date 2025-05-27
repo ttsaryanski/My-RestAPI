@@ -2,8 +2,8 @@ import { Router } from "express";
 
 import { secretsDto } from "../../validators/classBook/secretDto.js";
 
-import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
-import { CustomError } from "../../utils/customError.js";
+import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
+import { CustomError } from "../../utils/errorUtils/customError.js";
 
 export function directorController(directorService) {
     const router = Router();

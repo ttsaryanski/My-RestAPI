@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
+import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
 
 export function visitController(visitService) {
     const router = Router();
