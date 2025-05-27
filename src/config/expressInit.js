@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import csurf from "csurf";
+import helmet from "helmet";
 
 import { realIp } from "../middlewares/realIp.js";
 import { requestLogger } from "../middlewares/requestLogger.js";
@@ -36,6 +37,20 @@ export default function expressInit(app) {
     app.use(express.urlencoded({ extended: false }));
     app.use(cookieParser());
     app.use(appLimiter);
+    app.use(
+        helmet({
+            contentSecurityPolicy: false,
+            crossOriginEmbedderPolicy: false,
+            referrerPolicy: { policy: "strict-origin-when-cross-origin" },
+            permissionsPolicy: {
+                features: {
+                    geolocation: ["'none'"],
+                    camera: ["'none'"],
+                    microphone: ["'none'"],
+                },
+            },
+        })
+    );
     app.use(
         cors({
             origin: allowedOrigins,
