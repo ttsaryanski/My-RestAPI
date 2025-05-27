@@ -10,11 +10,12 @@ import {
     userLoginDto,
 } from "../../validators/cookingTogether/userDto.js";
 
-import s3 from "../../utils/AWS S3 client.js";
-import upload from "../../utils/multerStorage.js";
-import { getUserIdFromCookie } from "../../utils/getUserIdFromCookie.js";
-import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
-import { CustomError } from "../../utils/customError.js";
+import s3 from "../../utils/awsUtils/AWS S3 client.js";
+import upload from "../../utils/awsUtils/multerStorage.js";
+import { getUserIdFromCookie } from "../../utils/getUtils/getUserIdFromCookie.js";
+import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
+import { CustomError } from "../../utils/errorUtils/customError.js";
+import { loginLimiter } from "../../utils/rateLimiter.js";
 import { cookiesNames } from "../../config/constans.js";
 
 export function authController(authService) {
@@ -72,6 +73,7 @@ export function authController(authService) {
 
     router.post(
         "/login",
+        loginLimiter,
         asyncErrorHandler(async (req, res) => {
             const { error } = userLoginDto.validate(req.body);
             if (error) {

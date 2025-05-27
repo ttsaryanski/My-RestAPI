@@ -4,9 +4,10 @@ import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
 import { userDto } from "../../validators/gamesPlay/userDto.js";
 
-import { getUserIdFromCookie } from "../../utils/getUserIdFromCookie.js";
-import { asyncErrorHandler } from "../../utils/asyncErrorHandler.js";
-import { CustomError } from "../../utils/customError.js";
+import { getUserIdFromCookie } from "../../utils/getUtils/getUserIdFromCookie.js";
+import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
+import { CustomError } from "../../utils/errorUtils/customError.js";
+import { loginLimiter } from "../../utils/rateLimiter.js";
 import { cookiesNames } from "../../config/constans.js";
 
 export function authController(authService) {
@@ -36,6 +37,7 @@ export function authController(authService) {
 
     router.post(
         "/login",
+        loginLimiter,
         asyncErrorHandler(async (req, res) => {
             const { error } = userDto.validate(req.body);
             if (error) {

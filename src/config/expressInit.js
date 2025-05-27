@@ -7,6 +7,8 @@ import { realIp } from "../middlewares/realIp.js";
 import { requestLogger } from "../middlewares/requestLogger.js";
 import morgan from "morgan";
 
+import { appLimiter } from "../utils/rateLimiter.js";
+
 const isDev = process.env.NODE_ENV === "development";
 
 const allowedOrigins = [
@@ -24,7 +26,8 @@ if (isDev) {
 }
 
 export default function expressInit(app) {
-    app.set("trust proxy", true);
+    //app.set("trust proxy", true);
+    app.set("trust proxy", 1);
 
     // app.use(requestLogger);
     // app.use(morgan("dev"));
@@ -32,6 +35,7 @@ export default function expressInit(app) {
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
     app.use(cookieParser());
+    app.use(appLimiter);
     app.use(
         cors({
             origin: allowedOrigins,
