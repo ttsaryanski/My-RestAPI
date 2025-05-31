@@ -67,9 +67,13 @@ export const gameService = {
     },
 
     async edit(gameId, data) {
-        return await Game.findByIdAndUpdate(gameId, data, {
+        const updatedGame = await Game.findByIdAndUpdate(gameId, data, {
             runValidators: true,
             new: true,
         });
+        if (!updatedGame) {
+            throw new CustomError("Game not found", 404);
+        }
+        return updatedGame;
     },
 };
