@@ -4,7 +4,7 @@ import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { isAdmin } from "../../middlewares/isAdminMiddleware.js";
 
 import { adminController } from "../../controllers/gamesPlay/adminController.js";
-import { authService } from "../../services/gamesPlay/authServiceForGamesPlay.js";
+import { authService } from "../../services/gamesPlay/authService.js";
 import { gameService } from "../../services/gamesPlay/gameService.js";
 import { visitService } from "../../services/gamesPlay/visitService.js";
 

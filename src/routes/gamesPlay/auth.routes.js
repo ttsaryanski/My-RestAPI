@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-import { authController } from "../../controllers/gamesPlay/authControllerForGamesPlay.js";
-import { authService } from "../../services/gamesPlay/authServiceForGamesPlay.js";
+import { authController } from "../../controllers/gamesPlay/authController.js";
+import { authService } from "../../services/gamesPlay/authService.js";
 
 const router = Router();
 

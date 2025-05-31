@@ -4,7 +4,7 @@ import jwt from "../../lib/jwt.js";
 
 import { CustomError } from "../../utils/errorUtils/customError.js";
 
-import UserGames from "../../models/gamesPlay/UserForGamesPlay.js";
+import UserGames from "../../models/gamesPlay/User.js";
 import InvalidToken from "../../models/InvalidToken.js";
 
 export const authService = {
@@ -66,7 +66,13 @@ export const authService = {
     },
 
     async getUserById(id) {
-        return await UserGames.findById(id);
+        const user = await UserGames.findById(id);
+
+        if (!user) {
+            throw new CustomError("There is no user with this id!", 404);
+        }
+
+        return user;
     },
 
     async remove(userId) {

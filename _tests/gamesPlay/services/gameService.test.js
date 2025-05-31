@@ -1,5 +1,3 @@
-import { jest } from "@jest/globals";
-
 import { gameService } from "../../../src/services/gamesPlay/gameService.js";
 import Game from "../../../src/models/gamesPlay/Game.js";
 import { CustomError } from "../../../src/utils/errorUtils/customError.js";
