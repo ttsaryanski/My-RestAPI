@@ -27,7 +27,6 @@ if (isDev) {
 }
 
 export default function expressInit(app) {
-    //app.set("trust proxy", true);
     app.set("trust proxy", 1);
 
     // app.use(requestLogger);
@@ -70,12 +69,5 @@ export default function expressInit(app) {
 
     app.get("/api/csrf-token", (req, res) => {
         res.json({ csrfToken: req.csrfToken() });
-    });
-
-    app.use((err, req, res, next) => {
-        if (err.code === "EBADCSRFTOKEN") {
-            return res.status(403).json({ error: "Invalid CSRF token" });
-        }
-        next(err);
     });
 }

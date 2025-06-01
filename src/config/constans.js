@@ -7,3 +7,5 @@ export const cookiesNames = {
     classBook: "auth",
     gamesPlay: "auth_GamesPlay",
 };
+
+export const validId = "64b2f9d4f8a1e4e1c5a9c123";

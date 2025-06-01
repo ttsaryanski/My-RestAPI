@@ -5,6 +5,7 @@ import { isOwner } from "../../middlewares/ownerMiddleware.js";
 import Game from "../../models/gamesPlay/Game.js";
 
 import { gameDto } from "../../validators/gamesPlay/gameDto.js";
+import { mongooseIdDto } from "../../validators/mongooseIdDto.js";
 
 import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
 import { CustomError } from "../../utils/errorUtils/customError.js";
@@ -38,13 +39,13 @@ export function gameController(gameService) {
         "/",
         authMiddleware,
         asyncErrorHandler(async (req, res) => {
-            const { error } = gameDto.validate(req.body);
-            if (error) {
-                throw new CustomError(error.details[0].message, 400);
-            }
-
             const userId = req.user._id;
             const data = req.body;
+
+            const { error: dataError } = gameDto.validate(data);
+            if (dataError) {
+                throw new CustomError(dataError.details[0].message, 400);
+            }
 
             const game = await gameService.create(data, userId);
 
@@ -66,6 +67,11 @@ export function gameController(gameService) {
         asyncErrorHandler(async (req, res) => {
             const gameId = req.params.gameId;
 
+            const { error: idError } = mongooseIdDto.validate({ id: gameId });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
+
             const game = await gameService.getById(gameId);
 
             res.status(200).json(game);
@@ -77,13 +83,18 @@ export function gameController(gameService) {
         authMiddleware,
         isOwner(Game, "gameId"),
         asyncErrorHandler(async (req, res) => {
-            const { error } = gameDto.validate(req.body);
-            if (error) {
-                throw new CustomError(error.details[0].message, 400);
-            }
-
             const gameId = req.params.gameId;
             const data = req.body;
+
+            const { error: idError } = mongooseIdDto.validate({ id: gameId });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
+
+            const { error: dataError } = gameDto.validate(req.body);
+            if (dataError) {
+                throw new CustomError(dataError.details[0].message, 400);
+            }
 
             const game = await gameService.edit(gameId, data);
 
@@ -97,6 +108,11 @@ export function gameController(gameService) {
         isOwner(Game, "gameId"),
         asyncErrorHandler(async (req, res) => {
             const gameId = req.params.gameId;
+
+            const { error: idError } = mongooseIdDto.validate({ id: gameId });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
 
             await gameService.remove(gameId);
 
