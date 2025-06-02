@@ -3,6 +3,8 @@ import { Router } from "express";
 import { CustomError } from "../../utils/errorUtils/customError.js";
 import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
 
+import { mongooseIdDto } from "../../validators/mongooseIdDto.js";
+
 export function adminController(authService, gameService, visitService) {
     const router = Router();
 
@@ -21,6 +23,11 @@ export function adminController(authService, gameService, visitService) {
         "/games/:gameId",
         asyncErrorHandler(async (req, res) => {
             const gameId = req.params.gameId;
+
+            const { error: idError } = mongooseIdDto.validate({ id: gameId });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
 
             await gameService.remove(gameId);
 
@@ -44,6 +51,11 @@ export function adminController(authService, gameService, visitService) {
         asyncErrorHandler(async (req, res) => {
             const userId = req.params.userId;
 
+            const { error: idError } = mongooseIdDto.validate({ id: userId });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
+
             const user = await authService.makeAdmin(userId);
 
             res.status(200).json(user);
@@ -54,6 +66,11 @@ export function adminController(authService, gameService, visitService) {
         "/users/:userId",
         asyncErrorHandler(async (req, res) => {
             const userId = req.params.userId;
+
+            const { error: idError } = mongooseIdDto.validate({ id: userId });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
 
             const user = await authService.getUserById(userId);
 

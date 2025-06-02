@@ -84,11 +84,17 @@ export const authService = {
     },
 
     async makeAdmin(userId) {
-        return await UserGames.findByIdAndUpdate(
+        const user = await UserGames.findByIdAndUpdate(
             userId,
             { role: "admin" },
             { new: true }
         );
+
+        if (!user) {
+            throw new CustomError("User not found", 404);
+        }
+
+        return user;
     },
 
     async updateRole() {
