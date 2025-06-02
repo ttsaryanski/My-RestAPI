@@ -1,4 +1,5 @@
 import express from "express";
+import cookieParser from "cookie-parser";
 import request from "supertest";
 
 import { authController } from "../../../src/controllers/gamesPlay/authController.js";
@@ -16,6 +17,10 @@ jest.mock("../../../src/middlewares/authMiddleware.js", () => ({
     }),
 }));
 
+jest.mock("../../../src/models/InvalidToken", () => ({
+    create: jest.fn(),
+}));
+
 const mockAuthService = {
     register: jest.fn(),
     login: jest.fn(),
@@ -26,6 +31,7 @@ const mockAuthService = {
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 app.use("/authGame", authController(mockAuthService));
 app.use(errorHandler);
 
@@ -123,11 +129,22 @@ describe("Auth Controller", () => {
         expect(mockAuthService.updateRole).toHaveBeenCalled();
     });
 
-    // test("POST /logout - should clear cookie", async () => {
-    //     const fakeToken = "test-token";
+    test("POST /logout - should clear cookie", async () => {
+        const fakeToken = "test-token";
+        const cookieValue = encodeURIComponent(
+            `j:${JSON.stringify({ accessToken: fakeToken })}`
+        );
 
-    //     await mockAuthService.logout(fakeToken);
+        mockAuthService.logout.mockImplementation(async (token) => {
+            await InvalidToken.create({ token });
+        });
 
-    //     expect(InvalidToken.create).toHaveBeenCalledWith({ token: fakeToken });
-    // });
+        const res = await request(app)
+            .post("/authGame/logout")
+            .set("Cookie", [`auth_GamesPlay=${cookieValue}`]);
+
+        expect(res.statusCode).toBe(204);
+        expect(mockAuthService.logout).toHaveBeenCalledWith(fakeToken);
+        expect(InvalidToken.create).toHaveBeenCalledWith({ token: fakeToken });
+    });
 });
