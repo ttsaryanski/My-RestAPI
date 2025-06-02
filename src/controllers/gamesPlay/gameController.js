@@ -42,6 +42,11 @@ export function gameController(gameService) {
             const userId = req.user._id;
             const data = req.body;
 
+            const { error: idError } = mongooseIdDto.validate({ id: userId });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
+
             const { error: dataError } = gameDto.validate(data);
             if (dataError) {
                 throw new CustomError(dataError.details[0].message, 400);

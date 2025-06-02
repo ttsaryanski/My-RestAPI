@@ -11,7 +11,7 @@ import { validId } from "../../../src/config/constans.js";
 
 jest.mock("../../../src/middlewares/authMiddleware.js", () => ({
     authMiddleware: jest.fn((req, res, next) => {
-        req.user = { _id: "user123" };
+        req.user = { _id: "64b2f9d4f8a1e4e1c5a9c123" };
         next();
     }),
 }));
@@ -69,14 +69,14 @@ describe("Game Controller", () => {
             imageUrl: "https://valid-image.com",
             summary: "descdescdesc",
         };
-        const createdGame = { ...newGame, _id: "abc123" };
+        const createdGame = { ...newGame, _id: validId };
         mockGameService.create.mockResolvedValue(createdGame);
 
         const res = await request(app).post("/games").send(newGame);
 
         expect(res.statusCode).toBe(201);
         expect(res.body).toEqual(createdGame);
-        expect(mockGameService.create).toHaveBeenCalledWith(newGame, "user123");
+        expect(mockGameService.create).toHaveBeenCalledWith(newGame, validId);
     });
 
     test("POST /games - should return 400 for invalid data", async () => {

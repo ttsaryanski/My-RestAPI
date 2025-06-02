@@ -4,7 +4,6 @@ import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
 import { userDto } from "../../validators/gamesPlay/userDto.js";
 
-import { getUserIdFromCookie } from "../../utils/getUtils/getUserIdFromCookie.js";
 import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
 import { CustomError } from "../../utils/errorUtils/customError.js";
 import { loginLimiter } from "../../utils/rateLimiter.js";
@@ -79,10 +78,7 @@ export function authController(authService) {
         "/profile",
         authMiddleware,
         asyncErrorHandler(async (req, res) => {
-            const userId = await getUserIdFromCookie(
-                req,
-                cookiesNames.gamesPlay
-            );
+            const userId = req.user._id;
 
             const user = await authService.getUserById(userId);
 
