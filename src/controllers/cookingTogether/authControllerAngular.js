@@ -12,7 +12,6 @@ import {
 
 import s3 from "../../utils/awsUtils/AWS S3 client.js";
 import upload from "../../utils/awsUtils/multerStorage.js";
-import { getUserIdFromCookie } from "../../utils/getUtils/getUserIdFromCookie.js";
 import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
 import { CustomError } from "../../utils/errorUtils/customError.js";
 import { loginLimiter } from "../../utils/rateLimiter.js";
@@ -25,12 +24,14 @@ export function authController(authService) {
         "/register",
         upload.single("profilePicture"),
         asyncErrorHandler(async (req, res) => {
-            const { error } = userRegisterDto.validate(req.body);
-            if (error) {
-                throw new CustomError(error.details[0].message, 400);
+            const data = req.body;
+
+            const { error: dataError } = userRegisterDto.validate(data);
+            if (dataError) {
+                throw new CustomError(dataError.details[0].message, 400);
             }
 
-            const { username, email, password, rePassword } = req.body;
+            const { username, email, password, rePassword } = data;
             let profilePicture = null;
 
             if (req.file) {
@@ -100,7 +101,12 @@ export function authController(authService) {
             const token =
                 req.cookies[cookiesNames.cookingTogether]?.accessToken;
 
+            if (!token) {
+                throw new CustomError("Missing token in cookies!", 401);
+            }
+
             await authService.logout(token);
+
             res.status(204)
                 .clearCookie(cookiesNames.cookingTogether, {
                     httpOnly: true,
@@ -115,10 +121,7 @@ export function authController(authService) {
         "/profile",
         authMiddleware,
         asyncErrorHandler(async (req, res) => {
-            const userId = await getUserIdFromCookie(
-                req,
-                cookiesNames.cookingTogether
-            );
+            const userId = req.user._id;
 
             const user = await authService.getUserById(userId);
 

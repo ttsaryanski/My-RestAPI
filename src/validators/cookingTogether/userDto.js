@@ -31,8 +31,8 @@ export const userLoginDto = Joi.object({
         )
         .required()
         .messages({
-            "string.patern.base": "Invalid email format!",
             "any.required": "Email is required!",
+            "string.patern.base": "Invalid email format!",
         }),
     password: Joi.string().min(3).required().messages({
         "string.min": "Password must be at least 3 characters!",
