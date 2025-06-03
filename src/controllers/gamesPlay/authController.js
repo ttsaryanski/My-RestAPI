@@ -62,6 +62,10 @@ export function authController(authService) {
         asyncErrorHandler(async (req, res) => {
             const token = req.cookies[cookiesNames.gamesPlay]?.accessToken;
 
+            if (!token) {
+                throw new CustomError("Missing token in cookies!", 401);
+            }
+
             await authService.logout(token);
 
             res.status(204)

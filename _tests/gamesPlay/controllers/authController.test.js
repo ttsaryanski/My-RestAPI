@@ -141,10 +141,20 @@ describe("Auth Controller", () => {
 
         const res = await request(app)
             .post("/authGame/logout")
-            .set("Cookie", [`auth_GamesPlay=${cookieValue}`]);
+            .set("Cookie", [`${cookiesNames.gamesPlay}=${cookieValue}`]);
 
         expect(res.statusCode).toBe(204);
         expect(mockAuthService.logout).toHaveBeenCalledWith(fakeToken);
         expect(InvalidToken.create).toHaveBeenCalledWith({ token: fakeToken });
+    });
+
+    test("POST /logout - should return 401 missing token", async () => {
+        const res = await request(app)
+            .post("/authGame/logout")
+            .set("Cookie", [`${cookiesNames.gamesPlay}='undefined'`]);
+        console.log(res.body.message);
+
+        expect(res.statusCode).toBe(401);
+        expect(res.body.message).toBe("Missing token in cookies!");
     });
 });
