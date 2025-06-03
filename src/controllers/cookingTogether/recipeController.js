@@ -5,11 +5,10 @@ import { isOwner } from "../../middlewares/ownerMiddleware.js";
 import Item from "../../models/cookingTogether/Item.js";
 
 import { recipeDto } from "../../validators/cookingTogether/recipeDto.js";
+import { mongooseIdDto } from "../../validators/mongooseIdDto.js";
 
-import { getUserIdFromCookie } from "../../utils/getUtils/getUserIdFromCookie.js";
 import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
 import { CustomError } from "../../utils/errorUtils/customError.js";
-import { cookiesNames } from "../../config/constans.js";
 
 export function recipeController(recipeService) {
     const router = Router();
@@ -19,9 +18,9 @@ export function recipeController(recipeService) {
         asyncErrorHandler(async (req, res) => {
             const query = req.query;
 
-            const items = await recipeService.getAll(query);
+            const recipes = await recipeService.getAll(query);
 
-            res.status(200).json(items);
+            res.status(200).json(recipes);
         })
     );
 
@@ -29,17 +28,22 @@ export function recipeController(recipeService) {
         "/",
         authMiddleware,
         asyncErrorHandler(async (req, res) => {
-            const { error } = recipeDto.validate(req.body);
-            if (error) {
-                throw new CustomError(error.details[0].message, 400);
-            }
-
             const userId = req.user._id;
             const data = req.body;
 
-            const item = await recipeService.create(data, userId);
+            const { error: idError } = mongooseIdDto.validate({ id: userId });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
 
-            res.status(201).json(item);
+            const { error: dataError } = recipeDto.validate(data);
+            if (dataError) {
+                throw new CustomError(dataError.details[0].message, 400);
+            }
+
+            const recipe = await recipeService.create(data, userId);
+
+            res.status(201).json(recipe);
         })
     );
 
@@ -49,6 +53,7 @@ export function recipeController(recipeService) {
             const query = req.query;
 
             const result = await recipeService.getAllPaginated(query);
+
             const payload = {
                 items: result.items,
                 totalCount: result.totalCount,
@@ -63,115 +68,142 @@ export function recipeController(recipeService) {
     router.get(
         "/top-three",
         asyncErrorHandler(async (req, res) => {
-            const items = await recipeService.topThree();
+            const recipes = await recipeService.topThree();
 
-            res.status(200).json(items);
+            res.status(200).json(recipes);
         })
     );
 
     router.get(
         "/profileItem",
+        authMiddleware,
         asyncErrorHandler(async (req, res) => {
-            const userId = await getUserIdFromCookie(
-                req,
-                cookiesNames.cookingTogether
-            );
+            const userId = req.user._id;
             const query = req.query;
 
-            if (userId) {
-                const result = await recipeService.getByOwnerId(userId, query);
-                const payload = {
-                    items: result.items,
-                    totalCount: result.totalCount,
-                    totalPages: result.totalPages,
-                    currentPage: result.currentPage,
-                };
-
-                res.status(200).json(payload);
-            } else {
-                throw new CustomError("User not authenticated", 401);
+            const { error: idError } = mongooseIdDto.validate({ id: userId });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
             }
+
+            const result = await recipeService.getByOwnerId(userId, query);
+            const payload = {
+                items: result.items,
+                totalCount: result.totalCount,
+                totalPages: result.totalPages,
+                currentPage: result.currentPage,
+            };
+
+            res.status(200).json(payload);
         })
     );
 
     router.get(
         "/profileLiked",
+        authMiddleware,
         asyncErrorHandler(async (req, res) => {
-            const userId = await getUserIdFromCookie(
-                req,
-                cookiesNames.cookingTogether
-            );
+            const userId = req.user._id;
             const query = req.query;
 
-            if (userId) {
-                const result = await recipeService.getByLikedId(userId, query);
-                const payload = {
-                    items: result.items,
-                    totalCount: result.totalCount,
-                    totalPages: result.totalPages,
-                    currentPage: result.currentPage,
-                };
-
-                res.status(200).json(payload);
-            } else {
-                throw new CustomError("User not authenticated", 401);
+            const { error: idError } = mongooseIdDto.validate({ id: userId });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
             }
+
+            const result = await recipeService.getByLikedId(userId, query);
+            const payload = {
+                items: result.items,
+                totalCount: result.totalCount,
+                totalPages: result.totalPages,
+                currentPage: result.currentPage,
+            };
+
+            res.status(200).json(payload);
         })
     );
 
     router.get(
-        "/:itemId",
+        "/:recipeId",
         asyncErrorHandler(async (req, res) => {
-            const itemId = req.params.itemId;
+            const recipeId = req.params.recipeId;
 
-            const item = await recipeService.getById(itemId);
+            const { error: idError } = mongooseIdDto.validate({ id: recipeId });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
 
-            res.status(200).json(item);
+            const recipe = await recipeService.getById(recipeId);
+
+            res.status(200).json(recipe);
         })
     );
 
     router.delete(
-        "/:itemId",
+        "/:recipeId",
         authMiddleware,
-        isOwner(Item, "itemId"),
+        isOwner(Item, "recipeId"),
         asyncErrorHandler(async (req, res) => {
-            const itemId = req.params.itemId;
+            const recipeId = req.params.recipeId;
 
-            await recipeService.remove(itemId);
+            const { error: idError } = mongooseIdDto.validate({ id: recipeId });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
+
+            await recipeService.remove(recipeId);
 
             res.status(204).end();
         })
     );
 
     router.put(
-        "/:itemId",
+        "/:recipeId",
         authMiddleware,
-        isOwner(Item, "itemId"),
+        isOwner(Item, "recipeId"),
         asyncErrorHandler(async (req, res) => {
-            const { error } = recipeDto.validate(req.body);
-            if (error) {
-                throw new CustomError(error.details[0].message, 400);
-            }
-
-            const itemId = req.params.itemId;
+            const recipeId = req.params.recipeId;
             const data = req.body;
 
-            const item = await recipeService.edit(itemId, data);
+            const { error: idError } = mongooseIdDto.validate({ id: recipeId });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
 
-            res.status(201).json(item);
+            const { error: dataError } = recipeDto.validate(data);
+            if (dataError) {
+                throw new CustomError(dataError.details[0].message, 400);
+            }
+
+            const recipe = await recipeService.edit(recipeId, data);
+
+            res.status(201).json(recipe);
         })
     );
 
     router.post(
-        "/:itemId/like",
+        "/:recipeId/like",
         authMiddleware,
         asyncErrorHandler(async (req, res) => {
-            const itemId = req.params.itemId;
+            const recipeId = req.params.recipeId;
             const userId = req.user._id;
 
-            const item = await recipeService.like(itemId, userId);
+            const { error: idError1 } = mongooseIdDto.validate({
+                id: recipeId,
+            });
+            if (idError1) {
+                throw new CustomError(idError1.details[0].message, 400);
+            }
 
-            res.status(200).json(item);
+            const { error: idError2 } = mongooseIdDto.validate({
+                id: userId,
+            });
+            if (idError2) {
+                throw new CustomError(idError2.details[0].message, 400);
+            }
+
+            const recipe = await recipeService.like(recipeId, userId);
+
+            res.status(200).json(recipe);
         })
     );
 
