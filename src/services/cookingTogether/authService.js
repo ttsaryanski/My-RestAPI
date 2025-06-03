@@ -4,7 +4,7 @@ import jwt from "../../lib/jwt.js";
 
 import { CustomError } from "../../utils/errorUtils/customError.js";
 
-import UserAngular from "../../models/cookingTogether/UserAngular.js";
+import UserAngular from "../../models/cookingTogether/User.js";
 import InvalidToken from "../../models/InvalidToken.js";
 
 export const authService = {
@@ -51,7 +51,13 @@ export const authService = {
     },
 
     async getUserById(id) {
-        return await UserAngular.findById(id);
+        const user = await UserAngular.findById(id);
+
+        if (!user) {
+            throw new CustomError("There is no user with this id!", 404);
+        }
+
+        return user;
     },
 };
 

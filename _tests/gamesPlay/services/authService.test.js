@@ -2,7 +2,6 @@ import bcrypt from "bcrypt";
 import jwt from "../../../src/lib/jwt.js";
 
 import { authService } from "../../../src/services/gamesPlay/authService.js";
-import { CustomError } from "../../../src/utils/errorUtils/customError.js";
 import UserGames from "../../../src/models/gamesPlay/User.js";
 import InvalidToken from "../../../src/models/InvalidToken.js";
 
@@ -13,7 +12,7 @@ jest.mock("../../../src/models/InvalidToken.js");
 
 process.env.JWT_SECRET = "test-secret";
 
-describe("authService.register", () => {
+describe("authService/register", () => {
     it("should throw if email already exists", async () => {
         UserGames.findOne.mockResolvedValue({ email: "test@mail.com" });
 
@@ -36,7 +35,7 @@ describe("authService.register", () => {
     });
 });
 
-describe("authService.login", () => {
+describe("authService/login", () => {
     it("should throw if user not found", async () => {
         UserGames.findOne.mockResolvedValue(null);
 
@@ -73,7 +72,7 @@ describe("authService.login", () => {
     });
 });
 
-describe("authService.getAllUsers", () => {
+describe("authService/getAllUsers", () => {
     it("should return paginated users sorted by role", async () => {
         UserGames.aggregate.mockResolvedValue([{ email: "a" }, { email: "b" }]);
 
@@ -84,7 +83,7 @@ describe("authService.getAllUsers", () => {
     });
 });
 
-describe("authService.logout", () => {
+describe("authService/logout", () => {
     it("should create invalid token record", async () => {
         InvalidToken.create.mockResolvedValue(true);
 
@@ -94,7 +93,7 @@ describe("authService.logout", () => {
     });
 });
 
-describe("authService.getUserById", () => {
+describe("authService/getUserById", () => {
     it("should return user if found", async () => {
         const user = { _id: "abc123", email: "user@example.com" };
         UserGames.findById = jest.fn().mockResolvedValue(user);
@@ -116,7 +115,7 @@ describe("authService.getUserById", () => {
     });
 });
 
-describe("authService.remove", () => {
+describe("authService/remove", () => {
     it("should delete user", async () => {
         UserGames.findByIdAndDelete.mockResolvedValue({ _id: "1" });
 
@@ -136,7 +135,7 @@ describe("authService.remove", () => {
     });
 });
 
-describe("authService.makeAdmin", () => {
+describe("authService/makeAdmin", () => {
     it("should update role to admin", async () => {
         const updated = { _id: "1", role: "admin" };
         UserGames.findByIdAndUpdate.mockResolvedValue(updated);
@@ -152,7 +151,7 @@ describe("authService.makeAdmin", () => {
     });
 });
 
-describe("authService.updateRole", () => {
+describe("authService/updateRole", () => {
     it("should update all users without role", async () => {
         UserGames.updateMany.mockResolvedValue({ modifiedCount: 3 });
 
