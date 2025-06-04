@@ -1,10 +1,12 @@
 import { gameService } from "../../../src/services/gamesPlay/gameService.js";
+
 import Game from "../../../src/models/gamesPlay/Game.js";
+
 import { CustomError } from "../../../src/utils/errorUtils/customError.js";
 
 jest.mock("../../../src/models/gamesPlay/Game.js");
 
-describe("gameService.getAll()", () => {
+describe("gameService/getAll()", () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
@@ -65,7 +67,7 @@ describe("gameService.getAll()", () => {
     });
 });
 
-describe("gameService.getInfinity", () => {
+describe("gameService/getInfinity", () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
@@ -80,7 +82,7 @@ describe("gameService.getInfinity", () => {
         };
 
         Game.find.mockReturnValue(mockQuery);
-        Game.countDocuments.mockResolvedValue(20); // бройката е без значение тук
+        Game.countDocuments.mockResolvedValue(20);
 
         const result = await gameService.getInfinity({ page: 1 });
 
@@ -106,7 +108,7 @@ describe("gameService.getInfinity", () => {
 
         await gameService.getInfinity({ page: 3 });
 
-        expect(mockQuery.skip).toHaveBeenCalledWith(10); // (3 - 1) * 5
+        expect(mockQuery.skip).toHaveBeenCalledWith(10);
     });
 
     it("should use default page = 1 if not provided", async () => {
@@ -122,11 +124,11 @@ describe("gameService.getInfinity", () => {
 
         await gameService.getInfinity({});
 
-        expect(mockQuery.skip).toHaveBeenCalledWith(0); // default page = 1 → skip = 0
+        expect(mockQuery.skip).toHaveBeenCalledWith(0);
     });
 });
 
-describe("gameService.lastThree", () => {
+describe("gameService/lastThree", () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
@@ -154,7 +156,7 @@ describe("gameService.lastThree", () => {
     });
 });
 
-describe("gameService.create", () => {
+describe("gameService/create", () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
@@ -175,7 +177,7 @@ describe("gameService.create", () => {
     });
 });
 
-describe("gameService.getById", () => {
+describe("gameService/getById", () => {
     afterEach(() => {
         jest.clearAllMocks();
     });
@@ -205,7 +207,7 @@ describe("gameService.getById", () => {
     });
 });
 
-describe("gameService.remove", () => {
+describe("gameService/remove", () => {
     it("should delete a game when it exists", async () => {
         const gameId = "existing-game-id";
         Game.findByIdAndDelete.mockResolvedValue({ _id: gameId });
@@ -227,7 +229,7 @@ describe("gameService.remove", () => {
     });
 });
 
-describe("gameService.edit", () => {
+describe("gameService/edit", () => {
     it("should update and return the updated game", async () => {
         const gameId = "some-game-id";
         const updateData = { title: "New Title" };

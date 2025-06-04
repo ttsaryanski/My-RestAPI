@@ -3,7 +3,7 @@ import Comment from "../../../src/models/gamesPlay/Comment.js";
 
 jest.mock("../../../src/models/gamesPlay/Comment.js");
 
-describe("commentService.getAll", () => {
+describe("commentService/getAll", () => {
     it("should return sorted comments populated with _ownerId", async () => {
         const mockQuery = {
             sort: jest.fn().mockReturnThis(),

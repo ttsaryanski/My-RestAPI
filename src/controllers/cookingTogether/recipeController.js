@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 import { isOwner } from "../../middlewares/ownerMiddleware.js";
-import Item from "../../models/cookingTogether/Item.js";
+import Item from "../../models/cookingTogether/Recipe.js";
 
 import { recipeDto } from "../../validators/cookingTogether/recipeDto.js";
 import { mongooseIdDto } from "../../validators/mongooseIdDto.js";

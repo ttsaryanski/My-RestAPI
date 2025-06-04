@@ -1,6 +1,6 @@
 import { CustomError } from "../../utils/errorUtils/customError.js";
 
-import Item from "../../models/cookingTogether/Item.js";
+import Item from "../../models/cookingTogether/Recipe.js";
 
 export const recipeService = {
     async getAll(query = {}) {
@@ -55,23 +55,33 @@ export const recipeService = {
         const result = await Item.findByIdAndDelete(itemId);
 
         if (!result) {
-            throw new CustomError("Recipe not found");
+            throw new CustomError("Recipe not found", 404);
         }
     },
 
     async edit(itemId, data) {
         data.dateUpdate = Date.now();
 
-        return await Item.findByIdAndUpdate(itemId, data, {
+        const updatedRecipe = await Item.findByIdAndUpdate(itemId, data, {
             runValidators: true,
             new: true,
         });
+
+        if (!updatedRecipe) {
+            throw new CustomError("Recipe not found", 404);
+        }
+        return updatedRecipe;
     },
 
     async like(itemId, userId) {
-        return await Item.findByIdAndUpdate(itemId, {
+        const recipe = await Item.findByIdAndUpdate(itemId, {
             $addToSet: { likes: userId, new: true },
         });
+
+        if (!recipe) {
+            throw new CustomError("Recipe not found", 404);
+        }
+        return recipe;
     },
 
     async topThree() {

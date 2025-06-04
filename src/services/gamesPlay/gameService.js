@@ -71,6 +71,7 @@ export const gameService = {
             runValidators: true,
             new: true,
         });
+
         if (!updatedGame) {
             throw new CustomError("Game not found", 404);
         }

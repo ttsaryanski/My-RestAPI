@@ -3,7 +3,7 @@ import Visit from "../../../src/models/gamesPlay/Visit.js";
 
 jest.mock("../../../src/models/gamesPlay/Visit.js");
 
-describe("visitService.create", () => {
+describe("visitService/create", () => {
     const today = new Date();
     const mockStartOfDay = new Date(
         today.getFullYear(),
@@ -46,7 +46,7 @@ describe("visitService.create", () => {
     });
 });
 
-describe("visitService.getStats", () => {
+describe("visitService/getStats", () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
