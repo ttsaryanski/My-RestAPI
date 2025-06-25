@@ -26,9 +26,9 @@ export function authController(authService) {
         "/register",
         upload.single("profilePicture"),
         asyncErrorHandler(async (req, res) => {
-            const { error } = userRegisterDto.validate(req.body);
-            if (error) {
-                throw new CustomError(error.details[0].message, 400);
+            const { error: dataError } = userRegisterDto.validate(req.body);
+            if (dataError) {
+                throw new CustomError(dataError.details[0].message, 400);
             }
 
             const {
@@ -111,6 +111,10 @@ export function authController(authService) {
         asyncErrorHandler(async (req, res) => {
             const token = req.cookies[cookiesNames.classBook]?.accessToken;
 
+            if (!token) {
+                throw new CustomError("Missing token in cookies!", 401);
+            }
+
             await authService.logout(token);
             res.status(204)
                 .clearCookie(cookiesNames.classBook, {
@@ -126,10 +130,7 @@ export function authController(authService) {
         "/profile",
         authMiddleware,
         asyncErrorHandler(async (req, res) => {
-            const userId = await getUserIdFromCookie(
-                req,
-                cookiesNames.classBook
-            );
+            const userId = req.user._id;
 
             const user = await authService.getUserById(userId);
 
@@ -142,16 +143,13 @@ export function authController(authService) {
         authMiddleware,
         upload.single("profilePicture"),
         asyncErrorHandler(async (req, res) => {
-            const { error } = userEditDto.validate(req.body);
-            if (error) {
-                throw new CustomError(error.details[0].message, 400);
-            }
-
-            const userId = await getUserIdFromCookie(
-                req,
-                cookiesNames.classBook
-            );
+            const userId = req.user._id;
             let data = req.body;
+
+            const { error: dataError } = userEditDto.validate(data);
+            if (dataError) {
+                throw new CustomError(dataError.details[0].message, 400);
+            }
 
             if (req.file) {
                 const filePath = req.file.path;
