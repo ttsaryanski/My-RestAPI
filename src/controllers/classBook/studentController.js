@@ -6,6 +6,7 @@ import {
     createStudentDto,
     editStudentDto,
 } from "../../validators/classBook/studentDto.js";
+import { mongooseIdDto } from "../../validators/mongooseIdDto.js";
 
 import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
 import { CustomError } from "../../utils/errorUtils/customError.js";
@@ -28,13 +29,13 @@ export function studentController(studentService) {
         "/",
         authMiddleware,
         asyncErrorHandler(async (req, res) => {
-            const { error } = createStudentDto.validate(req.body);
-            if (error) {
-                throw new CustomError(error.details[0].message, 400);
-            }
-
             const userId = req.user._id;
             const data = req.body;
+
+            const { error: dataError } = createStudentDto.validate(req.body);
+            if (dataError) {
+                throw new CustomError(dataError.details[0].message, 400);
+            }
 
             const item = await studentService.create(data, userId);
 
@@ -64,6 +65,13 @@ export function studentController(studentService) {
         asyncErrorHandler(async (req, res) => {
             const studentId = req.params.studentId;
 
+            const { error: idError } = mongooseIdDto.validate({
+                id: studentId,
+            });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
+
             const student = await studentService.getById(studentId);
 
             res.status(200).json(student);
@@ -75,6 +83,13 @@ export function studentController(studentService) {
         asyncErrorHandler(async (req, res) => {
             const studentId = req.params.studentId;
 
+            const { error: idError } = mongooseIdDto.validate({
+                id: studentId,
+            });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
+
             const student = await studentService.getByIdPopulate(studentId);
 
             res.status(200).json(student);
@@ -85,13 +100,20 @@ export function studentController(studentService) {
         "/:studentId",
         authMiddleware,
         asyncErrorHandler(async (req, res) => {
-            const { error } = editStudentDto.validate(req.body);
-            if (error) {
-                throw new CustomError(error.details[0].message, 400);
-            }
-
             const studentId = req.params.studentId;
             const data = req.body;
+
+            const { error: idError } = mongooseIdDto.validate({
+                id: studentId,
+            });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
+
+            const { error: dataError } = editStudentDto.validate(req.body);
+            if (dataError) {
+                throw new CustomError(dataError.details[0].message, 400);
+            }
 
             const student = await studentService.edit(studentId, data);
 
