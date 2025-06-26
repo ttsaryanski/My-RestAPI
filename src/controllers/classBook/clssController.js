@@ -3,6 +3,7 @@ import { Router } from "express";
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
 import { classDto } from "../../validators/classBook/classDto.js";
+import { mongooseIdDto } from "../../validators/mongooseIdDto.js";
 
 import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
 import { CustomError } from "../../utils/errorUtils/customError.js";
@@ -25,13 +26,18 @@ export function classController(classService) {
         "/",
         authMiddleware,
         asyncErrorHandler(async (req, res) => {
-            const { error } = classDto.validate(req.body);
-            if (error) {
-                throw new CustomError(error.details[0].message, 400);
-            }
-
             const userId = req.user._id;
             const data = req.body;
+
+            const { error: idError } = mongooseIdDto.validate({ id: userId });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
+
+            const { error: dataError } = classDto.validate(req.body);
+            if (dataError) {
+                throw new CustomError(dataError.details[0].message, 400);
+            }
 
             const item = await classService.create(data, userId);
 
@@ -44,6 +50,11 @@ export function classController(classService) {
         asyncErrorHandler(async (req, res) => {
             const clssId = req.params.clssId;
 
+            const { error: idError } = mongooseIdDto.validate({ id: clssId });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
+
             const clss = await classService.getById(clssId);
 
             res.status(200).json(clss);
@@ -55,6 +66,11 @@ export function classController(classService) {
         asyncErrorHandler(async (req, res) => {
             const clssId = req.params.clssId;
 
+            const { error: idError } = mongooseIdDto.validate({ id: clssId });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
+
             const clss = await classService.getByIdPopulate(clssId);
 
             res.status(200).json(clss);
@@ -65,13 +81,18 @@ export function classController(classService) {
         "/:clssId",
         authMiddleware,
         asyncErrorHandler(async (req, res) => {
-            const { error } = classDto.validate(req.body);
-            if (error) {
-                throw new CustomError(error.details[0].message, 400);
-            }
-
             const clssId = req.params.clssId;
             const data = req.body;
+
+            const { error: idError } = mongooseIdDto.validate({ id: clssId });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
+
+            const { error: dataError } = classDto.validate(req.body);
+            if (dataError) {
+                throw new CustomError(dataError.details[0].message, 400);
+            }
 
             const clss = await classService.edit(clssId, data);
 
@@ -84,6 +105,11 @@ export function classController(classService) {
         authMiddleware,
         asyncErrorHandler(async (req, res) => {
             const clssId = req.params.clssId;
+
+            const { error: idError } = mongooseIdDto.validate({ id: clssId });
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
 
             await classService.remove(clssId);
 
