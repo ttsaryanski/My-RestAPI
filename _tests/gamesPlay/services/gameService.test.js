@@ -208,6 +208,10 @@ describe("gameService/getById", () => {
 });
 
 describe("gameService/remove", () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
+
     it("should delete a game when it exists", async () => {
         const gameId = "existing-game-id";
         Game.findByIdAndDelete.mockResolvedValue({ _id: gameId });

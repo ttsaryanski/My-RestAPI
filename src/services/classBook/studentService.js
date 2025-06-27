@@ -6,7 +6,7 @@ export const studentService = {
     async getAll(query = {}) {
         let studentsQuery = Student.find();
 
-        if (query.limit) {
+        if (query.limit && !isNaN(Number(query.limit))) {
             const limit = Number(query.limit);
             studentsQuery = studentsQuery.limit(limit);
         }
