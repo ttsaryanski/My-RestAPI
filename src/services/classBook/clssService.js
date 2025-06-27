@@ -12,7 +12,7 @@ export const classService = {
 
         let classesQuery = Clss.find(filter);
 
-        if (query.limit) {
+        if (query.limit && !isNaN(Number(query.limit))) {
             const limit = Number(query.limit);
             classesQuery = classesQuery.limit(limit);
         }
