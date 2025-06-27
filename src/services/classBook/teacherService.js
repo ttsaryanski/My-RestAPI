@@ -7,10 +7,10 @@ export const teacherService = {
         let filter = {};
 
         if (query.email) {
-            filter.email = { email: query.email };
+            filter.email = query.email;
         }
 
-        let teacherQuery = Teacher.find(filter.email);
+        let teacherQuery = Teacher.find(filter);
 
         const teachers = await teacherQuery;
         return teachers;
