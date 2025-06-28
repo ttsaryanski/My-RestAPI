@@ -74,9 +74,15 @@ export const classService = {
     async edit(itemId, data) {
         data.dateUpdate = Date.now();
 
-        return await Clss.findByIdAndUpdate(itemId, data, {
+        const updatedClss = await Clss.findByIdAndUpdate(itemId, data, {
             runValidators: true,
             new: true,
         });
+
+        if (!updatedClss) {
+            throw new CustomError("Class not found", 404);
+        }
+
+        return updatedClss;
     },
 };

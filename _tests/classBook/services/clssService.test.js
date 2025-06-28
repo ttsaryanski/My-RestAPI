@@ -266,11 +266,13 @@ describe("classService/edit", () => {
         expect(result).toEqual(expected);
     });
 
-    it("return null if class does not exist", async () => {
+    it("should throw CustomError if class does not exist", async () => {
         Clss.findByIdAndUpdate.mockResolvedValue(null);
 
-        const result = await classService.edit(validId, { title: "Title" });
-
-        expect(result).toBeNull();
+        try {
+            await classService.edit(validId, { title: "Class 1" });
+        } catch (err) {
+            expect(err).toBeInstanceOf(CustomError);
+        }
     });
 });
