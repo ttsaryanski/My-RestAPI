@@ -40,12 +40,12 @@ export const gameService = {
         return { games };
     },
 
-    async lastThree() {
-        return await Game.find().sort({ createdAt: -1 }).limit(3);
-    },
-
     async create(data, userId) {
         return await Game.create({ ...data, _ownerId: userId });
+    },
+
+    async lastThree() {
+        return await Game.find().sort({ createdAt: -1 }).limit(3);
     },
 
     async getById(gameId) {
@@ -58,14 +58,6 @@ export const gameService = {
         return game;
     },
 
-    async remove(gameId) {
-        const result = await Game.findByIdAndDelete(gameId);
-
-        if (!result) {
-            throw new CustomError("Game not found", 404);
-        }
-    },
-
     async edit(gameId, data) {
         const updatedGame = await Game.findByIdAndUpdate(gameId, data, {
             runValidators: true,
@@ -76,5 +68,13 @@ export const gameService = {
             throw new CustomError("Game not found", 404);
         }
         return updatedGame;
+    },
+
+    async remove(gameId) {
+        const result = await Game.findByIdAndDelete(gameId);
+
+        if (!result) {
+            throw new CustomError("Game not found", 404);
+        }
     },
 };

@@ -56,18 +56,20 @@ export default function expressInit(app) {
             credentials: true,
         })
     );
-    app.use(
-        csurf({
-            cookie: {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-                sameSite:
-                    process.env.NODE_ENV === "production" ? "None" : "Lax",
-            },
-        })
-    );
+    if (process.env.NODE_ENV !== "test") {
+        app.use(
+            csurf({
+                cookie: {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === "production",
+                    sameSite:
+                        process.env.NODE_ENV === "production" ? "None" : "Lax",
+                },
+            })
+        );
 
-    app.get("/api/csrf-token", (req, res) => {
-        res.json({ csrfToken: req.csrfToken() });
-    });
+        app.get("/api/csrf-token", (req, res) => {
+            res.json({ csrfToken: req.csrfToken() });
+        });
+    }
 }
