@@ -74,10 +74,6 @@ export function adminController(authService, gameService, visitService) {
 
             const user = await authService.getUserById(userId);
 
-            if (!user) {
-                throw new CustomError("User not found", 404);
-            }
-
             if (user.role === "admin") {
                 throw new CustomError("Cannot delete admin account", 401);
             }
