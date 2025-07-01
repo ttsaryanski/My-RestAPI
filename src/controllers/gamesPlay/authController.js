@@ -60,7 +60,12 @@ export function authController(authService) {
     router.post(
         "/logout",
         asyncErrorHandler(async (req, res) => {
-            const token = req.cookies[cookiesNames.gamesPlay]?.accessToken;
+            const token =
+                typeof req.cookies[cookiesNames.gamesPlay] === "string"
+                    ? req.cookies[cookiesNames.gamesPlay] === "undefined"
+                        ? undefined
+                        : req.cookies[cookiesNames.gamesPlay]
+                    : req.cookies[cookiesNames.gamesPlay]?.accessToken;
 
             if (!token) {
                 throw new CustomError("Missing token in cookies!", 401);
@@ -90,6 +95,7 @@ export function authController(authService) {
         })
     );
 
+    // TODO: This route was used for migration, it is preserved as part of history!
     router.get(
         "/updateRole",
         asyncErrorHandler(async (req, res) => {

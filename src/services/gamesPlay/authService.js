@@ -39,6 +39,20 @@ export const authService = {
         return createAccessToken(user);
     },
 
+    async logout(token) {
+        await InvalidToken.create({ token });
+    },
+
+    async getUserById(id) {
+        const user = await UserGames.findById(id);
+
+        if (!user) {
+            throw new CustomError("There is no user with this id!", 404);
+        }
+
+        return user;
+    },
+
     async getAllUsers(query = {}) {
         const page = parseInt(query.page) || 1;
         const limit = 5;
@@ -59,20 +73,6 @@ export const authService = {
         ]);
 
         return { users };
-    },
-
-    async logout(token) {
-        await InvalidToken.create({ token });
-    },
-
-    async getUserById(id) {
-        const user = await UserGames.findById(id);
-
-        if (!user) {
-            throw new CustomError("There is no user with this id!", 404);
-        }
-
-        return user;
     },
 
     async remove(userId) {
@@ -97,6 +97,7 @@ export const authService = {
         return user;
     },
 
+    // TODO: This service was used for migration, it is preserved as part of history!
     async updateRole() {
         return await UserGames.updateMany(
             { role: { $exists: false } },
@@ -105,7 +106,7 @@ export const authService = {
     },
 };
 
-async function createAccessToken(user) {
+export async function createAccessToken(user) {
     if (!process.env.JWT_SECRET) {
         throw new CustomError("JWT secret is not configured", 500);
     }

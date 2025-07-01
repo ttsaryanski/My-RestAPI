@@ -151,8 +151,7 @@ describe("Auth Controller", () => {
     test("POST /logout - should return 401 missing token", async () => {
         const res = await request(app)
             .post("/authGame/logout")
-            .set("Cookie", [`${cookiesNames.gamesPlay}='undefined'`]);
-        console.log(res.body.message);
+            .set("Cookie", [`${cookiesNames.gamesPlay}=undefined`]);
 
         expect(res.statusCode).toBe(401);
         expect(res.body.message).toBe("Missing token in cookies!");
