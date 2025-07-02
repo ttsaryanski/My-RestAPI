@@ -74,9 +74,11 @@ export const recipeService = {
     },
 
     async like(itemId, userId) {
-        const recipe = await Item.findByIdAndUpdate(itemId, {
-            $addToSet: { likes: userId, new: true },
-        });
+        const recipe = await Item.findByIdAndUpdate(
+            itemId,
+            { $addToSet: { likes: userId } },
+            { new: true }
+        );
 
         if (!recipe) {
             throw new CustomError("Recipe not found", 404);

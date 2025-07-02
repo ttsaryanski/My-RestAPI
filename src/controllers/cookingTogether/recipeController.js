@@ -184,8 +184,8 @@ export function recipeController(recipeService) {
         "/:recipeId/like",
         authMiddleware,
         asyncErrorHandler(async (req, res) => {
-            const recipeId = req.params.recipeId;
             const userId = req.user._id;
+            const recipeId = req.params.recipeId;
 
             const { error: idError1 } = mongooseIdDto.validate({
                 id: recipeId,

@@ -235,9 +235,11 @@ describe("recipeService/like", () => {
 
         const result = await recipeService.like(mockItemId, mockUserId);
 
-        expect(Item.findByIdAndUpdate).toHaveBeenCalledWith(mockItemId, {
-            $addToSet: { likes: mockUserId, new: true },
-        });
+        expect(Item.findByIdAndUpdate).toHaveBeenCalledWith(
+            mockItemId,
+            { $addToSet: { likes: mockUserId } },
+            { new: true }
+        );
         expect(result).toBe(mockResult);
     });
 

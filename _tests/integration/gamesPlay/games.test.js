@@ -267,7 +267,7 @@ describe("PUT /:gameId", () => {
 
     it("should return 400 if gameId is invalid", async () => {
         const res = await request(app)
-            .get("/api/games_play/games/invalidId")
+            .put("/api/games_play/games/invalidId")
             .send(editedData);
 
         expect(res.statusCode).toBe(400);
@@ -287,11 +287,11 @@ describe("PUT /:gameId", () => {
         const nonExistingId = new mongoose.Types.ObjectId();
 
         const res = await request(app)
-            .get(`/api/games_play/games/${nonExistingId}`)
+            .put(`/api/games_play/games/${nonExistingId}`)
             .send(editedData);
 
         expect(res.statusCode).toBe(404);
-        expect(res.body.message).toBe("There is no game with this id!");
+        expect(res.body.message).toBe("Game not found");
     });
 });
 
