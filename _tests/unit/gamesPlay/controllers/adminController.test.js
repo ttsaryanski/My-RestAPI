@@ -113,10 +113,9 @@ describe("Admin Controller", () => {
     });
 
     test("GET /users/:userId - should return 404 if user not found", async () => {
-        const mockData = { _id: "ValidId" };
-        mockAuthService.makeAdmin.mockResolvedValue(mockData);
+        mockAuthService.makeAdmin.mockResolvedValue(null);
 
-        const res = await request(app).delete(`/admin/users/${validId}`);
+        const res = await request(app).get(`/admin/users/${validId}`);
 
         expect(res.statusCode).toBe(404);
         expect(res.body.message).toBe("User not found");
