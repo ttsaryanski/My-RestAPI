@@ -193,8 +193,7 @@ describe("Auth Controller", () => {
     test("POST /logout - should return 401 missing token", async () => {
         const res = await request(app)
             .post("/authAngular/logout")
-            .set("Cookie", [`${cookiesNames.cookingTogether}='undefined'`]);
-        console.log(res.body.message);
+            .set("Cookie", [`${cookiesNames.cookingTogether}=undefined`]);
 
         expect(res.statusCode).toBe(401);
         expect(res.body.message).toBe("Missing token in cookies!");
