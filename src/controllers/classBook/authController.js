@@ -109,7 +109,12 @@ export function authController(authService) {
     router.post(
         "/logout",
         asyncErrorHandler(async (req, res) => {
-            const token = req.cookies[cookiesNames.classBook]?.accessToken;
+            const token =
+                typeof req.cookies[cookiesNames.classBook] === "string"
+                    ? req.cookies[cookiesNames.classBook] === "undefined"
+                        ? undefined
+                        : req.cookies[cookiesNames.classBook]
+                    : req.cookies[cookiesNames.classBook]?.accessToken;
 
             if (!token) {
                 throw new CustomError("Missing token in cookies!", 401);

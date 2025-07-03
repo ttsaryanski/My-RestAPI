@@ -129,7 +129,7 @@ export const authService = {
     },
 };
 
-async function createAccessToken(user) {
+export async function createAccessToken(user) {
     if (!process.env.JWT_SECRET) {
         throw new CustomError("JWT secret is not configured", 500);
     }

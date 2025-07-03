@@ -249,7 +249,7 @@ describe("Auth Controller", () => {
     test("POST /logout - should return 401 missing token", async () => {
         const res = await request(app)
             .post("/auth/logout")
-            .set("Cookie", [`${cookiesNames.classBook}='undefined'`]);
+            .set("Cookie", [`${cookiesNames.classBook}=undefined`]);
         console.log(res.body.message);
 
         expect(res.statusCode).toBe(401);
