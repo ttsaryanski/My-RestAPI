@@ -15,15 +15,15 @@ npm install
 
 ### Required Variables:
 
--   **JWT_SECRET**: A strong, random secret key for signing JSON Web Tokens (JWT).  
-    _Example:_ `your_super_secret_key`
+- **JWT_SECRET**: A strong, random secret key for signing JSON Web Tokens (JWT).  
+  _Example:_ `your_super_secret_key`
 
--   **CLOUD_DB_URL**: The connection string for a cloud database (e.g., MongoDB Atlas).  
-    _Example:_ `mongodb+srv://username:password@cluster0.mongodb.net/dbname`
+- **CLOUD_DB_URL**: The connection string for a cloud database (e.g., MongoDB Atlas).  
+  _Example:_ `mongodb+srv://username:password@cluster0.mongodb.net/dbname`
 
 ### Optional Variables:
 
--   **AWS_ACCESS_KEY** & **AWS_SECRET_ACCESS_KEY**: Required only if using AWS for file storage. Obtain these credentials from your AWS account.
+- **AWS_ACCESS_KEY** & **AWS_SECRET_ACCESS_KEY**: Required only if using AWS for file storage. Obtain these credentials from your AWS account.
 
 ### Steps to Set Up `.env`:
 
