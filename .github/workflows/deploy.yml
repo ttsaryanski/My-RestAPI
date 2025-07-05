@@ -43,4 +43,3 @@ jobs:
                     --image ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.SERVICE_NAME }}:latest \
                     --region ${{ env.REGION }} \
                     --platform managed \
-                    --set-env-vars "JWT_SECRET=${{ secrets.JWT_SECRET }},CLOUD_DB_URL=${{ secrets.CLOUD_DB_URL }}",AWS_ACCESS_KEY=${{ secrets.AWS_ACCESS_KEY }}",AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
