@@ -80,9 +80,19 @@ export const studentService = {
             delete updateQuery.clssToRemove;
         }
 
-        return await Student.findByIdAndUpdate(studentId, updateQuery, {
-            runValidators: true,
-            new: true,
-        });
+        const editedStudent = await Student.findByIdAndUpdate(
+            studentId,
+            updateQuery,
+            {
+                runValidators: true,
+                new: true,
+            }
+        );
+
+        if (!editedStudent) {
+            throw new CustomError("Student not found", 404);
+        }
+
+        return editedStudent;
     },
 };

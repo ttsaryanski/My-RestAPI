@@ -5,6 +5,7 @@ import { secretsDto } from "../../validators/classBook/secretDto.js";
 import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
 import { CustomError } from "../../utils/errorUtils/customError.js";
 
+// TODO: This rout was used during the initial configuration and is not used in the application!!!
 export function directorController(directorService) {
     const router = Router();
 

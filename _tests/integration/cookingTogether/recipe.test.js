@@ -40,7 +40,7 @@ describe("GET /recipes", () => {
                 likes: [],
             },
             {
-                title: "Recipe Thu",
+                title: "Recipe Two",
                 description: "Description2",
                 ingredients: "Ingredients2",
                 instructions: "Instructions2",

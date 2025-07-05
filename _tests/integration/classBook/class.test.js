@@ -31,7 +31,7 @@ describe("GET /clss", () => {
                 teacher: new mongoose.Types.ObjectId(),
             },
             {
-                title: "Class Thu",
+                title: "Class Two",
                 teacher: new mongoose.Types.ObjectId(),
             },
         ]);
