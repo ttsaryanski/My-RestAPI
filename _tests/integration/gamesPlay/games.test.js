@@ -152,7 +152,7 @@ describe("POST /games", () => {
     });
 });
 
-describe("GET /last_three", () => {
+describe("GET /games/last_three", () => {
     beforeEach(async () => {
         await Game.deleteMany();
 
@@ -183,7 +183,7 @@ describe("GET /last_three", () => {
     });
 });
 
-describe("GET /:gameId", () => {
+describe("GET /games/:gameId", () => {
     let game;
     beforeEach(async () => {
         await Game.deleteMany();
@@ -225,7 +225,7 @@ describe("GET /:gameId", () => {
     });
 });
 
-describe("PUT /:gameId", () => {
+describe("PUT /games/:gameId", () => {
     let game;
     beforeEach(async () => {
         await Game.deleteMany();
@@ -295,7 +295,7 @@ describe("PUT /:gameId", () => {
     });
 });
 
-describe("DELETE /:gameId", () => {
+describe("DELETE /games/:gameId", () => {
     let game;
     beforeEach(async () => {
         await Game.deleteMany();
