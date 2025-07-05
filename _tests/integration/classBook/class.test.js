@@ -1,5 +1,4 @@
 import { validId } from "../../../src/config/constans.js";
-import { authMiddleware } from "../../../src/middlewares/authMiddleware.js";
 const mockUserId = validId;
 jest.mock("../../../src/middlewares/authMiddleware.js", () => ({
     authMiddleware: (req, res, next) => {

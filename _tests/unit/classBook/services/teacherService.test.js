@@ -109,7 +109,6 @@ describe("teacherService/edit", () => {
     });
 
     it("update teacher with plain data (no classes)", async () => {
-        const input = { firstName: "Ivan" };
         const expected = {
             _id: validId,
             firstName: "Ivan",
@@ -134,7 +133,6 @@ describe("teacherService/edit", () => {
     });
 
     it("adds class to the list", async () => {
-        const input = { clssToAdd: "5A" };
         const expected = {
             _id: validId,
             clss: ["5A"],
@@ -159,7 +157,6 @@ describe("teacherService/edit", () => {
     });
 
     it("removes a class from the list", async () => {
-        const input = { clssToRemove: "5A" };
         const expected = {
             _id: validId,
             clss: [],

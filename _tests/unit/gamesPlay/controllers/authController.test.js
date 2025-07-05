@@ -4,7 +4,6 @@ import request from "supertest";
 
 import { authController } from "../../../../src/controllers/gamesPlay/authController.js";
 
-import { authMiddleware } from "../../../../src/middlewares/authMiddleware.js";
 import errorHandler from "../../../../src/middlewares/errorHandler.js";
 
 import InvalidToken from "../../../../src/models/InvalidToken.js";

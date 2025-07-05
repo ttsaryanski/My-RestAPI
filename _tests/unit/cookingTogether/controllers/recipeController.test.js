@@ -4,7 +4,6 @@ import request from "supertest";
 import { recipeController } from "../../../../src/controllers/cookingTogether/recipeController.js";
 
 import { authMiddleware } from "../../../../src/middlewares/authMiddleware.js";
-import { isOwner } from "../../../../src/middlewares/ownerMiddleware.js";
 import errorHandler from "../../../../src/middlewares/errorHandler.js";
 
 import { validId } from "../../../../src/config/constans.js";

@@ -3,7 +3,6 @@ import request from "supertest";
 
 import { teacherController } from "../../../../src/controllers/classBook/teacherController.js";
 
-import { authMiddleware } from "../../../../src/middlewares/authMiddleware.js";
 import errorHandler from "../../../../src/middlewares/errorHandler.js";
 
 import { validId } from "../../../../src/config/constans.js";

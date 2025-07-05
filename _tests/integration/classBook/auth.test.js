@@ -1,4 +1,3 @@
-import { authMiddleware } from "../../../src/middlewares/authMiddleware.js";
 jest.mock("../../../src/middlewares/authMiddleware.js", () => ({
     authMiddleware: (req, res, next) => {
         req.user = { _id: global.userId };
@@ -8,9 +7,6 @@ jest.mock("../../../src/middlewares/authMiddleware.js", () => ({
 }));
 
 import request from "supertest";
-import mongoose from "mongoose";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import path from "path";
 import fs from "fs";
 

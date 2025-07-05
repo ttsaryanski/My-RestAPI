@@ -263,7 +263,6 @@ describe("studentService/edit", () => {
     });
 
     it("update student with plain data (no classes)", async () => {
-        const input = { firstName: "Ivan" };
         const expected = {
             _id: validId,
             firstName: "Ivan",
@@ -288,7 +287,6 @@ describe("studentService/edit", () => {
     });
 
     it("adds class to the list", async () => {
-        const input = { clssToAdd: "5A" };
         const expected = {
             _id: validId,
             clss: ["5A"],
@@ -313,7 +311,6 @@ describe("studentService/edit", () => {
     });
 
     it("removes a class from the list", async () => {
-        const input = { clssToRemove: "5A" };
         const expected = {
             _id: validId,
             clss: [],

@@ -4,8 +4,6 @@ import request from "supertest";
 import { adminController } from "../../../../src/controllers/gamesPlay/adminController.js";
 
 import errorHandler from "../../../../src/middlewares/errorHandler.js";
-import { authMiddleware } from "../../../../src/middlewares/authMiddleware.js";
-import { isAdmin } from "../../../../src/middlewares/isAdminMiddleware.js";
 
 import { validId } from "../../../../src/config/constans.js";
 

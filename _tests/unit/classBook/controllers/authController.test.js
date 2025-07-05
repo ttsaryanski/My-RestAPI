@@ -4,7 +4,6 @@ import request from "supertest";
 
 import { authController } from "../../../../src/controllers/classBook/authController.js";
 
-import { authMiddleware } from "../../../../src/middlewares/authMiddleware.js";
 import errorHandler from "../../../../src/middlewares/errorHandler.js";
 
 import InvalidToken from "../../../../src/models/InvalidToken.js";
@@ -13,7 +12,6 @@ import { cookiesNames, validId } from "../../../../src/config/constans.js";
 import path from "path";
 import s3 from "../../../../src/utils/awsUtils/AWS S3 client.js";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { ECDH } from "crypto";
 
 jest.mock("../../../../src/utils/awsUtils/AWS S3 client.js", () => ({
     __esModule: true,

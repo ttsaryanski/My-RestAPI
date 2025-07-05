@@ -13,7 +13,6 @@ import {
 
 import s3 from "../../utils/awsUtils/AWS S3 client.js";
 import upload from "../../utils/awsUtils/multerStorage.js";
-import { getUserIdFromCookie } from "../../utils/getUtils/getUserIdFromCookie.js";
 import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
 import { CustomError } from "../../utils/errorUtils/customError.js";
 import { loginLimiter } from "../../utils/rateLimiter.js";

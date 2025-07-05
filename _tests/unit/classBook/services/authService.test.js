@@ -7,7 +7,6 @@ import { teacherService } from "../../../../src/services/classBook/teacherServic
 import Setting from "../../../../src/models/classBook/Setting.js";
 import User from "../../../../src/models/classBook/User.js";
 import Student from "../../../../src/models/classBook/Student.js";
-import Teacher from "../../../../src/models/classBook/Teacher.js";
 import InvalidToken from "../../../../src/models/InvalidToken.js";
 
 import { CustomError } from "../../../../src/utils/errorUtils/customError.js";

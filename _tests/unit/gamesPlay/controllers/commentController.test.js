@@ -3,8 +3,6 @@ import request from "supertest";
 
 import { commentController } from "../../../../src/controllers/gamesPlay/commentController.js";
 
-import { authMiddleware } from "../../../../src/middlewares/authMiddleware.js";
-import { isAdmin } from "../../../../src/middlewares/isAdminMiddleware.js";
 import errorHandler from "../../../../src/middlewares/errorHandler.js";
 
 import { validId } from "../../../../src/config/constans.js";
