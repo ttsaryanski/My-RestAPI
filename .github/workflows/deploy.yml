@@ -38,6 +38,9 @@ jobs:
             - name: Run ESLint
               run: npm run lint
 
+            - name: Set JWT_SECRET env variable
+              run: echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> $GITHUB_ENV
+
             - name: Run Tests
               run: npm test
 
