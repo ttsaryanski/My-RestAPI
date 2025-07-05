@@ -24,6 +24,23 @@ jobs:
               with:
                   credentials_json: ${{ secrets.GCP_SA_KEY }}
 
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 18
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Run Prettier check
+              run: npm run format:check
+
+            - name: Run ESLint
+              run: npm run lint
+
+            - name: Run Tests
+              run: npm test
+
             - name: Set up gcloud CLI
               uses: google-github-actions/setup-gcloud@v1
 
@@ -42,12 +59,3 @@ jobs:
                     --image ${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.SERVICE_NAME }}:latest \
                     --region ${{ env.REGION }} \
                     --platform managed \
-
-            - name: Run Prettier check
-              run: npm prettier . --check
-
-            - name: Run ESLint
-              run: npm run lint
-
-            - name: Run Tests
-              run: npm test
