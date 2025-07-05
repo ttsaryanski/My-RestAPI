@@ -49,6 +49,6 @@ export const editStudentDto = Joi.object({
             comment: Joi.string().trim().allow("", null).optional().messages({
                 "string.base": "Comment must be a string",
             }),
-        })
+        }).unknown(true)
     ),
 }).unknown(true);
