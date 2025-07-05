@@ -44,9 +44,19 @@ export const teacherService = {
             delete updateQuery.clssToRemove;
         }
 
-        return await Teacher.findByIdAndUpdate(teacherId, updateQuery, {
-            runValidators: true,
-            new: true,
-        });
+        const editedTeacher = await Teacher.findByIdAndUpdate(
+            teacherId,
+            updateQuery,
+            {
+                runValidators: true,
+                new: true,
+            }
+        );
+
+        if (!editedTeacher) {
+            throw new CustomError("Teacher not found", 404);
+        }
+
+        return editedTeacher;
     },
 };

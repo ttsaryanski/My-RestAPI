@@ -1,8 +1,10 @@
 import { authMiddleware } from "../../../src/middlewares/authMiddleware.js";
 import { isAdmin } from "../../../src/middlewares/isAdminMiddleware.js";
+import { validId } from "../../../src/config/constans.js";
+const mockUserId = validId;
 jest.mock("../../../src/middlewares/authMiddleware.js", () => ({
     authMiddleware: (req, res, next) => {
-        req.user = { _id: "64b2f9d4f8a1e4e1c5a9c123", role: "admin" };
+        req.user = { _id: mockUserId, role: "admin" };
         req.isAuthenticated = true;
         next();
     },
@@ -16,8 +18,6 @@ import mongoose from "mongoose";
 
 import app from "../../../src/app.js";
 import Comment from "../../../src/models/gamesPlay/Comment.js";
-
-import { validId } from "../../../src/config/constans.js";
 
 describe("GET /comments/:gameId", () => {
     beforeEach(async () => {

@@ -1,8 +1,10 @@
 import { authMiddleware } from "../../../src/middlewares/authMiddleware.js";
 import { isOwner } from "../../../src/middlewares/ownerMiddleware.js";
+import { validId } from "../../../src/config/constans.js";
+const mockUserId = validId;
 jest.mock("../../../src/middlewares/authMiddleware.js", () => ({
     authMiddleware: (req, res, next) => {
-        req.user = { _id: "64b2f9d4f8a1e4e1c5a9c123" };
+        req.user = { _id: mockUserId };
         req.isAuthenticated = true;
         next();
     },
@@ -16,8 +18,6 @@ import mongoose from "mongoose";
 
 import app from "../../../src/app.js";
 import Item from "../../../src/models/cookingTogether/Recipe.js";
-
-import { validId } from "../../../src/config/constans.js";
 
 describe("GET /recipes", () => {
     it("should return empty array", async () => {

@@ -27,12 +27,12 @@ describe("GET /student", () => {
     it("should return all existing students", async () => {
         await Student.create([
             {
-                firstName: "firsname1",
+                firstName: "firstname1",
                 lastName: "lastname1",
                 identifier: "0000000001",
             },
             {
-                firstName: "firsname2",
+                firstName: "firstname2",
                 lastName: "lastname2",
                 identifier: "0000000002",
             },
@@ -54,7 +54,7 @@ describe("POST /student", () => {
 
     it("should create new student and return 201", async () => {
         const newStudent = {
-            firstName: "firsname1",
+            firstName: "firstname1",
             lastName: "lastname1",
             identifier: "0000000001",
         };
@@ -64,10 +64,10 @@ describe("POST /student", () => {
             .send(newStudent);
 
         expect(res.statusCode).toBe(201);
-        expect(res.body.firstName).toBe("firsname1");
+        expect(res.body.firstName).toBe("firstname1");
         expect(res.body._ownerId).toBe(validId);
 
-        const dbEntry = await Student.findOne({ firstName: "firsname1" });
+        const dbEntry = await Student.findOne({ firstName: "firstname1" });
         expect(dbEntry).not.toBeNull();
     });
 
@@ -158,7 +158,7 @@ describe("GET /student/:studentId", () => {
         await Student.deleteMany();
 
         student = await Student.create({
-            firstName: "firsname1",
+            firstName: "firstname1",
             lastName: "lastname1",
             identifier: "0000000001",
             _ownerId: validId,
@@ -169,7 +169,7 @@ describe("GET /student/:studentId", () => {
         const res = await request(app).get(`/api/class/student/${student._id}`);
 
         expect(res.statusCode).toBe(200);
-        expect(res.body.firstName).toBe("firsname1");
+        expect(res.body.firstName).toBe("firstname1");
         expect(res.body).toHaveProperty("_id", student._id.toString());
     });
 
@@ -198,7 +198,7 @@ describe("GET /student/:studentId/populate", () => {
         await Student.deleteMany();
 
         student = await Student.create({
-            firstName: "firsname1",
+            firstName: "firstname1",
             lastName: "lastname1",
             identifier: "0000000001",
             _ownerId: validId,
@@ -211,7 +211,7 @@ describe("GET /student/:studentId/populate", () => {
         );
 
         expect(res.statusCode).toBe(200);
-        expect(res.body.firstName).toBe("firsname1");
+        expect(res.body.firstName).toBe("firstname1");
         expect(res.body).toHaveProperty("_id", student._id.toString());
     });
 
@@ -242,7 +242,7 @@ describe("PUT /student/:studentId", () => {
         await Student.deleteMany();
 
         student = await Student.create({
-            firstName: "firsname1",
+            firstName: "firstname1",
             lastName: "lastname1",
             identifier: "0000000001",
             _ownerId: validId,
@@ -262,10 +262,15 @@ describe("PUT /student/:studentId", () => {
     };
 
     const incorectData = {
-        teacher: "invalidId",
-        class: "invalidId",
-        value: 10,
-        comment: 6,
+        clssToAdd: "invalidId",
+        grades: [
+            {
+                teacher: "invalidId",
+                class: "invalidId",
+                value: 10,
+                comment: 6,
+            },
+        ],
     };
 
     it("should edit student by id", async () => {

@@ -138,32 +138,40 @@ describe("Student Controller", () => {
     });
 
     test("PUT /student/:studentId - should edit student", async () => {
-        const updatedStudent = {
-            teacher: validId,
-            class: validId,
-            value: 6,
-            comment: "Excellent work!",
+        const validUpdate = {
+            grades: [
+                {
+                    teacher: validId,
+                    class: validId,
+                    value: 6,
+                    comment: "Excellent work!",
+                },
+            ],
         };
-        mockStudentService.edit.mockResolvedValue(updatedStudent);
+        mockStudentService.edit.mockResolvedValue(validUpdate);
 
         const res = await request(app)
             .put(`/student/${validId}`)
-            .send(updatedStudent);
+            .send(validUpdate);
 
         expect(res.statusCode).toBe(201);
-        expect(res.body).toEqual(updatedStudent);
+        expect(res.body).toEqual(validUpdate);
         expect(mockStudentService.edit).toHaveBeenCalledWith(
             validId,
-            updatedStudent
+            validUpdate
         );
     });
 
     test("PUT /student/:studentId - should return 400 for invalid update data", async () => {
         const invalidUpdate = {
-            teacher: "invalid",
-            class: "invalid",
-            value: "6",
-            comment: 5,
+            grades: [
+                {
+                    teacher: "invalid",
+                    class: "invalid",
+                    value: "6",
+                    comment: 5,
+                },
+            ],
         };
 
         const res = await request(app)
@@ -176,10 +184,14 @@ describe("Student Controller", () => {
 
     test("PUT /student/:studentId - should return 400 for invalid studentId format", async () => {
         const validUpdate = {
-            teacher: validId,
-            class: validId,
-            value: 6,
-            comment: "Excellent work!",
+            grades: [
+                {
+                    teacher: validId,
+                    class: validId,
+                    value: 6,
+                    comment: "Excellent work!",
+                },
+            ],
         };
 
         const res = await request(app)
