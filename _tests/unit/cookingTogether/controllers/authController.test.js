@@ -9,7 +9,6 @@ import errorHandler from "../../../../src/middlewares/errorHandler.js";
 import InvalidToken from "../../../../src/models/InvalidToken.js";
 import { cookiesNames } from "../../../../src/config/constans.js";
 
-import path from "path";
 import s3 from "../../../../src/utils/awsUtils/AWS S3 client.js";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 
@@ -212,7 +211,6 @@ describe("Auth Controller", () => {
         s3.send.mockResolvedValue({ ETag: '"mock-etag"' });
         mockAuthService.register.mockResolvedValue("mockToken");
 
-        //const filePath = path.resolve(__dirname, "../../test-image.jpg");
         const res = await request(app)
             .post("/authAngular/register")
             .field("username", "TestUser")

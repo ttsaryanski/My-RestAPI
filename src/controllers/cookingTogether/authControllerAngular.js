@@ -1,6 +1,4 @@
 import { Router } from "express";
-import fs from "fs";
-import path from "path";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
@@ -32,29 +30,8 @@ export function authController(authService) {
             }
 
             const { username, email, password, rePassword } = data;
+
             let profilePicture = null;
-
-            // if (req.file) {
-            // const filePath = req.file.path;
-
-            // const uploadParams = {
-            // Bucket: "test-client-bucket-app",
-            // Key: path.basename(filePath),
-            // Body: fs.createReadStream(filePath),
-            // };
-
-            // const command = new PutObjectCommand(uploadParams);
-            // const s3Response = await s3.send(command);
-
-            // const fileName = req.file.originalname;
-            // const fileUrl = `https://${uploadParams.Bucket}.s3.amazonaws.com/${uploadParams.Key}`;
-            // profilePicture = { fileName, fileUrl };
-
-            // if (fs.existsSync(filePath)) {
-            // fs.unlinkSync(filePath);
-            // }
-            // }
-
             if (req.file) {
                 const uploadParams = {
                     Bucket: "test-client-bucket-app",

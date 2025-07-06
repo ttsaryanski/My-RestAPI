@@ -19,6 +19,16 @@ import { cookiesNames } from "../../../src/config/constans.js";
 
 import { createAccessToken } from "../../../src/services/cookingTogether/authService.js";
 
+jest.mock("@aws-sdk/client-s3", () => {
+    const sendMock = jest.fn().mockResolvedValue({ ETag: '"mocked-etag"' });
+    return {
+        S3Client: jest.fn(() => ({
+            send: sendMock,
+        })),
+        PutObjectCommand: jest.fn(),
+    };
+});
+
 describe("POST /authAngular/register", () => {
     beforeEach(async () => {
         await UserAngular.deleteMany();
@@ -119,7 +129,7 @@ describe("POST /authAngular/register", () => {
         expect(dbEntry).toBeNull();
     });
 
-    it("should upload profile picture and create user", async () => {
+    it("should upload profile picture and create user with AWS mock", async () => {
         const res = await request(app)
             .post("/api/cooking/authAngular/register")
             .field("username", "fileuser")

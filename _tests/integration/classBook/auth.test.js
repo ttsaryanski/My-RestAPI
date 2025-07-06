@@ -7,8 +7,6 @@ jest.mock("../../../src/middlewares/authMiddleware.js", () => ({
 }));
 
 import request from "supertest";
-import path from "path";
-import fs from "fs";
 
 import app from "../../../src/app.js";
 import User from "../../../src/models/classBook/User.js";
@@ -122,10 +120,6 @@ describe("POST /auth/register", () => {
     });
 
     it("should upload profile picture and create user", async () => {
-        // const testImagePath = path.resolve(__dirname, "..", "test-image.jpg");
-
-        // expect(fs.existsSync(testImagePath)).toBe(true);
-
         const res = await request(app)
             .post("/api/class/auth/register")
             .field("firstName", "fileuserfirstname")
@@ -153,8 +147,6 @@ describe("POST /auth/register", () => {
 });
 
 describe("POST /auth/register - file upload with AWS mock", () => {
-    //const testImagePath = path.resolve(__dirname, "..", "test-image.jpg");
-
     beforeEach(async () => {
         await User.deleteMany();
         await Setting.deleteMany();
@@ -167,8 +159,6 @@ describe("POST /auth/register - file upload with AWS mock", () => {
         jest.spyOn(s3, "send").mockResolvedValue({
             ETag: '"mocked-etag"',
         });
-
-        jest.spyOn(fs, "unlinkSync").mockImplementation(() => {});
     });
 
     afterEach(() => {
@@ -176,8 +166,6 @@ describe("POST /auth/register - file upload with AWS mock", () => {
     });
 
     it("should upload profile picture and create user", async () => {
-        //expect(fs.existsSync(testImagePath)).toBe(true);
-
         const res = await request(app)
             .post("/api/class/auth/register")
             .field("firstName", "fileuserfirstname")
@@ -455,8 +443,6 @@ describe("PUT /auth/profile without file upload", () => {
 });
 
 describe("PUT /auth/profile - edit user data with file upload with AWS mock", () => {
-    //const testImagePath = path.resolve(__dirname, "..", "test-image.jpg");
-
     beforeEach(async () => {
         await User.deleteMany();
         await Setting.deleteMany();
@@ -469,8 +455,6 @@ describe("PUT /auth/profile - edit user data with file upload with AWS mock", ()
         jest.spyOn(s3, "send").mockResolvedValue({
             ETag: '"mocked-etag"',
         });
-
-        //jest.spyOn(fs, "unlinkSync").mockImplementation(() => {});
     });
 
     afterEach(() => {
@@ -478,8 +462,6 @@ describe("PUT /auth/profile - edit user data with file upload with AWS mock", ()
     });
 
     it("should upload profile picture and update user", async () => {
-        //expect(fs.existsSync(testImagePath)).toBe(true);
-
         const user = await User.create({
             firstName: "testuser",
             lastName: "testuserov",
@@ -489,8 +471,6 @@ describe("PUT /auth/profile - edit user data with file upload with AWS mock", ()
             secretKey: "teacher-secret",
         });
         global.userId = user._id.toString();
-
-        //const mockImageBuffer = Buffer.from("mock image content");
 
         const res = await request(app)
             .put("/api/class/auth/profile")
