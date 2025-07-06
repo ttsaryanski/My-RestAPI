@@ -299,12 +299,16 @@ describe("Auth Controller", () => {
         s3.send.mockResolvedValue({ ETag: '"mock-etag"' });
         mockAuthService.editUser.mockResolvedValue("mockToken");
 
-        const filePath = path.resolve(__dirname, "../../test-image.jpg");
+        //const filePath = path.resolve(__dirname, "../../test-image.jpg");
         const res = await request(app)
             .put("/auth/profile")
             .field("firstName", "TestUser")
             .field("lastName", "TestUser")
-            .attach("profilePicture", filePath);
+            .attach(
+                "profilePicture",
+                Buffer.from("mock image"),
+                "test-image.jpg"
+            );
 
         expect(res.statusCode).toBe(201);
         expect(s3.send).toHaveBeenCalledWith(expect.any(PutObjectCommand));

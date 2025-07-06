@@ -41,25 +41,39 @@ export function authController(authService) {
 
             let profilePicture = null;
 
-            if (req.file) {
-                const filePath = req.file.path;
+            // if (req.file) {
+            // const filePath = req.file.path;
 
+            // const uploadParams = {
+            // Bucket: "test-client-bucket-app",
+            // Key: path.basename(filePath),
+            // Body: fs.createReadStream(filePath),
+            // };
+
+            // const command = new PutObjectCommand(uploadParams);
+            // const s3Response = await s3.send(command);
+
+            // const fileName = req.file.originalname;
+            // const fileUrl = `https://${uploadParams.Bucket}.s3.amazonaws.com/${uploadParams.Key}`;
+            // profilePicture = { fileName, fileUrl };
+
+            // if (fs.existsSync(filePath)) {
+            // fs.unlinkSync(filePath);
+            // }
+            // }
+
+            if (req.file) {
                 const uploadParams = {
                     Bucket: "test-client-bucket-app",
-                    Key: path.basename(filePath),
-                    Body: fs.createReadStream(filePath),
+                    Key: `${Date.now()}-${req.file.originalname}`,
+                    Body: req.file.buffer,
+                    ContentType: req.file.mimetype,
                 };
-
                 const command = new PutObjectCommand(uploadParams);
                 const s3Response = await s3.send(command);
-
                 const fileName = req.file.originalname;
                 const fileUrl = `https://${uploadParams.Bucket}.s3.amazonaws.com/${uploadParams.Key}`;
                 profilePicture = { fileName, fileUrl };
-
-                if (fs.existsSync(filePath)) {
-                    fs.unlinkSync(filePath);
-                }
             }
 
             const accessToken = await authService.register(
@@ -155,25 +169,39 @@ export function authController(authService) {
                 throw new CustomError(dataError.details[0].message, 400);
             }
 
+            // if (req.file) {
+            // const filePath = req.file.path;
+
+            // const uploadParams = {
+            // Bucket: "class-book",
+            // Key: path.basename(filePath),
+            // Body: fs.createReadStream(filePath),
+            // };
+
+            // const command = new PutObjectCommand(uploadParams);
+            // const s3Response = await s3.send(command);
+
+            // const fileName = req.file.originalname;
+            // const fileUrl = `https://${uploadParams.Bucket}.s3.amazonaws.com/${uploadParams.Key}`;
+            // data.profilePicture = { fileName, fileUrl };
+
+            // if (fs.existsSync(filePath)) {
+            // fs.unlinkSync(filePath);
+            // }
+            // }
+
             if (req.file) {
-                const filePath = req.file.path;
-
                 const uploadParams = {
-                    Bucket: "class-book",
-                    Key: path.basename(filePath),
-                    Body: fs.createReadStream(filePath),
+                    Bucket: "test-client-bucket-app",
+                    Key: `${Date.now()}-${req.file.originalname}`,
+                    Body: req.file.buffer,
+                    ContentType: req.file.mimetype,
                 };
-
                 const command = new PutObjectCommand(uploadParams);
                 const s3Response = await s3.send(command);
-
                 const fileName = req.file.originalname;
                 const fileUrl = `https://${uploadParams.Bucket}.s3.amazonaws.com/${uploadParams.Key}`;
                 data.profilePicture = { fileName, fileUrl };
-
-                if (fs.existsSync(filePath)) {
-                    fs.unlinkSync(filePath);
-                }
             }
 
             const user = await authService.editUser(userId, data);
