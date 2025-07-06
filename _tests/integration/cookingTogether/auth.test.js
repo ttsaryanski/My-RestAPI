@@ -7,8 +7,6 @@ jest.mock("../../../src/middlewares/authMiddleware.js", () => ({
 }));
 
 import request from "supertest";
-import path from "path";
-import fs from "fs";
 
 import app from "../../../src/app.js";
 import UserAngular from "../../../src/models/cookingTogether/User.js";
@@ -112,17 +110,17 @@ describe("POST /authAngular/register", () => {
     });
 
     it("should upload profile picture and create user", async () => {
-        const testImagePath = path.resolve(__dirname, "..", "test-image.jpg");
-
-        expect(fs.existsSync(testImagePath)).toBe(true);
-
         const res = await request(app)
             .post("/api/cooking/authAngular/register")
             .field("username", "fileuser")
             .field("email", "fileuser@email.com")
             .field("password", "password")
             .field("rePassword", "password")
-            .attach("profilePicture", testImagePath);
+            .attach(
+                "profilePicture",
+                Buffer.from("mock image"),
+                "test-image.jpg"
+            );
 
         expect(res.statusCode).toBe(204);
 

@@ -122,10 +122,6 @@ describe("POST /auth/register", () => {
     });
 
     it("should upload profile picture and create user", async () => {
-        const testImagePath = path.resolve(__dirname, "..", "test-image.jpg");
-
-        expect(fs.existsSync(testImagePath)).toBe(true);
-
         const res = await request(app)
             .post("/api/class/auth/register")
             .field("firstName", "fileuserfirstname")
@@ -133,7 +129,11 @@ describe("POST /auth/register", () => {
             .field("email", "fileuser@email.com")
             .field("identifier", "9876543210")
             .field("password", "password")
-            .attach("profilePicture", testImagePath);
+            .attach(
+                "profilePicture",
+                Buffer.from("mock image"),
+                "test-image.jpg"
+            );
 
         expect(res.statusCode).toBe(204);
 
