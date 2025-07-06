@@ -14,6 +14,7 @@ env:
 jobs:
     deploy:
         runs-on: ubuntu-latest
+        environment: Secrets environments
 
         steps:
             - name: Checkout
@@ -37,6 +38,12 @@ jobs:
 
             - name: Run ESLint
               run: npm run lint
+
+            - name: Set JWT_SECRET
+              run: echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> $GITHUB_ENV
+
+            - name: Run Tests
+              run: npm tests
 
             - name: Set up gcloud CLI
               uses: google-github-actions/setup-gcloud@v1

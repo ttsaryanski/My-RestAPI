@@ -122,7 +122,7 @@ describe("POST /auth/register", () => {
     });
 
     it("should upload profile picture and create user", async () => {
-        const testImagePath = path.join(__dirname, "..", "test-image.jpg");
+        const testImagePath = path.resolve(__dirname, "..", "test-image.jpg");
 
         expect(fs.existsSync(testImagePath)).toBe(true);
 
@@ -149,7 +149,7 @@ describe("POST /auth/register", () => {
 });
 
 describe("POST /auth/register - file upload with AWS mock", () => {
-    const testImagePath = path.join(__dirname, "..", "test-image.jpg");
+    const testImagePath = path.resolve(__dirname, "..", "test-image.jpg");
 
     beforeEach(async () => {
         await User.deleteMany();
@@ -447,7 +447,7 @@ describe("PUT /auth/profile without file upload", () => {
 });
 
 describe("PUT /auth/profile - edit user data with file upload with AWS mock", () => {
-    const testImagePath = path.join(__dirname, "..", "test-image.jpg");
+    const testImagePath = path.resolve(__dirname, "..", "test-image.jpg");
 
     beforeEach(async () => {
         await User.deleteMany();

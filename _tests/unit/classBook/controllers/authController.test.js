@@ -299,7 +299,7 @@ describe("Auth Controller", () => {
         s3.send.mockResolvedValue({ ETag: '"mock-etag"' });
         mockAuthService.editUser.mockResolvedValue("mockToken");
 
-        const filePath = path.join(__dirname, "../../test-image.jpg");
+        const filePath = path.resolve(__dirname, "../../test-image.jpg");
         const res = await request(app)
             .put("/auth/profile")
             .field("firstName", "TestUser")

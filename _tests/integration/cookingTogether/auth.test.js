@@ -112,7 +112,7 @@ describe("POST /authAngular/register", () => {
     });
 
     it("should upload profile picture and create user", async () => {
-        const testImagePath = path.join(__dirname, "..", "test-image.jpg");
+        const testImagePath = path.resolve(__dirname, "..", "test-image.jpg");
 
         expect(fs.existsSync(testImagePath)).toBe(true);
 
