@@ -12,6 +12,8 @@ import app from "../../../src/app.js";
 import UserAngular from "../../../src/models/cookingTogether/User.js";
 import InvalidToken from "../../../src/models/InvalidToken.js";
 
+import s3 from "../../../src/utils/awsUtils/AWS S3 client.js";
+
 import { validId } from "../../../src/config/constans.js";
 import { cookiesNames } from "../../../src/config/constans.js";
 
@@ -26,6 +28,14 @@ describe("POST /authAngular/register", () => {
             email: "existuser@email.com",
             password: "password",
         });
+
+        jest.spyOn(s3, "send").mockResolvedValue({
+            ETag: '"mocked-etag"',
+        });
+    });
+
+    afterEach(() => {
+        jest.restoreAllMocks();
     });
 
     it("should create new user and return 204", async () => {
