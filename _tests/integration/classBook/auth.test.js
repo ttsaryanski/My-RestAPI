@@ -490,13 +490,13 @@ describe("PUT /auth/profile - edit user data with file upload with AWS mock", ()
         });
         global.userId = user._id.toString();
 
-        const mockImageBuffer = Buffer.from("mock image content");
+        //const mockImageBuffer = Buffer.from("mock image content");
 
         const res = await request(app)
             .put("/api/class/auth/profile")
             .field("firstName", "editedfileuserfirstname")
             .field("lastName", "editedfileuserlastname")
-            .attach("profilePicture", mockImageBuffer, {
+            .attach("profilePicture", Buffer.from("mock image"), {
                 filename: "test-image.jpg",
                 contentType: "image/jpeg",
             });

@@ -116,11 +116,10 @@ describe("POST /authAngular/register", () => {
             .field("email", "fileuser@email.com")
             .field("password", "password")
             .field("rePassword", "password")
-            .attach(
-                "profilePicture",
-                Buffer.from("mock image"),
-                "test-image.jpg"
-            );
+            .attach("profilePicture", Buffer.from("mock image"), {
+                filename: "test-image.jpg",
+                contentType: "image/jpeg",
+            });
 
         expect(res.statusCode).toBe(204);
 
