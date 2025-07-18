@@ -57,5 +57,5 @@ Successfully connected to the cloud DB!
 ## 4. Use Documentation
 
 ```
-After server is on, go to http://localhost:3000/api.docs
+After server is on, go to http://localhost:3000/api/docs
 ```
