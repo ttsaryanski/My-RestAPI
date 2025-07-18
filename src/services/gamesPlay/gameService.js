@@ -33,7 +33,7 @@ export const gameService = {
                 .sort({ createdAt: -1 })
                 .skip(skip)
                 .limit(limit)
-                .populate("_ownerId"),
+                .populate("_ownerId", "-password"),
             Game.countDocuments(),
         ]);
 

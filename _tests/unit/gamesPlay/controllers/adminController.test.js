@@ -90,19 +90,19 @@ describe("Admin Controller", () => {
         expect(mockAuthService.getAllUsers).toHaveBeenCalledWith({});
     });
 
-    test("GET /users/:userId - should make user admin", async () => {
+    test("PATCH /users/:userId - should make user admin", async () => {
         const mockData = { _id: validId, role: "admin" };
         mockAuthService.makeAdmin.mockResolvedValue(mockData);
 
-        const res = await request(app).get(`/admin/users/${validId}`);
+        const res = await request(app).patch(`/admin/users/${validId}`);
 
         expect(res.statusCode).toBe(200);
         expect(res.body).toEqual(mockData);
         expect(mockAuthService.makeAdmin).toHaveBeenCalledWith(validId);
     });
 
-    test("GET /users/:userId - should return 400 for invalid userId format", async () => {
-        const res = await request(app).get("/admin/users/!@#invalidID");
+    test("PATCH /users/:userId - should return 400 for invalid userId format", async () => {
+        const res = await request(app).patch("/admin/users/!@#invalidID");
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toMatch(
@@ -110,10 +110,10 @@ describe("Admin Controller", () => {
         );
     });
 
-    test("GET /users/:userId - should return 404 if user not found", async () => {
+    test("PATCH /users/:userId - should return 404 if user not found", async () => {
         mockAuthService.makeAdmin.mockResolvedValue(null);
 
-        const res = await request(app).get(`/admin/users/${validId}`);
+        const res = await request(app).patch(`/admin/users/${validId}`);
 
         expect(res.statusCode).toBe(404);
         expect(res.body.message).toBe("User not found");
@@ -153,7 +153,7 @@ describe("Admin Controller", () => {
         expect(res.body.message).toBe("User not found");
     });
 
-    test("DELETE /users/:userId - should return 401 if user is admin", async () => {
+    test("DELETE /users/:userId - should return 403 if user is admin", async () => {
         mockAuthService.getUserById.mockResolvedValue({
             _id: validId,
             role: "admin",
@@ -161,7 +161,7 @@ describe("Admin Controller", () => {
 
         const res = await request(app).delete(`/admin/users/${validId}`);
 
-        expect(res.statusCode).toBe(401);
+        expect(res.statusCode).toBe(403);
         expect(res.body.message).toBe("Cannot delete admin account");
     });
 

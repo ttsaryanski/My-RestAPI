@@ -46,7 +46,7 @@ export function adminController(authService, gameService, visitService) {
         })
     );
 
-    router.get(
+    router.patch(
         "/users/:userId",
         asyncErrorHandler(async (req, res) => {
             const userId = req.params.userId;
@@ -81,7 +81,7 @@ export function adminController(authService, gameService, visitService) {
             }
 
             if (user.role === "admin") {
-                throw new CustomError("Cannot delete admin account", 401);
+                throw new CustomError("Cannot delete admin account", 403);
             }
 
             await authService.remove(userId);

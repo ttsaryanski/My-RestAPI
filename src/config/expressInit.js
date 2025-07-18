@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import csurf from "csurf";
 import helmet from "helmet";
+import { swaggerUi, swaggerDocument } from "../swagger.js";
 
 import { realIp } from "../middlewares/realIp.js";
 import { requestLogger } from "../middlewares/requestLogger.js";
@@ -57,19 +58,30 @@ export default function expressInit(app) {
         })
     );
     if (process.env.NODE_ENV !== "test") {
-        app.use(
-            csurf({
-                cookie: {
-                    httpOnly: true,
-                    secure: process.env.NODE_ENV === "production",
-                    sameSite:
-                        process.env.NODE_ENV === "production" ? "None" : "Lax",
-                },
-            })
-        );
+        const csrfProtection = csurf({
+            cookie: {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production",
+                sameSite:
+                    process.env.NODE_ENV === "production" ? "None" : "Lax",
+            },
+        });
+
+        app.use((req, res, next) => {
+            const isSwaggerUI =
+                req.path.startsWith("/docs") ||
+                (req.headers.referer && req.headers.referer.includes("/docs"));
+
+            if (isSwaggerUI) {
+                return next();
+            }
+
+            return csrfProtection(req, res, next);
+        });
 
         app.get("/api/csrf-token", (req, res) => {
             res.json({ csrfToken: req.csrfToken() });
         });
+        app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     }
 }

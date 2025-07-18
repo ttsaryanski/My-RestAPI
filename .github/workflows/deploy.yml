@@ -39,6 +39,9 @@ jobs:
             - name: Run ESLint
               run: npm run lint
 
+            - name: Validate OpenAPI spec
+              run: npm run validate
+
             - name: Set JWT_SECRET
               run: echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> $GITHUB_ENV
 

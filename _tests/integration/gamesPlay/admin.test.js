@@ -167,7 +167,7 @@ describe("GET /admin/users", () => {
     });
 });
 
-describe("GET /admin/users/:userId", () => {
+describe("PATCH /admin/users/:userId", () => {
     let user;
     beforeEach(async () => {
         await UserGames.deleteMany();
@@ -181,7 +181,7 @@ describe("GET /admin/users/:userId", () => {
     });
 
     it("should edit user by id and make her role admin", async () => {
-        const res = await request(app).get(
+        const res = await request(app).patch(
             `/api/games_play/admin/users/${user._id}`
         );
 
@@ -190,7 +190,7 @@ describe("GET /admin/users/:userId", () => {
     });
 
     it("should return 400 if userId is invalid", async () => {
-        const res = await request(app).get(
+        const res = await request(app).patch(
             "/api/games_play/admin/users/invalidId"
         );
 
@@ -201,7 +201,7 @@ describe("GET /admin/users/:userId", () => {
     it("should return 404 if user not found", async () => {
         const nonExistingId = new mongoose.Types.ObjectId();
 
-        const res = await request(app).get(
+        const res = await request(app).patch(
             `/api/games_play/admin/users/${nonExistingId}`
         );
 
@@ -268,12 +268,12 @@ describe("DELETE /admin/users/:userId", () => {
         expect(dbEntry).not.toBeNull();
     });
 
-    it("should return 401 if user is admin", async () => {
+    it("should return 403 if user is admin", async () => {
         const res = await request(app).delete(
             `/api/games_play/admin/users/${users[1]._id}`
         );
 
-        expect(res.statusCode).toBe(401);
+        expect(res.statusCode).toBe(403);
         expect(res.body.message).toBe("Cannot delete admin account");
 
         const dbEntry = await UserGames.findOne({ email: "test2@email.com" });

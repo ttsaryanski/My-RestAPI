@@ -44,7 +44,10 @@ export const authService = {
     },
 
     async getUserById(id) {
-        const user = await UserGames.findById(id);
+        const user = await UserGames.findById(id, {
+            password: 0,
+            __v: 0,
+        });
 
         if (!user) {
             throw new CustomError("There is no user with this id!", 404);
@@ -69,7 +72,7 @@ export const authService = {
             { $sort: { roleOrder: 1, _id: -1 } },
             { $skip: skip },
             { $limit: limit },
-            { $project: { roleOrder: 0 } },
+            { $project: { roleOrder: 0, password: 0, __v: 0 } },
         ]);
 
         return { users };

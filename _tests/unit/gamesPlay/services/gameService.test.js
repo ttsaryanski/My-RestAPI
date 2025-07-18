@@ -90,7 +90,10 @@ describe("gameService/getInfinity", () => {
         expect(mockQuery.sort).toHaveBeenCalledWith({ createdAt: -1 });
         expect(mockQuery.skip).toHaveBeenCalledWith(0);
         expect(mockQuery.limit).toHaveBeenCalledWith(5);
-        expect(mockQuery.populate).toHaveBeenCalledWith("_ownerId");
+        expect(mockQuery.populate).toHaveBeenCalledWith(
+            "_ownerId",
+            "-password"
+        );
 
         expect(result).toEqual({ games: fakeGames });
     });

@@ -1,0 +1,511 @@
+openapi: 3.0.0
+info:
+    title: Multi-Client REST API
+    version: 1.0.0
+paths:
+    /games_play/authGame/register:
+        post:
+            summary: Регистриране в системата
+            tags: [GamesPlay Auth]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/GamesPlayAuthRegisterUserData"
+            responses:
+                204:
+                    description: No Content - Успешна регистрация (няма съдържание)
+                    headers:
+                        Set-Cookie:
+                            description: Съдържа сесийния JWT
+                            schema:
+                                type: string
+                                example: auth_GamesPlay={accessToken:jwt.token.value}; Path=/; HttpOnly; Secure; SameSite=None
+                400:
+                    description: Bad Request - Невалидни данни
+                    content:
+                        application/json:
+                            examples:
+                                invalidEmail:
+                                    summary: Invalid email
+                                    value:
+                                        message: "Email must be a valid email address"
+                                invalidPassword:
+                                    summary: Invalid password
+                                    value:
+                                        message: "Password must be at least 3 characters!"
+                409:
+                    description: Conflict - Съществуващ имейл
+                    content:
+                        application/json:
+                            example:
+                                message: "This email already registered!"
+
+    /games_play/authGame/login:
+        post:
+            summary: Вход в системата
+            tags: [GamesPlay Auth]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/GamesPlayAuthLoginUserData"
+            responses:
+                204:
+                    description: No Content - Успешен вход (няма съдържание)
+                    headers:
+                        Set-Cookie:
+                            description: Съдържа сесийния JWT
+                            schema:
+                                type: string
+                                example: auth_GamesPlay={accessToken:jwt.token.value}; Path=/; HttpOnly; Secure; SameSite=None
+                400:
+                    description: Bad Request - Невалидни данни
+                    content:
+                        application/json:
+                            examples:
+                                invalidEmail:
+                                    summary: Invalid email
+                                    value:
+                                        message: "Email must be a valid email address"
+                                invalidPassword:
+                                    summary: Invalid password
+                                    value:
+                                        message: "Password must be at least 3 characters!"
+                401:
+                    description: Unauthorized - Грешна парола
+                    content:
+                        application/json:
+                            example:
+                                message: "Password does not match!"
+                404:
+                    description: Not Found - Потребителят не съществува
+                    content:
+                        application/json:
+                            example:
+                                message: "User does not exist!"
+                429:
+                    description: Too Many Requests - Прекалено много опити за вход
+                    content:
+                        application/json:
+                            example:
+                                message: "Too many login attempts. Please try again in 15 minutes."
+
+    /games_play/authGame/logout:
+        post:
+            summary: Изход от системата
+            tags: [GamesPlay Auth]
+            security:
+                - gamesPlay: []
+            responses:
+                204:
+                    description: No Content - Успешен logout (cookie е изтрит)
+                    headers:
+                        Set-Cookie:
+                            description: Изчистено сесийно cookie
+                            schema:
+                                type: string
+                                example: auth_GamesPlay=; Path=/; HttpOnly; Secure; SameSite=None; Max-Age=0
+                401:
+                    description: Липсващ токен
+                    content:
+                        application/json:
+                            example:
+                                message: "Missing token in cookies!"
+
+    /games_play/authGame/profile:
+        get:
+            summary: Връща текущия потребител
+            tags: [GamesPlay Auth]
+            security:
+                - gamesPlay: []
+            responses:
+                200:
+                    description: OK - Успешно извличане на потребител
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/GamesPlayAuthProfileResponse"
+                401:
+                    description: Unauthorized - Липсващ токен
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                403:
+                    description: Forbidden - Невалиден токен
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                404:
+                    description: Not Found - Потребителят не е намерен
+                    content:
+                        application/json:
+                            example:
+                                message: "User does not exist!"
+
+    /games_play/admin/games:
+        get:
+            summary: Връща всички игри с инфинити скрол (само за администратори)
+            tags: [GamesPlay Admin]
+            security:
+                - gamesPlay: []
+            parameters:
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                      default: 1
+                      minimum: 1
+                  description: Номер на страницата (лимитът е фиксиран на 5)
+            responses:
+                200:
+                    description: Успешно взети игри
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/GamesPlayAdminGamesListResponse"
+
+    /games_play/admin/games/{gameId}:
+        delete:
+            summary: Изтрива игра по ID (само за администратори)
+            tags: [GamesPlay Admin]
+            security:
+                - gamesPlay: []
+            parameters:
+                - in: path
+                  name: gameId
+                  required: true
+                  schema:
+                      type: string
+                  description: ID на играта (валиден ObjectId – 24 символа)
+            responses:
+                204:
+                    description: No Content - Успешно изтрита игра
+                400:
+                    description: Bad Request - Невалиден ID
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid ID format!"
+                401:
+                    description: Unauthorized - Липсващ токен
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                403:
+                    description: Forbidden - изисква се администраторски достъп
+                    content:
+                        application/json:
+                            example:
+                                message: "Admin access required"
+                404:
+                    description: Not Found - Играта не съществува
+                    content:
+                        application/json:
+                            example:
+                                message: "Game not found"
+
+    /games_play/admin/users:
+        get:
+            summary: Връща всички потребители с инфинити скрол (само за администратори)
+            tags: [GamesPlay Admin]
+            security:
+                - gamesPlay: []
+            parameters:
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                      default: 1
+                      minimum: 1
+                  description: Номер на страницата (лимитът е фиксиран на 5)
+            responses:
+                200:
+                    description: Успешно взети потребители
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/GamesPlayAdminUsersListResponse"
+                401:
+                    description: Unauthorized - Липсващ токен
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                403:
+                    description: Forbidden - изисква се администраторски достъп
+                    content:
+                        application/json:
+                            example:
+                                message: "Admin access required"
+
+    /games_play/admin/users/{userId}:
+        patch:
+            summary: Сменя ролята на потребител и го прави администратор (само за администратори)
+            tags: [GamesPlay Admin]
+            security:
+                - gamesPlay: []
+            parameters:
+                - in: path
+                  name: userId
+                  required: true
+                  schema:
+                      type: string
+                  description: ID на потребителя (валиден ObjectId – 24 символа)
+            responses:
+                200:
+                    description: Успешно добавен за администратор
+                    content:
+                        application/json:
+                            example:
+                                _id: "123"
+                                email: "user@test.com"
+                                role: "аdmin"
+                400:
+                    description: Bad Request - Невалиден ID
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid ID format!"
+                401:
+                    description: Unauthorized - Липсващ токен
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                403:
+                    description: Forbidden - изисква се администраторски достъп
+                    content:
+                        application/json:
+                            example:
+                                message: "Admin access required"
+                404:
+                    description: Not Found - Потребителят не съществува
+                    content:
+                        application/json:
+                            example:
+                                message: "User not found"
+        delete:
+            summary: Изтрива потребител - администратор не може да бъде изтрит (само за администратори)
+            tags: [GamesPlay Admin]
+            security:
+                - gamesPlay: []
+            parameters:
+                - in: path
+                  name: userId
+                  required: true
+                  schema:
+                      type: string
+                  description: ID на потребителя (валиден ObjectId – 24 символа)
+            responses:
+                204:
+                    description: Успешно изтрит потребител
+                400:
+                    description: Bad Request - Невалиден ID
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid ID format!"
+                401:
+                    description: Unauthorized - Липсващ токен
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                403:
+                    description: Forbidden - Невалиден токен или непозволено действие
+                    content:
+                        application/json:
+                            examples:
+                                forbiddenAction:
+                                    summary: Невъзможно изтриване на администратор
+                                    value:
+                                        message: "Cannot delete admin account"
+                                notAdmin:
+                                    summary: изисква се администраторски достъп
+                                    value:
+                                        message: "Admin access required"
+                404:
+                    description: Not Found - Потребителят не съществува
+                    content:
+                        application/json:
+                            example:
+                                message: "User not found"
+
+    /games_play/admin/stats:
+        get:
+            summary: Връща статистика за брой посещения в приложението (само за администратори)
+            tags: [GamesPlay Admin]
+            security:
+                - gamesPlay: []
+            responses:
+                200:
+                    description: Успешно взета статистика
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/GamesPlayAdminStatsResponse"
+                401:
+                    description: Unauthorized - Липсващ токен
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                403:
+                    description: Forbidden - изисква се администраторски достъп
+                    content:
+                        application/json:
+                            example:
+                                message: "Admin access required"
+
+servers:
+    - url: http://localhost:3000/api
+
+components:
+    securitySchemes:
+        gamesPlay:
+            type: apiKey
+            in: cookie
+            name: auth_GamesPlay
+        cookingTogether:
+            type: apiKey
+            in: cookie
+            name: auth_cooking
+        classBook:
+            type: apiKey
+            in: cookie
+            name: auth
+    schemas:
+        GamesPlayAuthRegisterUserData:
+            type: object
+            required:
+                - email
+                - password
+            properties:
+                email:
+                    type: string
+                    example: user@example.com
+                password:
+                    type: string
+                    example: 123456
+
+        GamesPlayAuthLoginUserData:
+            type: object
+            required:
+                - email
+                - password
+            properties:
+                email:
+                    type: string
+                    example: user@testemail.com
+                password:
+                    type: string
+                    example: password
+
+        GamesPlayAuthProfileResponse:
+            type: object
+            properties:
+                _id:
+                    type: string
+                    example: 60c72b2f9b1e8b001c8e4d3a
+                email:
+                    type: string
+                    example: user@example.com
+                role:
+                    type: string
+                    example: "user"
+                dateCreated:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+
+        GamesPlayAdminGamesListResponse:
+            type: object
+            properties:
+                games:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/Game"
+        Game:
+            type: object
+            properties:
+                _id:
+                    type: string
+                    example: "6833318fd414ea08fac843ec"
+                title:
+                    type: string
+                    example: "Test"
+                category:
+                    type: string
+                    example: "Test category"
+                maxLevel:
+                    type: integer
+                    example: 95
+                imageUrl:
+                    type: string
+                    format: uri
+                    example: "https://example.com/image.jpg"
+                summary:
+                    type: string
+                _ownerId:
+                    $ref: "#/components/schemas/UserBasic"
+                createdAt:
+                    type: string
+                    format: date-time
+                    example: "2025-05-25T15:04:47.780Z"
+                updatedAt:
+                    type: string
+                    format: date-time
+                    example: "2025-05-25T15:04:47.784Z"
+
+        UserBasic:
+            type: object
+            properties:
+                _id:
+                    type: string
+                    example: "6833307c97d956479e7c161e"
+                email:
+                    type: string
+                    example: "user@example.com"
+                role:
+                    type: string
+                    example: "user"
+                dateCreated:
+                    type: string
+                    format: date-time
+                    example: "2025-05-25T15:00:12.341Z"
+
+        GamesPlayAdminUsersListResponse:
+            type: object
+            properties:
+                users:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/UserBasic"
+
+        GamesPlayAdminStatsResponse:
+            type: object
+            properties:
+                stats:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                            _id:
+                                type: string
+                                example: "60c72b2f9b1e8b001c8e4d3a"
+                            ip:
+                                type: string
+                                example: "xxx.xxx.xxx.xxx"
+                            timestamp:
+                                type: string
+                                format: date-time
+                                example: "2021-06-14T12:00:00Z"
+                totalCount:
+                    type: integer
+                    example: 100

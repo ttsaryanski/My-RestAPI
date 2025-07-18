@@ -26,8 +26,8 @@ routes.use("/class/clss", classClassBookRoutes);
 routes.use("/class/teacher", teacherClassBookRoutes);
 routes.use("/class/student", studentClassBookRoutes);
 
-routes.use("/games_play/admin", adminGamesPlayRoutes);
 routes.use("/games_play/authGame", authGamesPlayRoutes);
+routes.use("/games_play/admin", adminGamesPlayRoutes);
 routes.use("/games_play/games", gameGamesPlayRoutes);
 routes.use("/games_play/comments", commentGamesPlayRoutes);
 routes.use("/games_play/visit", visitGamesPlayRoutes);

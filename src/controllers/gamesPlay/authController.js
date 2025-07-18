@@ -59,6 +59,7 @@ export function authController(authService) {
 
     router.post(
         "/logout",
+        authMiddleware,
         asyncErrorHandler(async (req, res) => {
             const token =
                 typeof req.cookies[cookiesNames.gamesPlay] === "string"

@@ -9,4 +9,5 @@ export default {
     transformIgnorePatterns: ["/node_modules/(?!mongoose|bson)/"],
     testMatch: ["**/?(*.)+(spec|test).[jt]s?(x)"],
     setupFilesAfterEnv: ["<rootDir>/_tests/test_setup.js"],
+    // moduleDirectories: ["node_modules", "src", "src/docs", "_tests"],
 };

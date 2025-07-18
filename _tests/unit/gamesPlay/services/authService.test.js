@@ -100,7 +100,10 @@ describe("authService/getUserById", () => {
 
         const result = await authService.getUserById("abc123");
 
-        expect(UserGames.findById).toHaveBeenCalledWith("abc123");
+        expect(UserGames.findById).toHaveBeenCalledWith("abc123", {
+            password: 0,
+            __v: 0,
+        });
         expect(result).toEqual(user);
     });
 
