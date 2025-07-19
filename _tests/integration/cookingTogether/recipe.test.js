@@ -386,7 +386,9 @@ describe("GET /recipes/:recipeId", () => {
         const res = await request(app).get("/api/cooking/recipes/invalidId");
 
         expect(res.statusCode).toBe(400);
-        expect(res.body.message).toBe("Id must be a valid MongooseDB ObjectId");
+        expect(res.body.message).toBe(
+            "Id must be a valid MongooseDB ObjectId!"
+        );
     });
 
     it("should return 404 if recipe not found", async () => {
@@ -431,7 +433,9 @@ describe("DELETE /recipes/:recipeId", () => {
         const res = await request(app).delete("/api/cooking/recipes/invalidId");
 
         expect(res.statusCode).toBe(400);
-        expect(res.body.message).toBe("Id must be a valid MongooseDB ObjectId");
+        expect(res.body.message).toBe(
+            "Id must be a valid MongooseDB ObjectId!"
+        );
 
         const dbEntry = await Item.findOne({ title: "Recipe One" });
         expect(dbEntry).not.toBeNull();
@@ -498,7 +502,9 @@ describe("PUT /recipes/:recipeId", () => {
             .send(editedData);
 
         expect(res.statusCode).toBe(400);
-        expect(res.body.message).toBe("Id must be a valid MongooseDB ObjectId");
+        expect(res.body.message).toBe(
+            "Id must be a valid MongooseDB ObjectId!"
+        );
     });
 
     it("should return 400 if invalid data", async () => {
@@ -559,7 +565,9 @@ describe("POST /recipes/:recipeId/like", () => {
         );
 
         expect(res.statusCode).toBe(400);
-        expect(res.body.message).toBe("Id must be a valid MongooseDB ObjectId");
+        expect(res.body.message).toBe(
+            "Id must be a valid MongooseDB ObjectId!"
+        );
     });
 
     it("should return 404 if recipe not found", async () => {

@@ -74,7 +74,9 @@ describe("GET /teacher/:teachertId", () => {
         const res = await request(app).get("/api/class/teacher/invalidId");
 
         expect(res.statusCode).toBe(400);
-        expect(res.body.message).toBe("Id must be a valid MongooseDB ObjectId");
+        expect(res.body.message).toBe(
+            "Id must be a valid MongooseDB ObjectId!"
+        );
     });
 
     it("should return 404 if teacher not found", async () => {
@@ -133,7 +135,9 @@ describe("PUT /teacher/:teacherId", () => {
             .send(editedData);
 
         expect(res.statusCode).toBe(400);
-        expect(res.body.message).toBe("Id must be a valid MongooseDB ObjectId");
+        expect(res.body.message).toBe(
+            "Id must be a valid MongooseDB ObjectId!"
+        );
     });
 
     it("should return 400 if invalid data", async () => {

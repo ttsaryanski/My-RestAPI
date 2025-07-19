@@ -75,7 +75,7 @@ describe("Admin Controller", () => {
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toMatch(
-            "Id must be a valid MongooseDB ObjectId"
+            "Id must be a valid MongooseDB ObjectId!"
         );
     });
 
@@ -106,7 +106,7 @@ describe("Admin Controller", () => {
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toMatch(
-            "Id must be a valid MongooseDB ObjectId"
+            "Id must be a valid MongooseDB ObjectId!"
         );
     });
 
@@ -140,7 +140,7 @@ describe("Admin Controller", () => {
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toMatch(
-            "Id must be a valid MongooseDB ObjectId"
+            "Id must be a valid MongooseDB ObjectId!"
         );
     });
 

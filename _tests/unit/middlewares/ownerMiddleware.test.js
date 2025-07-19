@@ -1,13 +1,14 @@
 import { isOwner } from "../../../src/middlewares/ownerMiddleware.js";
 import { CustomError } from "../../../src/utils/errorUtils/customError.js";
+import { validId } from "../../../src/config/constans.js";
 
 describe("isOwner middleware", () => {
     const mockModel = {
         findById: jest.fn(),
     };
 
-    const ownerId = "user123";
-    const resourceId = "res123";
+    const ownerId = validId;
+    const resourceId = validId;
 
     const createReq = (id = resourceId, user = { _id: ownerId }) => ({
         params: { id },

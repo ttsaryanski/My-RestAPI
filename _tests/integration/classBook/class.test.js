@@ -116,7 +116,9 @@ describe("GET /clss/:clssId", () => {
         const res = await request(app).get("/api/class/clss/invalidId");
 
         expect(res.statusCode).toBe(400);
-        expect(res.body.message).toBe("Id must be a valid MongooseDB ObjectId");
+        expect(res.body.message).toBe(
+            "Id must be a valid MongooseDB ObjectId!"
+        );
     });
 
     it("should return 404 if class not found", async () => {
@@ -161,7 +163,9 @@ describe("GET /clss/:clssId/populate", () => {
         );
 
         expect(res.statusCode).toBe(400);
-        expect(res.body.message).toBe("Id must be a valid MongooseDB ObjectId");
+        expect(res.body.message).toBe(
+            "Id must be a valid MongooseDB ObjectId!"
+        );
     });
 
     it("should return 404 if class not found", async () => {
@@ -219,7 +223,9 @@ describe("PUT /clss/:clssId", () => {
             .send(editedData);
 
         expect(res.statusCode).toBe(400);
-        expect(res.body.message).toBe("Id must be a valid MongooseDB ObjectId");
+        expect(res.body.message).toBe(
+            "Id must be a valid MongooseDB ObjectId!"
+        );
     });
 
     it("should return 400 if invalid data", async () => {
@@ -269,7 +275,9 @@ describe("DELETE /clss/:clssId", () => {
         const res = await request(app).delete("/api/class/clss/invalidId");
 
         expect(res.statusCode).toBe(400);
-        expect(res.body.message).toBe("Id must be a valid MongooseDB ObjectId");
+        expect(res.body.message).toBe(
+            "Id must be a valid MongooseDB ObjectId!"
+        );
 
         const dbEntry = await Clss.findOne({ title: "Class One" });
         expect(dbEntry).not.toBeNull();

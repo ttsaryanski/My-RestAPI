@@ -6,7 +6,7 @@ export const commentService = {
     async getAll(gameId) {
         return await Comment.find({ gameId: gameId })
             .sort({ updatedAt: -1 })
-            .populate("_ownerId");
+            .populate("_ownerId", "-password");
     },
 
     async create(data, userId) {
@@ -15,7 +15,7 @@ export const commentService = {
             _ownerId: userId,
         });
 
-        return await newComment.populate("_ownerId");
+        return await newComment.populate("_ownerId", "-password");
     },
 
     async remove(commentId) {

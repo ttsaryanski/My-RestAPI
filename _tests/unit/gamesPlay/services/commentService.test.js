@@ -16,7 +16,10 @@ describe("commentService/getAll", () => {
 
         expect(Comment.find).toHaveBeenCalledWith({ gameId: "game123" });
         expect(mockQuery.sort).toHaveBeenCalledWith({ updatedAt: -1 });
-        expect(mockQuery.populate).toHaveBeenCalledWith("_ownerId");
+        expect(mockQuery.populate).toHaveBeenCalledWith(
+            "_ownerId",
+            "-password"
+        );
         expect(result).toEqual([{ content: "Test" }]);
     });
 });

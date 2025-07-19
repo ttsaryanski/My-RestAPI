@@ -100,13 +100,15 @@ describe("DELETE /admin/games/:gameId", () => {
         );
 
         expect(res.statusCode).toBe(400);
-        expect(res.body.message).toBe("Id must be a valid MongooseDB ObjectId");
+        expect(res.body.message).toBe(
+            "Id must be a valid MongooseDB ObjectId!"
+        );
 
         const dbEntry = await Game.findOne({ title: "Game One" });
         expect(dbEntry).not.toBeNull();
     });
 
-    it("should return 404 if game not found", async () => {
+    it("should return 404 if Game not found!", async () => {
         const nonExistingId = new mongoose.Types.ObjectId();
 
         const res = await request(app).delete(
@@ -114,7 +116,7 @@ describe("DELETE /admin/games/:gameId", () => {
         );
 
         expect(res.statusCode).toBe(404);
-        expect(res.body.message).toBe("Game not found");
+        expect(res.body.message).toBe("Game not found!");
 
         const dbEntry = await Game.findOne({ title: "Game One" });
         expect(dbEntry).not.toBeNull();
@@ -195,7 +197,9 @@ describe("PATCH /admin/users/:userId", () => {
         );
 
         expect(res.statusCode).toBe(400);
-        expect(res.body.message).toBe("Id must be a valid MongooseDB ObjectId");
+        expect(res.body.message).toBe(
+            "Id must be a valid MongooseDB ObjectId!"
+        );
     });
 
     it("should return 404 if user not found", async () => {
@@ -248,7 +252,9 @@ describe("DELETE /admin/users/:userId", () => {
         );
 
         expect(res.statusCode).toBe(400);
-        expect(res.body.message).toBe("Id must be a valid MongooseDB ObjectId");
+        expect(res.body.message).toBe(
+            "Id must be a valid MongooseDB ObjectId!"
+        );
 
         const dbEntry = await UserGames.findOne({ email: "test1@email.com" });
         expect(dbEntry).not.toBeNull();

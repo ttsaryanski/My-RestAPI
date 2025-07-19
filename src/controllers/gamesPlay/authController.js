@@ -97,7 +97,7 @@ export function authController(authService) {
     );
 
     // TODO: This route was used for migration, it is preserved as part of history!
-    router.get(
+    router.patch(
         "/updateRole",
         asyncErrorHandler(async (req, res) => {
             await authService.updateRole();

@@ -7,9 +7,6 @@ jest.mock("../../../src/middlewares/authMiddleware.js", () => ({
         next();
     },
 }));
-jest.mock("../../../src/middlewares/ownerMiddleware.js", () => ({
-    isOwner: () => (_req, _res, next) => next(),
-}));
 
 import request from "supertest";
 import mongoose from "mongoose";
@@ -208,10 +205,12 @@ describe("GET /games/:gameId", () => {
         const res = await request(app).get("/api/games_play/games/invalidId");
 
         expect(res.statusCode).toBe(400);
-        expect(res.body.message).toBe("Id must be a valid MongooseDB ObjectId");
+        expect(res.body.message).toBe(
+            "Id must be a valid MongooseDB ObjectId!"
+        );
     });
 
-    it("should return 404 if game not found", async () => {
+    it("should return 404 if Game not found!", async () => {
         const nonExistingId = new mongoose.Types.ObjectId();
 
         const res = await request(app).get(
@@ -269,7 +268,9 @@ describe("PUT /games/:gameId", () => {
             .send(editedData);
 
         expect(res.statusCode).toBe(400);
-        expect(res.body.message).toBe("Id must be a valid MongooseDB ObjectId");
+        expect(res.body.message).toBe(
+            "Id must be a valid MongooseDB ObjectId!"
+        );
     });
 
     it("should return 400 if invalid data", async () => {
@@ -281,7 +282,7 @@ describe("PUT /games/:gameId", () => {
         expect(res.body.message).toBeDefined();
     });
 
-    it("should return 404 if game not found", async () => {
+    it("should return 404 if Game not found!", async () => {
         const nonExistingId = new mongoose.Types.ObjectId();
 
         const res = await request(app)
@@ -289,7 +290,7 @@ describe("PUT /games/:gameId", () => {
             .send(editedData);
 
         expect(res.statusCode).toBe(404);
-        expect(res.body.message).toBe("Game not found");
+        expect(res.body.message).toBe("Resource not found!");
     });
 });
 
@@ -325,13 +326,15 @@ describe("DELETE /games/:gameId", () => {
         );
 
         expect(res.statusCode).toBe(400);
-        expect(res.body.message).toBe("Id must be a valid MongooseDB ObjectId");
+        expect(res.body.message).toBe(
+            "Id must be a valid MongooseDB ObjectId!"
+        );
 
         const dbEntry = await Game.findOne({ title: "Game One" });
         expect(dbEntry).not.toBeNull();
     });
 
-    it("should return 404 if game not found", async () => {
+    it("should return 404 if Game not found!", async () => {
         const nonExistingId = new mongoose.Types.ObjectId();
 
         const res = await request(app).delete(
@@ -339,7 +342,7 @@ describe("DELETE /games/:gameId", () => {
         );
 
         expect(res.statusCode).toBe(404);
-        expect(res.body.message).toBe("Game not found");
+        expect(res.body.message).toBe("Resource not found!");
 
         const dbEntry = await Game.findOne({ title: "Game One" });
         expect(dbEntry).not.toBeNull();

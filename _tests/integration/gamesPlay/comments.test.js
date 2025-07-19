@@ -71,7 +71,9 @@ describe("GET /comments/:gameId", () => {
         );
 
         expect(res.statusCode).toBe(400);
-        expect(res.body.message).toBe("Id must be a valid MongooseDB ObjectId");
+        expect(res.body.message).toBe(
+            "Id must be a valid MongooseDB ObjectId!"
+        );
     });
 });
 
@@ -145,7 +147,9 @@ describe("DELETE /:commentId", () => {
         );
 
         expect(res.statusCode).toBe(400);
-        expect(res.body.message).toBe("Id must be a valid MongooseDB ObjectId");
+        expect(res.body.message).toBe(
+            "Id must be a valid MongooseDB ObjectId!"
+        );
 
         const dbEntry = await Comment.findOne({ content: "Comment for tests" });
         expect(dbEntry).not.toBeNull();

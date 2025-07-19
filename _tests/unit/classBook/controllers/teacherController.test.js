@@ -57,7 +57,7 @@ describe("Teacher Controller", () => {
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toMatch(
-            "Id must be a valid MongooseDB ObjectId"
+            "Id must be a valid MongooseDB ObjectId!"
         );
         expect(res.body.message).toBeDefined();
         expect(typeof res.body.message).toBe("string");
@@ -117,7 +117,7 @@ describe("Teacher Controller", () => {
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toMatch(
-            "Id must be a valid MongooseDB ObjectId"
+            "Id must be a valid MongooseDB ObjectId!"
         );
     });
 });

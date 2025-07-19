@@ -22,7 +22,10 @@ describe("gameService/getAll()", () => {
 
         expect(Game.find).toHaveBeenCalledWith({});
         expect(mockQuery.sort).toHaveBeenCalledWith({ updatedAt: -1 });
-        expect(mockQuery.populate).toHaveBeenCalledWith("_ownerId");
+        expect(mockQuery.populate).toHaveBeenCalledWith(
+            "_ownerId",
+            "-password"
+        );
     });
 
     it("should use search term if provided", async () => {
@@ -223,7 +226,7 @@ describe("gameService/remove", () => {
         expect(Game.findByIdAndDelete).toHaveBeenCalledWith(gameId);
     });
 
-    it("should throw CustomError when game not found", async () => {
+    it("should throw CustomError when Game not found!", async () => {
         Game.findByIdAndDelete.mockResolvedValue(null);
 
         try {
@@ -231,7 +234,7 @@ describe("gameService/remove", () => {
         } catch (err) {
             expect(err).toBeInstanceOf(CustomError);
             expect(err.statusCode).toBe(404);
-            expect(err.message).toBe("Game not found");
+            expect(err.message).toBe("Game not found!");
         }
     });
 });

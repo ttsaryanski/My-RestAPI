@@ -42,11 +42,6 @@ export function gameController(gameService) {
             const userId = req.user._id;
             const data = req.body;
 
-            const { error: idError } = mongooseIdDto.validate({ id: userId });
-            if (idError) {
-                throw new CustomError(idError.details[0].message, 400);
-            }
-
             const { error: dataError } = gameDto.validate(data);
             if (dataError) {
                 throw new CustomError(dataError.details[0].message, 400);
@@ -91,11 +86,6 @@ export function gameController(gameService) {
             const gameId = req.params.gameId;
             const data = req.body;
 
-            const { error: idError } = mongooseIdDto.validate({ id: gameId });
-            if (idError) {
-                throw new CustomError(idError.details[0].message, 400);
-            }
-
             const { error: dataError } = gameDto.validate(req.body);
             if (dataError) {
                 throw new CustomError(dataError.details[0].message, 400);
@@ -113,11 +103,6 @@ export function gameController(gameService) {
         isOwner(Game, "gameId"),
         asyncErrorHandler(async (req, res) => {
             const gameId = req.params.gameId;
-
-            const { error: idError } = mongooseIdDto.validate({ id: gameId });
-            if (idError) {
-                throw new CustomError(idError.details[0].message, 400);
-            }
 
             await gameService.remove(gameId);
 

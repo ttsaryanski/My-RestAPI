@@ -118,10 +118,10 @@ describe("Auth Controller", () => {
         expect(mockAuthService.getUserById).toHaveBeenCalledWith(mockUser._id);
     });
 
-    test("GET /updateRole - should update roles", async () => {
+    test("PATCH /updateRole - should update roles", async () => {
         mockAuthService.updateRole.mockResolvedValue();
 
-        const res = await request(app).get("/authGame/updateRole");
+        const res = await request(app).patch("/authGame/updateRole");
 
         expect(res.statusCode).toBe(200);
         expect(res.body).toEqual({ message: "The update was successful." });

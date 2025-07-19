@@ -12,7 +12,7 @@ export const gameService = {
 
         let gamesQuery = Game.find(filter)
             .sort({ updatedAt: -1 })
-            .populate("_ownerId");
+            .populate("_ownerId", "-password");
 
         if (query.limit) {
             const limit = Number(query.limit);
@@ -65,7 +65,7 @@ export const gameService = {
         });
 
         if (!updatedGame) {
-            throw new CustomError("Game not found", 404);
+            throw new CustomError("Game not found!", 404);
         }
         return updatedGame;
     },
@@ -74,7 +74,7 @@ export const gameService = {
         const result = await Game.findByIdAndDelete(gameId);
 
         if (!result) {
-            throw new CustomError("Game not found", 404);
+            throw new CustomError("Game not found!", 404);
         }
     },
 };
