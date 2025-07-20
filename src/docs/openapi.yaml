@@ -9,7 +9,7 @@ servers:
 paths:
     /games_play/authGame/register:
         post:
-            summary: Регистриране в системата
+            summary: User registration
             tags: [GamesPlay Auth]
             requestBody:
                 required: true
@@ -19,15 +19,15 @@ paths:
                             $ref: "#/components/schemas/GamesPlayAuthRegisterUserData"
             responses:
                 204:
-                    description: No Content - Успешна регистрация (няма съдържание)
+                    description: No Content - Register is successful (no content)
                     headers:
                         Set-Cookie:
-                            description: Съдържа сесийния JWT
+                            description: Set JWT in cookie
                             schema:
                                 type: string
                                 example: auth_GamesPlay={accessToken:jwt.token.value}; Path=/; HttpOnly; Secure; SameSite=None
                 400:
-                    description: Bad Request - Невалидни данни
+                    description: Bad Request - Invalid data
                     content:
                         application/json:
                             examples:
@@ -40,13 +40,13 @@ paths:
                                     value:
                                         message: "Password must be at least 3 characters!"
                 409:
-                    description: Conflict - Съществуващ имейл
+                    description: Conflict - Email already registered
                     content:
                         application/json:
                             example:
                                 message: "This email already registered!"
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
@@ -54,7 +54,7 @@ paths:
 
     /games_play/authGame/login:
         post:
-            summary: Вход в системата
+            summary: User login
             tags: [GamesPlay Auth]
             requestBody:
                 required: true
@@ -64,15 +64,15 @@ paths:
                             $ref: "#/components/schemas/GamesPlayAuthLoginUserData"
             responses:
                 204:
-                    description: No Content - Успешен вход (няма съдържание)
+                    description: No Content - Login is successful (no content)
                     headers:
                         Set-Cookie:
-                            description: Съдържа сесийния JWT
+                            description: Set JWT in cookie
                             schema:
                                 type: string
                                 example: auth_GamesPlay={accessToken:jwt.token.value}; Path=/; HttpOnly; Secure; SameSite=None
                 400:
-                    description: Bad Request - Невалидни данни
+                    description: Bad Request - Invalid data
                     content:
                         application/json:
                             examples:
@@ -85,25 +85,25 @@ paths:
                                     value:
                                         message: "Password must be at least 3 characters!"
                 401:
-                    description: Unauthorized - Грешна парола
+                    description: Unauthorized - Invalid password
                     content:
                         application/json:
                             example:
                                 message: "Password does not match!"
                 404:
-                    description: Not Found - Потребителят не съществува
+                    description: Not Found - User does not exist
                     content:
                         application/json:
                             example:
                                 message: "User does not exist!"
                 429:
-                    description: Too Many Requests - Прекалено много опити за вход
+                    description: Too Many Requests - Too many login attempts
                     content:
                         application/json:
                             example:
                                 message: "Too many login attempts. Please try again in 15 minutes."
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
@@ -111,27 +111,27 @@ paths:
 
     /games_play/authGame/logout:
         post:
-            summary: Изход от системата
+            summary: User logout
             tags: [GamesPlay Auth]
             security:
                 - gamesPlay: []
             responses:
                 204:
-                    description: No Content - Успешен logout (cookie е изтрит)
+                    description: No Content - Logout is successful (no content)
                     headers:
                         Set-Cookie:
-                            description: Изчистено сесийно cookie
+                            description: Clear JWT cookie
                             schema:
                                 type: string
                                 example: auth_GamesPlay=; Path=/; HttpOnly; Secure; SameSite=None; Max-Age=0
                 401:
-                    description: Липсващ токен
+                    description: Unauthorized - Missing token
                     content:
                         application/json:
                             example:
                                 message: "Missing token in cookies!"
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
@@ -139,37 +139,37 @@ paths:
 
     /games_play/authGame/profile:
         get:
-            summary: Връща текущия потребител
+            summary: Gets user profile
             tags: [GamesPlay Auth]
             security:
                 - gamesPlay: []
             responses:
                 200:
-                    description: OK - Успешно извличане на потребител
+                    description: OK - User profile retrieved successfully
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/GamesPlayAuthProfileResponse"
                 401:
-                    description: Unauthorized - Липсващ токен
+                    description: Unauthorized - Missing token
                     content:
                         application/json:
                             example:
                                 message: "Invalid token!"
                 403:
-                    description: Forbidden - Невалиден токен
+                    description: Forbidden - Access denied
                     content:
                         application/json:
                             example:
                                 message: "Invalid token!"
                 404:
-                    description: Not Found - Потребителят не е намерен
+                    description: Not Found - User does not exist
                     content:
                         application/json:
                             example:
                                 message: "User does not exist!"
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
@@ -177,12 +177,12 @@ paths:
 
     /games_play/authGame/updateRole:
         patch:
-            summary: Добавя роля "user" към всички потребители
+            summary: Adds a "user" role to all users (deprecated)
             tags: [GamesPlay Auth]
             deprecated: true
             responses:
                 200:
-                    description: Успешно добавена роля "user"
+                    description: OK - Update successful
                     content:
                         application/json:
                             schema:
@@ -192,7 +192,7 @@ paths:
                                         type: string
                                         example: "The update was successful."
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
@@ -200,7 +200,7 @@ paths:
 
     /games_play/admin/games:
         get:
-            summary: Връща всички игри с пейджинг (само за администратори)
+            summary: get all games with pagination (only for admins)
             tags: [GamesPlay Admin]
             security:
                 - gamesPlay: []
@@ -211,28 +211,28 @@ paths:
                       type: integer
                       default: 1
                       minimum: 1
-                  description: Номер на страницата (лимитът е фиксиран на 5)
+                  description: Page number (limit is fixed at 5)
             responses:
                 200:
-                    description: Успешно взети игри
+                    description: Ok - Successfully retrieved games
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/GamesPlayAdminGamesListResponse"
                 401:
-                    description: Unauthorized - Липсващ токен
+                    description: Unauthorized - Missing token
                     content:
                         application/json:
                             example:
                                 message: "Invalid token!"
                 403:
-                    description: Forbidden - изисква се администраторски достъп
+                    description: Forbidden - admin access required
                     content:
                         application/json:
                             example:
                                 message: "Admin access required"
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
@@ -240,7 +240,7 @@ paths:
 
     /games_play/admin/games/{gameId}:
         delete:
-            summary: Изтрива игра по ID (само за администратори)
+            summary: Deletes a game by ID (only for admins)
             tags: [GamesPlay Admin]
             security:
                 - gamesPlay: []
@@ -250,36 +250,36 @@ paths:
                   required: true
                   schema:
                       type: string
-                  description: ID на играта (валиден ObjectId – 24 символа)
+                  description: ID of the game (valid ObjectId - 24 characters)
             responses:
                 204:
-                    description: No Content - Успешно изтрита игра
+                    description: No Content - Game successfully deleted
                 400:
-                    description: Bad Request - Невалиден ID
+                    description: Bad Request - Invalid ID
                     content:
                         application/json:
                             example:
                                 message: "Id must be a valid MongooseDB ObjectId!"
                 401:
-                    description: Unauthorized - Липсващ токен
+                    description: Unauthorized - Missing token
                     content:
                         application/json:
                             example:
                                 message: "Invalid token!"
                 403:
-                    description: Forbidden - изисква се администраторски достъп
+                    description: Forbidden - admin access required
                     content:
                         application/json:
                             example:
                                 message: "Admin access required"
                 404:
-                    description: Not Found - Играта не съществува
+                    description: Not Found - Game does not exist
                     content:
                         application/json:
                             example:
                                 message: "Game not found!"
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
@@ -287,7 +287,7 @@ paths:
 
     /games_play/admin/users:
         get:
-            summary: Връща всички потребители с пейджинг (само за администратори)
+            summary: Gets all users with pagination (only for admins)
             tags: [GamesPlay Admin]
             security:
                 - gamesPlay: []
@@ -298,28 +298,28 @@ paths:
                       type: integer
                       default: 1
                       minimum: 1
-                  description: Номер на страницата (лимитът е фиксиран на 5)
+                  description: Page number (limit is fixed at 5)
             responses:
                 200:
-                    description: Успешно взети потребители
+                    description: Ok - Successfully retrieved users
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/GamesPlayAdminUsersListResponse"
                 401:
-                    description: Unauthorized - Липсващ токен
+                    description: Unauthorized - Missing token
                     content:
                         application/json:
                             example:
                                 message: "Invalid token!"
                 403:
-                    description: Forbidden - изисква се администраторски достъп
+                    description: Forbidden - admin access required
                     content:
                         application/json:
                             example:
                                 message: "Admin access required"
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
@@ -327,7 +327,7 @@ paths:
 
     /games_play/admin/users/{userId}:
         patch:
-            summary: Сменя ролята на потребител и го прави администратор (само за администратори)
+            summary: Adds a user as an administrator (only for admins)
             tags: [GamesPlay Admin]
             security:
                 - gamesPlay: []
@@ -337,48 +337,46 @@ paths:
                   required: true
                   schema:
                       type: string
-                  description: ID на потребителя (валиден ObjectId – 24 символа)
+                  description: ID of the user (valid ObjectId - 24 characters)
             responses:
                 200:
-                    description: Успешно добавен за администратор
+                    description: Ok - User successfully updated to admin
                     content:
                         application/json:
-                            example:
-                                _id: "123"
-                                email: "user@test.com"
-                                role: "аdmin"
+                            schema:
+                                $ref: "#/components/schemas/GamesPlayUserBasic"
                 400:
-                    description: Bad Request - Невалиден ID
+                    description: Bad Request - Invalid ID
                     content:
                         application/json:
                             example:
                                 message: "Id must be a valid MongooseDB ObjectId!"
                 401:
-                    description: Unauthorized - Липсващ токен
+                    description: Unauthorized - Missing token
                     content:
                         application/json:
                             example:
                                 message: "Invalid token!"
                 403:
-                    description: Forbidden - изисква се администраторски достъп
+                    description: Forbidden - admin access required
                     content:
                         application/json:
                             example:
                                 message: "Admin access required"
                 404:
-                    description: Not Found - Потребителят не съществува
+                    description: Not Found - User does not exist
                     content:
                         application/json:
                             example:
                                 message: "User not found"
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
                                 message: "Internal server error..."
         delete:
-            summary: Изтрива потребител - администратор не може да бъде изтрит (само за администратори)
+            summary: Deletes a user by ID - admins cannot be deleted (only for admins)
             tags: [GamesPlay Admin]
             security:
                 - gamesPlay: []
@@ -388,43 +386,43 @@ paths:
                   required: true
                   schema:
                       type: string
-                  description: ID на потребителя (валиден ObjectId – 24 символа)
+                  description: ID of the user (valid ObjectId - 24 characters)
             responses:
                 204:
-                    description: Успешно изтрит потребител
+                    description: No Content - User successfully deleted
                 400:
-                    description: Bad Request - Невалиден ID
+                    description: Bad Request - Invalid ID
                     content:
                         application/json:
                             example:
                                 message: "Id must be a valid MongooseDB ObjectId!"
                 401:
-                    description: Unauthorized - Липсващ токен
+                    description: Unauthorized - Missing token
                     content:
                         application/json:
                             example:
                                 message: "Invalid token!"
                 403:
-                    description: Forbidden - Невалиден токен или непозволено действие
+                    description: Forbidden - admin access required or unauthorized action
                     content:
                         application/json:
                             examples:
                                 forbiddenAction:
-                                    summary: Невъзможно изтриване на администратор
+                                    summary: Forbidden action
                                     value:
                                         message: "Cannot delete admin account"
                                 notAdmin:
-                                    summary: изисква се администраторски достъп
+                                    summary: Not an admin
                                     value:
                                         message: "Admin access required"
                 404:
-                    description: Not Found - Потребителят не съществува
+                    description: Not Found - User does not exist
                     content:
                         application/json:
                             example:
                                 message: "User not found"
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
@@ -432,7 +430,7 @@ paths:
 
     /games_play/admin/stats:
         get:
-            summary: Връща статистика за брой посещения в приложението с пейджинг (само за администратори)
+            summary: Gets statistics for the application with pagination (only for admins)
             tags: [GamesPlay Admin]
             security:
                 - gamesPlay: []
@@ -443,28 +441,28 @@ paths:
                       type: integer
                       default: 1
                       minimum: 1
-                  description: Номер на страницата (лимитът е фиксиран на 5)
+                  description: Page number (limit is fixed at 5)
             responses:
                 200:
-                    description: Успешно взета статистика
+                    description: Ok - Successfully retrieved statistics
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/GamesPlayAdminStatsResponse"
                 401:
-                    description: Unauthorized - Липсващ токен
+                    description: Unauthorized - Missing token
                     content:
                         application/json:
                             example:
                                 message: "Invalid token!"
                 403:
-                    description: Forbidden - изисква се администраторски достъп
+                    description: Forbidden - admin access required
                     content:
                         application/json:
                             example:
                                 message: "Admin access required"
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
@@ -472,7 +470,7 @@ paths:
 
     /games_play/comments/{gameId}:
         get:
-            summary: Взема всички коментари за игра
+            summary: Gets comments for a game by ID
             tags: [GamesPlay Comments]
             parameters:
                 - in: path
@@ -480,22 +478,22 @@ paths:
                   required: true
                   schema:
                       type: string
-                  description: ID на играта (валиден ObjectId – 24 символа)
+                  description: ID of the game (valid ObjectId - 24 characters)
             responses:
                 200:
-                    description: Успешно вземане на коментари
+                    description: Ok - Successfully retrieved comments
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/GamesPlayGetCommentsResponse"
                 400:
-                    description: Bad Request - Невалиден ID
+                    description: Bad Request - Invalid ID
                     content:
                         application/json:
                             example:
                                 message: "Id must be a valid MongooseDB ObjectId!"
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
@@ -503,7 +501,7 @@ paths:
 
     /games_play/comments:
         post:
-            summary: Публикуване на нов коментар
+            summary: Creates a new comment for a game
             tags: [GamesPlay Comments]
             security:
                 - gamesPlay: []
@@ -515,13 +513,13 @@ paths:
                             $ref: "#/components/schemas/GamesPlayCreateCommentRequest"
             responses:
                 201:
-                    description: Успешно публикуване на коментар
+                    description: Created - Comment successfully created
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/GamesPlayCreateCommentResponse"
                 400:
-                    description: Bad Request - Невалидни данни
+                    description: Bad Request - Invalid data
                     content:
                         application/json:
                             examples:
@@ -534,13 +532,13 @@ paths:
                                     value:
                                         message: "Invalid game ID format!"
                 401:
-                    description: Unauthorized - Липсващ токен
+                    description: Unauthorized - Missing token
                     content:
                         application/json:
                             example:
                                 message: "Invalid token!"
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
@@ -548,7 +546,7 @@ paths:
 
     /games_play/comments/{commentId}:
         delete:
-            summary: Изтрива коментар по ID (само за администратори)
+            summary: Deletes a comment by ID (only for admins)
             tags: [GamesPlay Comments]
             security:
                 - gamesPlay: []
@@ -558,36 +556,36 @@ paths:
                   required: true
                   schema:
                       type: string
-                  description: ID на коментар (валиден ObjectId – 24 символа)
+                  description: ID of the comment (valid ObjectId - 24 characters)
             responses:
                 204:
-                    description: Успешно изтрит коментар
+                    description: No Content - Comment successfully deleted
                 400:
-                    description: Bad Request - Невалиден ID
+                    description: Bad Request - Invalid ID
                     content:
                         application/json:
                             example:
                                 message: "Id must be a valid MongooseDB ObjectId!"
                 401:
-                    description: Unauthorized - Липсващ токен
+                    description: Unauthorized - Missing token
                     content:
                         application/json:
                             example:
                                 message: "Invalid token!"
                 403:
-                    description: Forbidden - изисква се администраторски достъп
+                    description: Forbidden - admin access required
                     content:
                         application/json:
                             example:
                                 message: "Admin access required"
                 404:
-                    description: Not Found - Коментарът не съществува
+                    description: Not Found - Comment does not exist
                     content:
                         application/json:
                             example:
                                 message: "Comment not found"
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
@@ -595,7 +593,7 @@ paths:
 
     /games_play/games:
         get:
-            summary: Връща всички игри с опция лимит на респонса и филтриране по заглавие
+            summary: Gets all games with optional search and limit
             tags: [GamesPlay Games]
             parameters:
                 - in: query
@@ -603,35 +601,35 @@ paths:
                   schema:
                       type: string
                   required: false
-                  description: Търсене по заглавие на играта
+                  description: Searching for games by title
 
                 - in: query
                   name: limit
                   schema:
                       type: integer
                   required: false
-                  description: Максимален брой игри в отговора
+                  description: Limit the number of games returned
             responses:
                 200:
-                    description: Успешно взети игри
+                    description: Ok - Successfully retrieved games
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/GamesPlayGamesGamesListResponse"
                 400:
-                    description: Bad Request - Невалиден лимит
+                    description: Bad Request - Invalid limit
                     content:
                         application/json:
                             example:
                                 message: "Limit must be a positive integer!"
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
                                 message: "Internal server error..."
         post:
-            summary: Създава нова игра
+            summary: Creates a new game
             tags: [GamesPlay Games]
             security:
                 - gamesPlay: []
@@ -643,13 +641,13 @@ paths:
                             $ref: "#/components/schemas/GamesPlayGamesCreateGameRequest"
             responses:
                 201:
-                    description: Успешно създадена игра
+                    description: Created - Game successfully created
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/GamesPlayGamesCreateGameResponse"
                 400:
-                    description: Bad Request - Невалидни данни
+                    description: Bad Request - Invalid data
                     content:
                         application/json:
                             examples:
@@ -674,13 +672,13 @@ paths:
                                     value:
                                         message: "Summary should be at least 10 characters long!"
                 401:
-                    description: Unauthorized - Липсващ токен
+                    description: Unauthorized - Missing token
                     content:
                         application/json:
                             example:
                                 message: "Invalid token!"
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
@@ -688,7 +686,7 @@ paths:
 
     /games_play/games/infinity:
         get:
-            summary: Връща всички игри с пейджинг
+            summary: Gets all games with pagination
             tags: [GamesPlay Games]
             parameters:
                 - in: query
@@ -697,16 +695,16 @@ paths:
                       type: integer
                       default: 1
                       minimum: 1
-                  description: Номер на страницата (лимитът е фиксиран на 5)
+                  description: Page number (limit is fixed at 5)
             responses:
                 200:
-                    description: Успешно взети игри
+                    description: Ok - Successfully retrieved games
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/GamesPlayAdminGamesListResponse"
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
@@ -714,17 +712,17 @@ paths:
 
     /games_play/games/last_three:
         get:
-            summary: Връща последните три игри
+            summary: Gets the last three games
             tags: [GamesPlay Games]
             responses:
                 200:
-                    description: Успешно взети игри
+                    description: Ok - Successfully retrieved last three games
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/GamesPlayGamesGamesLast_ThreeResponse"
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
@@ -732,7 +730,7 @@ paths:
 
     /games_play/games/{gameId}:
         get:
-            summary: Взема игра по ID
+            summary: Gets a game by ID
             tags: [GamesPlay Games]
             parameters:
                 - in: path
@@ -740,34 +738,34 @@ paths:
                   required: true
                   schema:
                       type: string
-                  description: ID на играта (валиден ObjectId – 24 символа)
+                  description: ID of the game (valid ObjectId - 24 characters)
             responses:
                 200:
-                    description: Успешно вземане на коментари
+                    description: Ok - Successfully retrieved game
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/GamesPlayGamesCreateGameResponse"
                 400:
-                    description: Bad Request - Невалиден ID
+                    description: Bad Request - Invalid ID
                     content:
                         application/json:
                             example:
                                 message: "Id must be a valid MongooseDB ObjectId!"
                 404:
-                    description: Not Found - Играта не съществува
+                    description: Not Found - Game does not exist
                     content:
                         application/json:
                             example:
                                 message: "There is no game with this id!"
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
                                 message: "Internal server error..."
         put:
-            summary: Редактира игра по ID (само за автори)
+            summary: Updates a game by ID (only for authors)
             tags: [GamesPlay Games]
             security:
                 - gamesPlay: []
@@ -777,7 +775,7 @@ paths:
                   required: true
                   schema:
                       type: string
-                  description: ID на играта (валиден ObjectId – 24 символа)
+                  description: ID of the game (valid ObjectId - 24 characters)
             requestBody:
                 required: true
                 content:
@@ -786,13 +784,13 @@ paths:
                             $ref: "#/components/schemas/GamesPlayGamesCreateGameRequest"
             responses:
                 201:
-                    description: Успешно редактирана игра
+                    description: Created - Game successfully updated
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/GamesPlayGamesCreateGameResponse"
                 400:
-                    description: Bad Request - Невалидни данни
+                    description: Bad Request - Invalid data
                     content:
                         application/json:
                             examples:
@@ -821,19 +819,19 @@ paths:
                                     value:
                                         message: "Summary should be at least 10 characters long!"
                 401:
-                    description: Unauthorized - Липсващ токен
+                    description: Unauthorized - Missing token
                     content:
                         application/json:
                             example:
                                 message: "Invalid token!"
                 403:
-                    description: Forbidden - само авторът на играта може да я редактира
+                    description: Forbidden - only the author of the game can edit it
                     content:
                         application/json:
                             example:
                                 message: "You are not the owner of this resource!"
                 404:
-                    description: Not Found - Играта не съществува
+                    description: Not Found - Game does not exist
                     content:
                         application/json:
                             examples:
@@ -846,13 +844,13 @@ paths:
                                     value:
                                         message: "Game not found!"
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
                                 message: "Internal server error..."
         delete:
-            summary: Изтрива игра по ID (само за автори)
+            summary: Deletes a game by ID (only for authors)
             tags: [GamesPlay Games]
             security:
                 - gamesPlay: []
@@ -862,30 +860,30 @@ paths:
                   required: true
                   schema:
                       type: string
-                  description: ID на играта (валиден ObjectId – 24 символа)
+                  description: ID of the game (valid ObjectId - 24 characters)
             responses:
                 204:
-                    description: No Content - Успешно изтрита игра
+                    description: No Content - Game successfully deleted
                 400:
-                    description: Bad Request - Невалидни данни
+                    description: Bad Request - Invalid ID
                     content:
                         application/json:
                             example:
                                 message: "Id must be a valid MongooseDB ObjectId!"
                 401:
-                    description: Unauthorized - Липсващ токен
+                    description: Unauthorized - Missing token
                     content:
                         application/json:
                             example:
                                 message: "Invalid token!"
                 403:
-                    description: Forbidden - само авторът на играта може да я редактира
+                    description: Forbidden - only the author of the game can delete it
                     content:
                         application/json:
                             example:
                                 message: "You are not the owner of this resource!"
                 404:
-                    description: Not Found - Играта не съществува
+                    description: Not Found - Game does not exist
                     content:
                         application/json:
                             examples:
@@ -898,7 +896,7 @@ paths:
                                     value:
                                         message: "Game not found!"
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:
@@ -906,7 +904,7 @@ paths:
 
     /games_play/visit:
         post:
-            summary: Статистика за посещения на страница по IP адрес
+            summary: Tracks a visit to the GamesPlay site
             tags: [GamesPlay Visit]
             requestBody:
                 required: true
@@ -920,7 +918,7 @@ paths:
                                     example: home
             responses:
                 201:
-                    description: Посещението е проследено успешно
+                    description: Created - Visit successfully tracked
                     content:
                         application/json:
                             schema:
@@ -930,7 +928,7 @@ paths:
                                         type: integer
                                         example: 123
                 500:
-                    description: Internal Server Error - Вътрешна грешка на сървъра
+                    description: Internal Server Error - Server error
                     content:
                         application/json:
                             example:

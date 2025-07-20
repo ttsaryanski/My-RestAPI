@@ -90,7 +90,7 @@ export const authService = {
         const user = await UserGames.findByIdAndUpdate(
             userId,
             { role: "admin" },
-            { new: true }
+            { new: true, projection: { password: 0 } }
         );
 
         if (!user) {

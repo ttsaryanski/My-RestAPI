@@ -148,7 +148,7 @@ describe("authService/makeAdmin", () => {
         expect(UserGames.findByIdAndUpdate).toHaveBeenCalledWith(
             "1",
             { role: "admin" },
-            { new: true }
+            { new: true, projection: { password: 0 } }
         );
         expect(result).toEqual(updated);
     });
