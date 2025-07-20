@@ -11,7 +11,7 @@ const authMiddleware = async (req, res, next) => {
         const token = getTokenFromRequest(req);
 
         if (!token) {
-            throw new CustomError("Invalid token!", 401);
+            throw new CustomError("Missing token!", 401);
         }
         const invalidToken = await InvalidToken.findOne({ token });
 

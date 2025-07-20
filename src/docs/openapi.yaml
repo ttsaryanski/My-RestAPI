@@ -129,7 +129,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -155,7 +155,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 403:
                     description: Forbidden - Access denied
                     content:
@@ -224,7 +224,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 403:
                     description: Forbidden - admin access required
                     content:
@@ -265,7 +265,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 403:
                     description: Forbidden - admin access required
                     content:
@@ -311,7 +311,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 403:
                     description: Forbidden - admin access required
                     content:
@@ -356,7 +356,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 403:
                     description: Forbidden - admin access required
                     content:
@@ -401,7 +401,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 403:
                     description: Forbidden - admin access required or unauthorized action
                     content:
@@ -454,7 +454,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 403:
                     description: Forbidden - admin access required
                     content:
@@ -536,7 +536,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -571,7 +571,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 403:
                     description: Forbidden - admin access required
                     content:
@@ -676,7 +676,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -823,7 +823,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 403:
                     description: Forbidden - only the author of the game can edit it
                     content:
@@ -875,7 +875,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 403:
                     description: Forbidden - only the author of the game can delete it
                     content:
@@ -1064,7 +1064,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -1090,7 +1090,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 403:
                     description: Forbidden - Access denied
                     content:
@@ -1195,7 +1195,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -1273,7 +1273,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -1307,7 +1307,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -1406,7 +1406,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 403:
                     description: Forbidden - only the author of the recipe can edit it
                     content:
@@ -1458,7 +1458,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 403:
                     description: Forbidden - only the author of the recipe can delete it
                     content:
@@ -1510,7 +1510,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Invalid token!"
+                                message: "Missing token!"
                 404:
                     description: Not Found - Recipe does not exist
                     content:

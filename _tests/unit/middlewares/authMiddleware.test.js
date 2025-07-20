@@ -31,7 +31,7 @@ describe("authMiddleware", () => {
         expect(next).toHaveBeenCalledWith(
             expect.objectContaining({
                 statusCode: 401,
-                message: "Invalid token!",
+                message: "Missing token!",
             })
         );
     });
