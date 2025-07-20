@@ -34,7 +34,7 @@ paths:
                                 invalidEmail:
                                     summary: Invalid email
                                     value:
-                                        message: "Email must be a valid email address"
+                                        message: "Invalid email format!"
                                 invalidPassword:
                                     summary: Invalid password
                                     value:
@@ -79,7 +79,7 @@ paths:
                                 invalidEmail:
                                     summary: Invalid email
                                     value:
-                                        message: "Email must be a valid email address"
+                                        message: "Invalid email format!"
                                 invalidPassword:
                                     summary: Invalid password
                                     value:
@@ -129,7 +129,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "Missing token in cookies!"
+                                message: "Invalid token!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -167,7 +167,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "User does not exist!"
+                                message: "There is no user with this id!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -934,6 +934,596 @@ paths:
                             example:
                                 message: "Internal server error..."
 
+    /cooking/authAngular/register:
+        post:
+            summary: User registration
+            tags: [CookingTogether Auth]
+            requestBody:
+                required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/CookingAuthRegisterRequest"
+            responses:
+                204:
+                    description: No Content - Register is successful (no content)
+                    headers:
+                        Set-Cookie:
+                            description: Set JWT in cookie
+                            schema:
+                                type: string
+                                example: auth_GamesPlay={accessToken:jwt.token.value}; Path=/; HttpOnly; Secure; SameSite=None
+                400:
+                    description: Bad Request - Invalid data
+                    content:
+                        application/json:
+                            examples:
+                                invalidUserName:
+                                    summary: Invalid username
+                                    value:
+                                        message: "Username must be at least 3 characters!"
+                                invalidEmail:
+                                    summary: Invalid email
+                                    value:
+                                        message: "Invalid email format!"
+                                invalidPassword:
+                                    summary: Invalid password
+                                    value:
+                                        message: "Password must be at least 3 characters!"
+                                invalidRePassword:
+                                    summary: Invalid rePassword
+                                    value:
+                                        message: "rePasswords do not match!"
+                409:
+                    description: Conflict - UserName or email already registered
+                    content:
+                        application/json:
+                            example:
+                                message: "This username or email already registered!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /cooking/authAngular/login:
+        post:
+            summary: User login
+            tags: [CookingTogether Auth]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CookingAuthLoginRequest"
+            responses:
+                204:
+                    description: No Content - Login is successful (no content)
+                    headers:
+                        Set-Cookie:
+                            description: Set JWT in cookie
+                            schema:
+                                type: string
+                                example: auth_GamesPlay={accessToken:jwt.token.value}; Path=/; HttpOnly; Secure; SameSite=None
+                400:
+                    description: Bad Request - Invalid data
+                    content:
+                        application/json:
+                            examples:
+                                invalidEmail:
+                                    summary: Invalid email
+                                    value:
+                                        message: "Invalid email format!"
+                                invalidPassword:
+                                    summary: Invalid password
+                                    value:
+                                        message: "Password must be at least 3 characters!"
+                401:
+                    description: Unauthorized - Invalid password
+                    content:
+                        application/json:
+                            example:
+                                message: "Password does not match!"
+                404:
+                    description: Not Found - User does not exist
+                    content:
+                        application/json:
+                            example:
+                                message: "User does not exist!"
+                429:
+                    description: Too Many Requests - Too many login attempts
+                    content:
+                        application/json:
+                            example:
+                                message: "Too many login attempts. Please try again in 15 minutes."
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /cooking/authAngular/logout:
+        post:
+            summary: User logout
+            tags: [CookingTogether Auth]
+            security:
+                - gamesPlay: []
+            responses:
+                204:
+                    description: No Content - Logout is successful (no content)
+                    headers:
+                        Set-Cookie:
+                            description: Clear JWT cookie
+                            schema:
+                                type: string
+                                example: auth_GamesPlay=; Path=/; HttpOnly; Secure; SameSite=None; Max-Age=0
+                401:
+                    description: Unauthorized - Missing token
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /cooking/authAngular/profile:
+        get:
+            summary: Gets user profile
+            tags: [CookingTogether Auth]
+            security:
+                - gamesPlay: []
+            responses:
+                200:
+                    description: OK - User profile retrieved successfully
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/CookingAuthProfileResponse"
+                401:
+                    description: Unauthorized - Missing token
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                403:
+                    description: Forbidden - Access denied
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                404:
+                    description: Not Found - User does not exist
+                    content:
+                        application/json:
+                            example:
+                                message: "There is no user with this id!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /cooking/recipes:
+        get:
+            summary: Gets all recipes with optional search and limit
+            tags: [CookingTogether Recipes]
+            parameters:
+                - in: query
+                  name: search
+                  schema:
+                      type: string
+                  required: false
+                  description: Searching for recipe by title
+
+                - in: query
+                  name: limit
+                  schema:
+                      type: integer
+                  required: false
+                  description: Limit the number of recipes returned
+            responses:
+                200:
+                    description: Ok - Successfully retrieved recipes
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/CookingRecipesArrayResponse"
+                400:
+                    description: Bad Request - Invalid limit
+                    content:
+                        application/json:
+                            example:
+                                message: "Limit must be a positive integer!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+        post:
+            summary: Creates a new recipe
+            tags: [CookingTogether Recipes]
+            security:
+                - cookingTogether: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CookingCreateRecipeRequest"
+            responses:
+                201:
+                    description: Created - Recipe successfully created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/CookingSimpleRecipe"
+                400:
+                    description: Bad Request - Invalid data
+                    content:
+                        application/json:
+                            examples:
+                                invalidTitle:
+                                    summary: Invalid title
+                                    value:
+                                        message: "Title should be at least 5 characters long!"
+                                invalidDescription:
+                                    summary: Invalid description
+                                    value:
+                                        message: "Description should be at least 10 characters long!"
+                                invalidIngredients:
+                                    summary: Invalid ingredients
+                                    value:
+                                        message: "Ingredients should be at least 10 characters long!"
+                                invalidInstructions:
+                                    summary: Invalid instructions
+                                    value:
+                                        message: "Instructions should be at least 10 characters long!"
+                                invalidImgUrl:
+                                    summary: Invalid image URL
+                                    value:
+                                        message: "Invalid image URL!"
+                401:
+                    description: Unauthorized - Missing token
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /cooking/recipes/paginated:
+        get:
+            summary: Gets all recipes with pagination
+            tags: [CookingTogether Recipes]
+            parameters:
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                      default: 1
+                      minimum: 1
+                  description: Page number (limit is fixed at 9)
+            responses:
+                200:
+                    description: Ok - Successfully retrieved recipes
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/CookingPaginatedRecipesResponse"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /cooking/recipes/top-three:
+        get:
+            summary: Gets the top three recipes
+            tags: [CookingTogether Recipes]
+            responses:
+                200:
+                    description: Ok - Successfully retrieved top three recipes
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/CookingTopThreeRecipesResponse"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /cooking/recipes/profileItem:
+        get:
+            summary: Gets all recipes authored by the logged in user with pagination
+            tags: [CookingTogether Recipes]
+            security:
+                - cookingTogether: []
+            parameters:
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                      default: 1
+                      minimum: 1
+                  description: Page number (limit is fixed at 5)
+            responses:
+                200:
+                    description: Ok - Successfully retrieved recipes
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/CookingPaginatedRecipesResponse"
+                401:
+                    description: Unauthorized - Missing token
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /cooking/recipes/profileLiked:
+        get:
+            summary: Gets all recipes that the logged in user has liked with pagination
+            tags: [CookingTogether Recipes]
+            security:
+                - cookingTogether: []
+            parameters:
+                - in: query
+                  name: page
+                  schema:
+                      type: integer
+                      default: 1
+                      minimum: 1
+                  description: Page number (limit is fixed at 5)
+            responses:
+                200:
+                    description: Ok - Successfully retrieved recipes
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/CookingPaginatedRecipesResponse"
+                401:
+                    description: Unauthorized - Missing token
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /cooking/recipes/{recipeId}:
+        get:
+            summary: Gets a recipe by ID
+            tags: [CookingTogether Recipes]
+            parameters:
+                - in: path
+                  name: recipeId
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the recipe (valid ObjectId - 24 characters)
+            responses:
+                200:
+                    description: Ok - Successfully retrieved recipe
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/CookingSimpleRecipe"
+                400:
+                    description: Bad Request - Invalid ID
+                    content:
+                        application/json:
+                            example:
+                                message: "Id must be a valid MongooseDB ObjectId!"
+                404:
+                    description: Not Found - Recipe does not exist
+                    content:
+                        application/json:
+                            example:
+                                message: "There is no recipe with this id!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+        put:
+            summary: Updates a recipe by ID (only for authors)
+            tags: [CookingTogether Recipes]
+            security:
+                - cookingTogether: []
+            parameters:
+                - in: path
+                  name: recipeId
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the recipe (valid ObjectId - 24 characters)
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CookingCreateRecipeRequest"
+            responses:
+                201:
+                    description: Created - Recipe successfully updated
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/CookingSimpleRecipe"
+                400:
+                    description: Bad Request - Invalid data
+                    content:
+                        application/json:
+                            examples:
+                                invalidTitle:
+                                    summary: Invalid title
+                                    value:
+                                        message: "Title should be at least 5 characters long!"
+                                invalidDescription:
+                                    summary: Invalid description
+                                    value:
+                                        message: "Description should be at least 10 characters long!"
+                                invalidIngredients:
+                                    summary: Invalid ingredients
+                                    value:
+                                        message: "Ingredients should be at least 10 characters long!"
+                                invalidInstructions:
+                                    summary: Invalid instructions
+                                    value:
+                                        message: "Instructions should be at least 10 characters long!"
+                                invalidImgUrl:
+                                    summary: Invalid image URL
+                                    value:
+                                        message: "Invalid image URL!"
+                401:
+                    description: Unauthorized - Missing token
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                403:
+                    description: Forbidden - only the author of the recipe can edit it
+                    content:
+                        application/json:
+                            example:
+                                message: "You are not the owner of this resource!"
+                404:
+                    description: Not Found - Recipe does not exist
+                    content:
+                        application/json:
+                            examples:
+                                invalidGameIdMiddleware:
+                                    summary: Invalid resource ID
+                                    value:
+                                        message: "Resource not found!"
+                                invalidGameUpdate:
+                                    summary: Invalid update
+                                    value:
+                                        message: "Recipe not found!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+        delete:
+            summary: Deletes a recipe by ID (only for authors)
+            tags: [CookingTogether Recipes]
+            security:
+                - cookingTogether: []
+            parameters:
+                - in: path
+                  name: recipeId
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the recipe (valid ObjectId - 24 characters)
+            responses:
+                204:
+                    description: No Content - Recipe successfully deleted
+                400:
+                    description: Bad Request - Invalid ID
+                    content:
+                        application/json:
+                            example:
+                                message: "Id must be a valid MongooseDB ObjectId!"
+                401:
+                    description: Unauthorized - Missing token
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                403:
+                    description: Forbidden - only the author of the recipe can delete it
+                    content:
+                        application/json:
+                            example:
+                                message: "You are not the owner of this resource!"
+                404:
+                    description: Not Found - Recipe does not exist
+                    content:
+                        application/json:
+                            examples:
+                                invalidGameIdMiddleware:
+                                    summary: Invalid resource ID
+                                    value:
+                                        message: "Resource not found!"
+                                invalidGameUpdate:
+                                    summary: Invalid update
+                                    value:
+                                        message: "Recipe not found!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /cooking/recipes/{recipeId}/like:
+        post:
+            summary: Logged in user like a recipe by ID
+            tags: [CookingTogether Recipes]
+            security:
+                - cookingTogether: []
+            parameters:
+                - in: path
+                  name: recipeId
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the recipe (valid ObjectId - 24 characters)
+            responses:
+                200:
+                    description: Ok - Recipe successfully liked
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/CookingSimpleRecipe"
+                401:
+                    description: Unauthorized - Missing token
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                404:
+                    description: Not Found - Recipe does not exist
+                    content:
+                        application/json:
+                            example:
+                                message: "Recipe not found!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
 components:
     securitySchemes:
         gamesPlay:
@@ -1209,3 +1799,205 @@ components:
             type: array
             items:
                 $ref: "#/components/schemas/GamesPlayGamesCreateGameResponse"
+
+        CookingAuthRegisterRequest:
+            type: object
+            required:
+                - username
+                - email
+                - password
+                - rePassword
+            properties:
+                username:
+                    type: string
+                    example: example
+                email:
+                    type: string
+                    example: user@example.com
+                password:
+                    type: string
+                    example: 123456
+                rePassword:
+                    type: string
+                    example: 123456
+                profilePicture:
+                    type: string
+                    format: binary
+
+        CookingAuthLoginRequest:
+            type: object
+            required:
+                - email
+                - password
+            properties:
+                email:
+                    type: string
+                    example: user@example.com
+                password:
+                    type: string
+                    example: 123456
+
+        CookingAuthProfileResponse:
+            type: object
+            properties:
+                _id:
+                    type: string
+                    example: 60c72b2f9b1e8b001c8e4d3a
+                username:
+                    type: string
+                    example: example
+                email:
+                    type: string
+                    example: user@example.com
+                profilePicture:
+                    type: object
+                    properties:
+                        fileName:
+                            type: string
+                            example: profile.jpg
+                        fileUrl:
+                            type: string
+                            format: uri
+                            example: "https://example.com/profile.jpg"
+                dateCreated:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+                dateUpdate:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+
+        CookingRecipesArrayResponse:
+            type: array
+            items:
+                $ref: "#/components/schemas/CookingSimpleRecipe"
+
+        CookingSimpleRecipe:
+            type: object
+            properties:
+                _id:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                title:
+                    type: string
+                    example: "Recipe Title"
+                description:
+                    type: string
+                    example: "This is a brief description of the recipe."
+                ingredients:
+                    type: string
+                    example: "Ingredient 1, Ingredient 2, Ingredient 3"
+                instructions:
+                    type: string
+                    example: "Step-by-step instructions for the recipe."
+                imageUrl:
+                    type: string
+                    format: uri
+                    example: "https://example.com/recipe-image.jpg"
+                _ownerId:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                dateCreated:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+                dateUpdate:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+                likes:
+                    type: array
+                    items:
+                        type: string
+                        example: "60c72b2f9b1e8c001f8e4d3a"
+
+        CookingCreateRecipeRequest:
+            type: object
+            required:
+                - title
+                - description
+                - ingredients
+                - instructions
+                - imageUrl
+            properties:
+                title:
+                    type: string
+                    example: "New Recipe Title"
+                description:
+                    type: string
+                    example: "New recipe description."
+                ingredients:
+                    type: string
+                    example: "New recipe ingredient."
+                instructions:
+                    type: string
+                    example: "New recipe instructions."
+                imageUrl:
+                    type: string
+                    format: uri
+                    example: "https://example.com/recipe-image.jpg"
+
+        CookingPaginatedRecipesResponse:
+            type: object
+            properties:
+                items:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/CookingSimpleRecipe"
+                totalCount:
+                    type: integer
+                    example: 100
+                totalPages:
+                    type: integer
+                    example: 10
+                currentPage:
+                    type: integer
+                    example: 1
+
+        CookingTopThreeRecipesResponse:
+            type: array
+            items:
+                $ref: "#/components/schemas/CookingSimpleTopThreeRecipe"
+
+        CookingSimpleTopThreeRecipe:
+            type: object
+            properties:
+                _id:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                title:
+                    type: string
+                    example: "Recipe Title"
+                description:
+                    type: string
+                    example: "This is a brief description of the recipe."
+                ingredients:
+                    type: string
+                    example: "Ingredient 1, Ingredient 2, Ingredient 3"
+                instructions:
+                    type: string
+                    example: "Step-by-step instructions for the recipe."
+                imageUrl:
+                    type: string
+                    format: uri
+                    example: "https://example.com/recipe-image.jpg"
+                _ownerId:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                dateCreated:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+                dateUpdate:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+                likes:
+                    type: array
+                    items:
+                        type: string
+                        example: "60c72b2f9b1e8c001f8e4d3a"
+                likesCount:
+                    type: integer
+                    example: 10

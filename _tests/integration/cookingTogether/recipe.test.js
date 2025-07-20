@@ -449,7 +449,7 @@ describe("DELETE /recipes/:recipeId", () => {
         );
 
         expect(res.statusCode).toBe(404);
-        expect(res.body.message).toBe("Recipe not found");
+        expect(res.body.message).toBe("Recipe not found!");
 
         const dbEntry = await Item.findOne({ title: "Recipe One" });
         expect(dbEntry).not.toBeNull();
@@ -524,7 +524,7 @@ describe("PUT /recipes/:recipeId", () => {
             .send(editedData);
 
         expect(res.statusCode).toBe(404);
-        expect(res.body.message).toBe("Recipe not found");
+        expect(res.body.message).toBe("Recipe not found!");
     });
 });
 
@@ -578,6 +578,6 @@ describe("POST /recipes/:recipeId/like", () => {
         );
 
         expect(res.statusCode).toBe(404);
-        expect(res.body.message).toBe("Recipe not found");
+        expect(res.body.message).toBe("Recipe not found!");
     });
 });

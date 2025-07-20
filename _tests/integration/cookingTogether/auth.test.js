@@ -105,7 +105,7 @@ describe("POST /authAngular/register", () => {
             .send(newUser);
 
         expect(res.statusCode).toBe(400);
-        expect(res.body.message).toBe("rePasswords do not match");
+        expect(res.body.message).toBe("rePasswords do not match!");
     });
 
     it("should return 400 if data is incorect", async () => {

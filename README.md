@@ -54,7 +54,7 @@ Server running on http://localhost:3000
 Successfully connected to the cloud DB!
 ```
 
-## 4. Use Documentation
+## 4. Use Documentation - [Live Docs](https://restapi-docs-b694e.web.app)
 
 ```
 After server is on, go to http://localhost:3000/api/docs

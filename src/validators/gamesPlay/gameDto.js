@@ -25,7 +25,7 @@ export const gameDto = Joi.object({
         .messages({
             "string.base": "Image URL must be a string!",
             "string.empty": "Game image is required!",
-            "string.uri": "Invalid image url!",
+            "string.uriCustomScheme": "Invalid image url!",
             "any.required": "Game image is required!",
         }),
     summary: Joi.string().min(10).required().messages({

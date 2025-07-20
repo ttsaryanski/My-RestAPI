@@ -94,7 +94,10 @@ describe("authService/register", () => {
 
             const result = await authService.getUserById("abc123");
 
-            expect(UserAngular.findById).toHaveBeenCalledWith("abc123");
+            expect(UserAngular.findById).toHaveBeenCalledWith("abc123", {
+                __v: 0,
+                password: 0,
+            });
             expect(result).toEqual(user);
         });
 

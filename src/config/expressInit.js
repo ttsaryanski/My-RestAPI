@@ -82,6 +82,17 @@ export default function expressInit(app) {
         app.get("/api/csrf-token", (req, res) => {
             res.json({ csrfToken: req.csrfToken() });
         });
-        app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+        app.use(
+            "/api/docs",
+            swaggerUi.serve,
+            swaggerUi.setup(swaggerDocument, {
+                swaggerOptions: isDev
+                    ? {}
+                    : {
+                          tryItOutEnabled: false,
+                          supportedSubmitMethods: [],
+                      },
+            })
+        );
     }
 }

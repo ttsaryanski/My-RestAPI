@@ -187,18 +187,11 @@ export function recipeController(recipeService) {
             const userId = req.user._id;
             const recipeId = req.params.recipeId;
 
-            const { error: idError1 } = mongooseIdDto.validate({
+            const { error: idError } = mongooseIdDto.validate({
                 id: recipeId,
             });
-            if (idError1) {
-                throw new CustomError(idError1.details[0].message, 400);
-            }
-
-            const { error: idError2 } = mongooseIdDto.validate({
-                id: userId,
-            });
-            if (idError2) {
-                throw new CustomError(idError2.details[0].message, 400);
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
             }
 
             const recipe = await recipeService.like(recipeId, userId);

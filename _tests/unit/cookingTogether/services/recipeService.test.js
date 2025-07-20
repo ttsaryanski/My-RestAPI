@@ -188,7 +188,7 @@ describe("recipeService/remove", () => {
         } catch (err) {
             expect(err).toBeInstanceOf(CustomError);
             expect(err.statusCode).toBe(404);
-            expect(err.message).toBe("Recipe not found");
+            expect(err.message).toBe("Recipe not found!");
         }
     });
 });

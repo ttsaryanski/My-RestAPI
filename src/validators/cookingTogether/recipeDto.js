@@ -21,7 +21,7 @@ export const recipeDto = Joi.object({
         .uri({ scheme: ["http", "https"] })
         .required()
         .messages({
-            "string.uri": "Invalid image URL!",
+            "string.uriCustomScheme": "Invalid image URL!",
             "any.required": "Image is required!",
         }),
 });

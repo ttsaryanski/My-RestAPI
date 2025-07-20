@@ -51,7 +51,10 @@ export const authService = {
     },
 
     async getUserById(id) {
-        const user = await UserAngular.findById(id);
+        const user = await UserAngular.findById(id, {
+            password: 0,
+            __v: 0,
+        });
 
         if (!user) {
             throw new CustomError("There is no user with this id!", 404);

@@ -55,7 +55,7 @@ export const recipeService = {
         const result = await Item.findByIdAndDelete(itemId);
 
         if (!result) {
-            throw new CustomError("Recipe not found", 404);
+            throw new CustomError("Recipe not found!", 404);
         }
     },
 
@@ -68,7 +68,7 @@ export const recipeService = {
         });
 
         if (!updatedRecipe) {
-            throw new CustomError("Recipe not found", 404);
+            throw new CustomError("Recipe not found!", 404);
         }
         return updatedRecipe;
     },
@@ -81,7 +81,7 @@ export const recipeService = {
         );
 
         if (!recipe) {
-            throw new CustomError("Recipe not found", 404);
+            throw new CustomError("Recipe not found!", 404);
         }
         return recipe;
     },

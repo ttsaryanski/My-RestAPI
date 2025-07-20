@@ -18,7 +18,7 @@ export const userRegisterDto = Joi.object({
         .required()
         .messages({
             "string.empty": "Email is required",
-            "string.pattern.base": "Invalid email format",
+            "string.pattern.base": "Invalid email format!",
             "any.required": "Email is required",
         }),
     password: Joi.string().min(6).required().messages({

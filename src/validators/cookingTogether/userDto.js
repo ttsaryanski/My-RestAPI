@@ -11,7 +11,7 @@ export const userRegisterDto = Joi.object({
         )
         .required()
         .messages({
-            "string.patern.base": "Invalid email format!",
+            "string.pattern.base": "Invalid email format!",
             "any.required": "Email is required!",
         }),
     password: Joi.string().min(3).required().messages({
@@ -19,8 +19,8 @@ export const userRegisterDto = Joi.object({
         "any.required": "Password is required!",
     }),
     rePassword: Joi.string().valid(Joi.ref("password")).required().messages({
-        "any.only": "rePasswords do not match",
-        "any.required": "Re-enter your rePassword",
+        "any.only": "rePasswords do not match!",
+        "any.required": "Re-enter your rePassword!",
     }),
 });
 
@@ -32,7 +32,7 @@ export const userLoginDto = Joi.object({
         .required()
         .messages({
             "any.required": "Email is required!",
-            "string.patern.base": "Invalid email format!",
+            "string.pattern.base": "Invalid email format!",
         }),
     password: Joi.string().min(3).required().messages({
         "string.min": "Password must be at least 3 characters!",
