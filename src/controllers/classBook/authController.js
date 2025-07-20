@@ -46,7 +46,7 @@ export function authController(authService) {
                     ContentType: req.file.mimetype,
                 };
                 const command = new PutObjectCommand(uploadParams);
-                const s3Response = await s3.send(command);
+                await s3.send(command);
                 const fileName = req.file.originalname;
                 const fileUrl = `https://${uploadParams.Bucket}.s3.amazonaws.com/${uploadParams.Key}`;
                 profilePicture = { fileName, fileUrl };
@@ -153,7 +153,7 @@ export function authController(authService) {
                     ContentType: req.file.mimetype,
                 };
                 const command = new PutObjectCommand(uploadParams);
-                const s3Response = await s3.send(command);
+                await s3.send(command);
                 const fileName = req.file.originalname;
                 const fileUrl = `https://${uploadParams.Bucket}.s3.amazonaws.com/${uploadParams.Key}`;
                 data.profilePicture = { fileName, fileUrl };
