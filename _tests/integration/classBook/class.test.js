@@ -245,7 +245,7 @@ describe("PUT /clss/:clssId", () => {
             .send(editedData);
 
         expect(res.statusCode).toBe(404);
-        expect(res.body.message).toBe("Class not found");
+        expect(res.body.message).toBe("Class not found!");
     });
 });
 
@@ -291,7 +291,7 @@ describe("DELETE /clss/:clssId", () => {
         );
 
         expect(res.statusCode).toBe(404);
-        expect(res.body.message).toBe("Class not found");
+        expect(res.body.message).toBe("Class not found!");
 
         const dbEntry = await Clss.findOne({ title: "Class One" });
         expect(dbEntry).not.toBeNull();

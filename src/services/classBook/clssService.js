@@ -67,7 +67,7 @@ export const classService = {
         const result = await Clss.findByIdAndDelete(itemId);
 
         if (!result) {
-            throw new CustomError("Class not found", 404);
+            throw new CustomError("Class not found!", 404);
         }
     },
 
@@ -80,7 +80,7 @@ export const classService = {
         });
 
         if (!updatedClss) {
-            throw new CustomError("Class not found", 404);
+            throw new CustomError("Class not found!", 404);
         }
 
         return updatedClss;

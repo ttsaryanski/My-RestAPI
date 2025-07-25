@@ -233,7 +233,7 @@ describe("classService/remove", () => {
         } catch (err) {
             expect(err).toBeInstanceOf(CustomError);
             expect(err.statusCode).toBe(404);
-            expect(err.message).toBe("Class not found");
+            expect(err.message).toBe("Class not found!");
         }
     });
 });

@@ -28,26 +28,26 @@ export const createStudentDto = Joi.object({
 
 export const editStudentDto = Joi.object({
     clssToAdd: objectIdValidator.optional().messages({
-        "any.invalid": "Class must be a valid ObjectId",
+        "any.invalid": "Class must be a valid ObjectId!",
     }),
     clssToRemove: objectIdValidator.optional().messages({
-        "any.invalid": "Class must be a valid ObjectId",
+        "any.invalid": "Class must be a valid ObjectId!",
     }),
     grades: Joi.array().items(
         Joi.object({
             teacher: objectIdValidator.optional().messages({
-                "any.invalid": "Teacher must be a valid ObjectId",
+                "any.invalid": "Teacher must be a valid ObjectId!",
             }),
             class: objectIdValidator.optional().messages({
-                "any.invalid": "Class must be a valid ObjectId",
+                "any.invalid": "Class must be a valid ObjectId!",
             }),
             value: Joi.number().integer().min(2).max(6).optional().messages({
-                "number.base": "Grade value must be a number",
-                "number.min": "Grade cannot be less than 2",
-                "number.max": "Grade cannot be greater than 6",
+                "number.base": "Grade value must be a number!",
+                "number.min": "Grade cannot be less than 2!",
+                "number.max": "Grade cannot be greater than 6!",
             }),
             comment: Joi.string().trim().allow("", null).optional().messages({
-                "string.base": "Comment must be a string",
+                "string.base": "Comment must be a string!",
             }),
         }).unknown(true)
     ),

@@ -62,7 +62,7 @@ export const studentService = {
         const result = Student.findByIdAndDelete(studentId);
 
         if (!result) {
-            throw new CustomError("Student not found", 404);
+            throw new CustomError("Student not found!", 404);
         }
     },
 
@@ -90,7 +90,7 @@ export const studentService = {
         );
 
         if (!editedStudent) {
-            throw new CustomError("Student not found", 404);
+            throw new CustomError("Student not found!", 404);
         }
 
         return editedStudent;

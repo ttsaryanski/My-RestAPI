@@ -104,7 +104,10 @@ export const authService = {
     },
 
     async getUserById(id) {
-        const user = await User.findById(id);
+        const user = await User.findById(id, {
+            password: 0,
+            __v: 0,
+        });
 
         if (!user) {
             throw new CustomError("There is no user with this id!", 404);
@@ -119,10 +122,11 @@ export const authService = {
         const updatedUser = await User.findByIdAndUpdate(userId, data, {
             runValidators: true,
             new: true,
+            projection: { password: 0 },
         });
 
         if (!updatedUser) {
-            throw new CustomError("User not found", 404);
+            throw new CustomError("User not found!", 404);
         }
 
         return updatedUser;

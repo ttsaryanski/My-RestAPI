@@ -54,7 +54,7 @@ export const teacherService = {
         );
 
         if (!editedTeacher) {
-            throw new CustomError("Teacher not found", 404);
+            throw new CustomError("Teacher not found!", 404);
         }
 
         return editedTeacher;

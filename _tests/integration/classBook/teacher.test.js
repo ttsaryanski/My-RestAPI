@@ -157,6 +157,6 @@ describe("PUT /teacher/:teacherId", () => {
             .send(editedData);
 
         expect(res.statusCode).toBe(404);
-        expect(res.body.message).toBe("Teacher not found");
+        expect(res.body.message).toBe("Teacher not found!");
     });
 });

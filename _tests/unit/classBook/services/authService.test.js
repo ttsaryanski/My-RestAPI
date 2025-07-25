@@ -202,7 +202,10 @@ describe("authService/getUserById", () => {
 
         const result = await authService.getUserById("abc123");
 
-        expect(User.findById).toHaveBeenCalledWith("abc123");
+        expect(User.findById).toHaveBeenCalledWith("abc123", {
+            password: 0,
+            __v: 0,
+        });
         expect(result).toEqual(user);
     });
 
@@ -233,6 +236,7 @@ describe("authService/editUser", () => {
             {
                 runValidators: true,
                 new: true,
+                projection: { password: 0 },
             }
         );
         expect(result).toEqual(updatedUser);

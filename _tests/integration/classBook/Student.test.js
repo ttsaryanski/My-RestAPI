@@ -315,6 +315,6 @@ describe("PUT /student/:studentId", () => {
             .send(editedData);
 
         expect(res.statusCode).toBe(404);
-        expect(res.body.message).toBe("Student not found");
+        expect(res.body.message).toBe("Student not found!");
     });
 });

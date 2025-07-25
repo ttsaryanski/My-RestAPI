@@ -130,6 +130,12 @@ paths:
                         application/json:
                             example:
                                 message: "Missing token!"
+                403:
+                    description: Forbidden - Access denied
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -219,6 +225,12 @@ paths:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/GamesPlayAdminGamesListResponse"
+                400:
+                    description: Bad Request - Invalid page
+                    content:
+                        application/json:
+                            example:
+                                message: "Page cannot be less than 1!"
                 401:
                     description: Unauthorized - Missing token
                     content:
@@ -306,6 +318,12 @@ paths:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/GamesPlayAdminUsersListResponse"
+                400:
+                    description: Bad Request - Invalid page
+                    content:
+                        application/json:
+                            example:
+                                message: "Page cannot be less than 1!"
                 401:
                     description: Unauthorized - Missing token
                     content:
@@ -449,6 +467,12 @@ paths:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/GamesPlayAdminStatsResponse"
+                400:
+                    description: Bad Request - Invalid page
+                    content:
+                        application/json:
+                            example:
+                                message: "Page cannot be less than 1!"
                 401:
                     description: Unauthorized - Missing token
                     content:
@@ -537,6 +561,12 @@ paths:
                         application/json:
                             example:
                                 message: "Missing token!"
+                403:
+                    description: Forbidden - Access denied
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -616,12 +646,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/GamesPlayGamesGamesListResponse"
-                400:
-                    description: Bad Request - Invalid limit
-                    content:
-                        application/json:
-                            example:
-                                message: "Limit must be a positive integer!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -677,6 +701,12 @@ paths:
                         application/json:
                             example:
                                 message: "Missing token!"
+                403:
+                    description: Forbidden - Access denied
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -703,6 +733,12 @@ paths:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/GamesPlayAdminGamesListResponse"
+                400:
+                    description: Bad Request - Invalid page
+                    content:
+                        application/json:
+                            example:
+                                message: "Page cannot be less than 1!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -952,14 +988,14 @@ paths:
                             description: Set JWT in cookie
                             schema:
                                 type: string
-                                example: auth_GamesPlay={accessToken:jwt.token.value}; Path=/; HttpOnly; Secure; SameSite=None
+                                example: auth_cooking={accessToken:jwt.token.value}; Path=/; HttpOnly; Secure; SameSite=None
                 400:
                     description: Bad Request - Invalid data
                     content:
                         application/json:
                             examples:
                                 invalidUserName:
-                                    summary: Invalid username
+                                    summary: Invalid user name
                                     value:
                                         message: "Username must be at least 3 characters!"
                                 invalidEmail:
@@ -1005,7 +1041,7 @@ paths:
                             description: Set JWT in cookie
                             schema:
                                 type: string
-                                example: auth_GamesPlay={accessToken:jwt.token.value}; Path=/; HttpOnly; Secure; SameSite=None
+                                example: auth_cooking={accessToken:jwt.token.value}; Path=/; HttpOnly; Secure; SameSite=None
                 400:
                     description: Bad Request - Invalid data
                     content:
@@ -1058,13 +1094,19 @@ paths:
                             description: Clear JWT cookie
                             schema:
                                 type: string
-                                example: auth_GamesPlay=; Path=/; HttpOnly; Secure; SameSite=None; Max-Age=0
+                                example: auth_cooking=; Path=/; HttpOnly; Secure; SameSite=None; Max-Age=0
                 401:
                     description: Unauthorized - Missing token
                     content:
                         application/json:
                             example:
                                 message: "Missing token!"
+                403:
+                    description: Forbidden - Access denied
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -1196,6 +1238,12 @@ paths:
                         application/json:
                             example:
                                 message: "Missing token!"
+                403:
+                    description: Forbidden - Access denied
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -1214,7 +1262,15 @@ paths:
                       type: integer
                       default: 1
                       minimum: 1
-                  description: Page number (limit is fixed at 9)
+                  description: Page number
+                - in: query
+                  name: limit
+                  schema:
+                      type: integer
+                      default: 9
+                      minimum: 1
+                      maximum: 100
+                  description: Number of recipes per page (default is 9)
             responses:
                 200:
                     description: Ok - Successfully retrieved recipes
@@ -1222,6 +1278,19 @@ paths:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/CookingPaginatedRecipesResponse"
+                400:
+                    description: Bad Request - Invalid page or limit
+                    content:
+                        application/json:
+                            examples:
+                                invalidPage:
+                                    summary: Invalid page
+                                    value:
+                                        message: "Page cannot be less than 1!"
+                                invalidLimit:
+                                    summary: Invalid limit
+                                    value:
+                                        message: "Limit must be between 1 and 100!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -1260,7 +1329,15 @@ paths:
                       type: integer
                       default: 1
                       minimum: 1
-                  description: Page number (limit is fixed at 5)
+                  description: Page number
+                - in: query
+                  name: limit
+                  schema:
+                      type: integer
+                      default: 5
+                      minimum: 1
+                      maximum: 100
+                  description: Number of recipes per page (default is 5)
             responses:
                 200:
                     description: Ok - Successfully retrieved recipes
@@ -1268,12 +1345,31 @@ paths:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/CookingPaginatedRecipesResponse"
+                400:
+                    description: Bad Request - Invalid page or limit
+                    content:
+                        application/json:
+                            examples:
+                                invalidPage:
+                                    summary: Invalid page
+                                    value:
+                                        message: "Page cannot be less than 1!"
+                                invalidLimit:
+                                    summary: Invalid limit
+                                    value:
+                                        message: "Limit must be between 1 and 100!"
                 401:
                     description: Unauthorized - Missing token
                     content:
                         application/json:
                             example:
                                 message: "Missing token!"
+                403:
+                    description: Forbidden - Access denied
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -1294,7 +1390,15 @@ paths:
                       type: integer
                       default: 1
                       minimum: 1
-                  description: Page number (limit is fixed at 5)
+                  description: Page number
+                - in: query
+                  name: limit
+                  schema:
+                      type: integer
+                      default: 5
+                      minimum: 1
+                      maximum: 100
+                  description: Number of recipes per page (default is 5)
             responses:
                 200:
                     description: Ok - Successfully retrieved recipes
@@ -1302,12 +1406,31 @@ paths:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/CookingPaginatedRecipesResponse"
+                400:
+                    description: Bad Request - Invalid page or limit
+                    content:
+                        application/json:
+                            examples:
+                                invalidPage:
+                                    summary: Invalid page
+                                    value:
+                                        message: "Page cannot be less than 1!"
+                                invalidLimit:
+                                    summary: Invalid limit
+                                    value:
+                                        message: "Limit must be between 1 and 100!"
                 401:
                     description: Unauthorized - Missing token
                     content:
                         application/json:
                             example:
                                 message: "Missing token!"
+                403:
+                    description: Forbidden - Access denied
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -1511,12 +1634,1037 @@ paths:
                         application/json:
                             example:
                                 message: "Missing token!"
+                403:
+                    description: Forbidden - Access denied
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
                 404:
                     description: Not Found - Recipe does not exist
                     content:
                         application/json:
                             example:
                                 message: "Recipe not found!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /class/auth/register:
+        post:
+            description:
+                You must provide either secretKey or identifier — only one of the two should be submitted.
+
+                If you choose to use secretKey, leave identifier empty and uncheck the "Send empty value" option.
+
+                If you choose to use identifier, leave secretKey empty and uncheck the "Send empty value" option.
+
+                ⚠️ If both fields are submitted or if both are marked as "empty values", the request will be rejected.
+            summary: User registration
+            tags: [ClassBook Auth]
+            requestBody:
+                required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/ClassBookAuthRegisterRequest"
+            responses:
+                204:
+                    description: No Content - Register is successful (no content)
+                    headers:
+                        Set-Cookie:
+                            description: Set JWT in cookie
+                            schema:
+                                type: string
+                                example: auth={accessToken:jwt.token.value}; Path=/; HttpOnly; Secure; SameSite=None
+                400:
+                    description: Bad Request - Invalid data
+                    content:
+                        application/json:
+                            examples:
+                                invalidFirstName:
+                                    summary: Invalid first name
+                                    value:
+                                        message: "First name should be at least 3 characters long!"
+                                invalidLastName:
+                                    summary: Invalid last name
+                                    value:
+                                        message: "Last name should be at least 3 characters long!"
+                                invalidEmail:
+                                    summary: Invalid email
+                                    value:
+                                        message: "Invalid email format!"
+                                invalidPassword:
+                                    summary: Invalid password
+                                    value:
+                                        message: "Password must be at least 6 characters long!"
+                                invalidSecretKey:
+                                    summary: Invalid secretKey
+                                    value:
+                                        message: "Secret key must be a string!"
+                                invalidIdentifier:
+                                    summary: Invalid identifier
+                                    value:
+                                        message: "Identifier must be exactly 10 digits!"
+                                invalidImageUpload:
+                                    summary: Invalid file type
+                                    value:
+                                        message: "Invalid file type. Only jpg, jpeg, and png files are allowed!"
+                409:
+                    description: Conflict - Email already registered
+                    content:
+                        application/json:
+                            example:
+                                message: "This email already registered!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /class/auth/login:
+        post:
+            summary: User login
+            tags: [ClassBook Auth]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CookingAuthLoginRequest"
+            responses:
+                204:
+                    description: No Content - Login is successful (no content)
+                    headers:
+                        Set-Cookie:
+                            description: Set JWT in cookie
+                            schema:
+                                type: string
+                                example: auth={accessToken:jwt.token.value}; Path=/; HttpOnly; Secure; SameSite=None
+                400:
+                    description: Bad Request - Invalid data
+                    content:
+                        application/json:
+                            examples:
+                                invalidEmail:
+                                    summary: Invalid email
+                                    value:
+                                        message: "Invalid email format!"
+                                invalidPassword:
+                                    summary: Invalid password
+                                    value:
+                                        message: "Password must be at least 6 characters long!"
+                401:
+                    description: Unauthorized - Invalid password
+                    content:
+                        application/json:
+                            example:
+                                message: "Password does not match!"
+                404:
+                    description: Not Found - User does not exist
+                    content:
+                        application/json:
+                            example:
+                                message: "User does not exist!"
+                429:
+                    description: Too Many Requests - Too many login attempts
+                    content:
+                        application/json:
+                            example:
+                                message: "Too many login attempts. Please try again in 15 minutes."
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /class/auth/logout:
+        post:
+            summary: User logout
+            tags: [ClassBook Auth]
+            security:
+                - classBook: []
+            responses:
+                204:
+                    description: No Content - Logout is successful (no content)
+                    headers:
+                        Set-Cookie:
+                            description: Clear JWT cookie
+                            schema:
+                                type: string
+                                example: auth=; Path=/; HttpOnly; Secure; SameSite=None; Max-Age=0
+                401:
+                    description: Unauthorized - Missing token
+                    content:
+                        application/json:
+                            example:
+                                message: "Missing token!"
+                403:
+                    description: Forbidden - Access denied
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /class/auth/profile:
+        get:
+            summary: Gets user profile
+            tags: [ClassBook Auth]
+            security:
+                - classBook: []
+            responses:
+                200:
+                    description: OK - User profile retrieved successfully
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ClassBookAuthProfileResponse"
+                401:
+                    description: Unauthorized - Missing token
+                    content:
+                        application/json:
+                            example:
+                                message: "Missing token!"
+                403:
+                    description: Forbidden - Access denied
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                404:
+                    description: Not Found - User does not exist
+                    content:
+                        application/json:
+                            example:
+                                message: "There is no user with this id!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+        put:
+            summary: Updates user profile
+            tags: [ClassBook Auth]
+            security:
+                - classBook: []
+            requestBody:
+                required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            $ref: "#/components/schemas/ClassBookAuthEditProfileRequest"
+            responses:
+                201:
+                    description: Created - User profile successfully updated
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ClassBookAuthProfileResponse"
+                400:
+                    description: Bad Request - Invalid data
+                    content:
+                        application/json:
+                            examples:
+                                invalidFirstName:
+                                    summary: Invalid first name
+                                    value:
+                                        message: "First name should be at least 3 characters long!"
+                                invalidLastName:
+                                    summary: Invalid last name
+                                    value:
+                                        message: "Last name should be at least 3 characters long!"
+                                invalidImageUpload:
+                                    summary: Invalid file type
+                                    value:
+                                        message: "Invalid file type. Only jpg, jpeg, and png files are allowed!"
+                401:
+                    description: Unauthorized - Missing token
+                    content:
+                        application/json:
+                            example:
+                                message: "Missing token!"
+                403:
+                    description: Forbidden - Access denied
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                404:
+                    description: Not Found - User does not exist
+                    content:
+                        application/json:
+                            example:
+                                message: "User not found!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /class/clss:
+        get:
+            summary: Gets all classes with optional search and limit
+            tags: [ClassBook Class]
+            parameters:
+                - in: query
+                  name: search
+                  schema:
+                      type: string
+                  required: false
+                  description: Searching for classes by title
+
+                - in: query
+                  name: limit
+                  schema:
+                      type: integer
+                  required: false
+                  description: Limit the number of classes returned
+            responses:
+                200:
+                    description: Ok - Successfully retrieved classes
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ClassBookClassArrayResponse"
+                400:
+                    description: Bad Request - Invalid limit
+                    content:
+                        application/json:
+                            example:
+                                message: "Limit must be a positive integer!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+        post:
+            summary: Creates a new class
+            tags: [ClassBook Class]
+            security:
+                - classBook: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/ClassBookCreateClassRequest"
+            responses:
+                201:
+                    description: Created - Class successfully created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ClassBookSimpleClass"
+                400:
+                    description: Bad Request - Invalid data
+                    content:
+                        application/json:
+                            examples:
+                                invalidTitle:
+                                    summary: Invalid title
+                                    value:
+                                        message: "Title should be at least 3 characters long!"
+                                invalidTeacher:
+                                    summary: Invalid teacher ID
+                                    value:
+                                        message: "Teacher must be a valid ObjectId!"
+                                invalidStudents:
+                                    summary: Invalid students ID
+                                    value:
+                                        message: "Each student must be a valid ObjectId!"
+                401:
+                    description: Unauthorized - Missing token
+                    content:
+                        application/json:
+                            example:
+                                message: "Missing token!"
+                403:
+                    description: Forbidden - Access denied
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /class/clss/{clssId}:
+        get:
+            summary: Gets a class by ID
+            tags: [ClassBook Class]
+            parameters:
+                - in: path
+                  name: clssId
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the class (valid ObjectId - 24 characters)
+            responses:
+                200:
+                    description: Ok - Successfully retrieved class
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ClassBookSimpleClass"
+                400:
+                    description: Bad Request - Invalid ID
+                    content:
+                        application/json:
+                            example:
+                                message: "Id must be a valid MongooseDB ObjectId!"
+                404:
+                    description: Not Found - Class does not exist
+                    content:
+                        application/json:
+                            example:
+                                message: "There is no class with this id!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+        put:
+            summary: Updates a class by ID
+            tags: [ClassBook Class]
+            security:
+                - classBook: []
+            parameters:
+                - in: path
+                  name: clssId
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the class (valid ObjectId - 24 characters)
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/ClassBookCreateClassRequest"
+            responses:
+                201:
+                    description: Created - Class successfully updated
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ClassBookSimpleClass"
+                400:
+                    description: Bad Request - Invalid data
+                    content:
+                        application/json:
+                            examples:
+                                invalidTitle:
+                                    summary: Invalid title
+                                    value:
+                                        message: "Title should be at least 3 characters long!"
+                                invalidTeacher:
+                                    summary: Invalid teacher ID
+                                    value:
+                                        message: "Teacher must be a valid ObjectId!"
+                                invalidStudents:
+                                    summary: Invalid students ID
+                                    value:
+                                        message: "Each student must be a valid ObjectId!"
+                401:
+                    description: Unauthorized - Missing token
+                    content:
+                        application/json:
+                            example:
+                                message: "Missing token!"
+                403:
+                    description: Forbidden - Access denied
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                404:
+                    description: Not Found - Class does not exist
+                    content:
+                        application/json:
+                            example:
+                                message: "Class not found!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+        delete:
+            summary: Deletes a class by ID
+            tags: [ClassBook Class]
+            security:
+                - classBook: []
+            parameters:
+                - in: path
+                  name: clssId
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the class (valid ObjectId - 24 characters)
+            responses:
+                204:
+                    description: No Content - Class successfully deleted
+                400:
+                    description: Bad Request - Invalid ID
+                    content:
+                        application/json:
+                            example:
+                                message: "Id must be a valid MongooseDB ObjectId!"
+                401:
+                    description: Unauthorized - Missing token
+                    content:
+                        application/json:
+                            example:
+                                message: "Missing token!"
+                403:
+                    description: Forbidden - Access denied
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                404:
+                    description: Not Found - Class does not exist
+                    content:
+                        application/json:
+                            example:
+                                message: "Class not found!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /class/clss/{clssId}/populate:
+        get:
+            summary: Gets a class by ID with populate data
+            tags: [ClassBook Class]
+            description: Gets a class by ID with populate data for teacher and students.
+            parameters:
+                - in: path
+                  name: clssId
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the class (valid ObjectId - 24 characters)
+            responses:
+                200:
+                    description: Ok - Successfully retrieved class
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ClassBookPopulateClass"
+                400:
+                    description: Bad Request - Invalid ID
+                    content:
+                        application/json:
+                            example:
+                                message: "Id must be a valid MongooseDB ObjectId!"
+                404:
+                    description: Not Found - Class does not exist
+                    content:
+                        application/json:
+                            example:
+                                message: "There is no class with this id!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /class/director:
+        post:
+            summary: Set director and teacher secret keys (deprecated)
+            tags: [ClassBook Director]
+            deprecated: true
+            description:
+                This endpoint creates the initial registration keys (secretKey) for role assignment (e.g., teacher or director).
+
+                ⚠️ Only one settings record is allowed. If registration keys have already been created, this endpoint becomes unavailable and will return a 403 Forbidden response.
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/ClassBookCreateSecretsRequest"
+            responses:
+                201:
+                    description: Created - Secret keys successfully created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ClassBookCreateSecretsResponse"
+                400:
+                    description: Bad Request - Invalid data
+                    content:
+                        application/json:
+                            examples:
+                                invalidTeacherKey:
+                                    summary: Invalid teacherKey
+                                    value:
+                                        message: "Teacher key must be at least 10 characters long!"
+                                invalidDirectorKey:
+                                    summary: Invalid directorKey
+                                    value:
+                                        message: "Director key must be at least 10 characters long!"
+                403:
+                    description: Forbidden - Access denied
+                    content:
+                        application/json:
+                            example:
+                                message: "Secret keys already exist!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /class/teacher:
+        get:
+            summary: Gets all teachers with optional search
+            tags: [ClassBook Teacher]
+            parameters:
+                - in: query
+                  name: email
+                  schema:
+                      type: string
+                  required: false
+                  description: Searching for teachers by email
+            responses:
+                200:
+                    description: Ok - Successfully retrieved teachers
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "#/components/schemas/ClassBookSimpleTeacher"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /class/teacher/{teacherId}:
+        get:
+            summary: Gets a teacher by ID
+            tags: [ClassBook Teacher]
+            parameters:
+                - in: path
+                  name: teacherId
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the teacher (valid ObjectId - 24 characters)
+            responses:
+                200:
+                    description: Ok - Successfully retrieved teacher
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ClassBookSimpleTeacher"
+                400:
+                    description: Bad Request - Invalid ID
+                    content:
+                        application/json:
+                            example:
+                                message: "Id must be a valid MongooseDB ObjectId!"
+                404:
+                    description: Not Found - Teacher does not exist
+                    content:
+                        application/json:
+                            example:
+                                message: "There is no teacher with this id!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+        put:
+            summary: Updates a teacher by ID
+            tags: [ClassBook Teacher]
+            description:
+                You can provide either clssToAdd or clssToRemove to update the teacher's assigned classes, but not both at the same time.
+
+                If clssToAdd is present, clssToRemove must be omitted.
+
+                If clssToRemove is present, clssToAdd must be omitted.
+
+                You may also omit both if no class change is needed.
+
+                ⚠️ If both fields are submitted in the same request, the operation will be rejected.
+            security:
+                - classBook: []
+            parameters:
+                - in: path
+                  name: teacherId
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the teacher (valid ObjectId - 24 characters)
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/ClassBookEditTeacherRequest"
+            responses:
+                201:
+                    description: Created - Teacher successfully updated
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ClassBookSimpleTeacher"
+                400:
+                    description: Bad Request - Invalid data
+                    content:
+                        application/json:
+                            examples:
+                                invalidFirstName:
+                                    summary: Invalid first name
+                                    value:
+                                        message: "First name should be at least 3 characters long!"
+                                invalidLastName:
+                                    summary: Invalid last name
+                                    value:
+                                        message: "Last name should be at least 3 characters long!"
+                                invalidSpeciality:
+                                    summary: Invalid speciality
+                                    value:
+                                        message: "Speciality should be at least 3 characters long!"
+                                invalidClssToAdd:
+                                    summary: Invalid class to add
+                                    value:
+                                        message: "Class must be a valid ObjectId!"
+                                invalidClssToRemove:
+                                    summary: Invalid class to remove
+                                    value:
+                                        message: "Class must be a valid ObjectId!"
+                401:
+                    description: Unauthorized - Missing token
+                    content:
+                        application/json:
+                            example:
+                                message: "Missing token!"
+                403:
+                    description: Forbidden - Access denied
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                404:
+                    description: Not Found - Teacher does not exist
+                    content:
+                        application/json:
+                            example:
+                                message: "Teacher not found!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /class/student:
+        get:
+            summary: Gets all students with optional limit
+            tags: [ClassBook Student]
+            parameters:
+                - in: query
+                  name: limit
+                  schema:
+                      type: integer
+                  required: false
+                  description: Limit the number of students returned
+            responses:
+                200:
+                    description: Ok - Successfully retrieved students
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ClassBookStudentArrayResponse"
+                400:
+                    description: Bad Request - Invalid limit
+                    content:
+                        application/json:
+                            example:
+                                message: "Limit must be a positive integer!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+        post:
+            summary: Creates a new student from director
+            tags: [ClassBook Student]
+            security:
+                - classBook: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/ClassBookCreateStudentRequest"
+            responses:
+                201:
+                    description: Created - Student successfully created
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ClassBookStudentWithoutEmail"
+                400:
+                    description: Bad Request - Invalid data
+                    content:
+                        application/json:
+                            examples:
+                                invalidFirstName:
+                                    summary: Invalid first name
+                                    value:
+                                        message: "First name should be at least 3 characters long!"
+                                invalidLastName:
+                                    summary: Invalid last name
+                                    value:
+                                        message: "Last name should be at least 3 characters long!"
+                                invalidIdentifier:
+                                    summary: Invalid identifier
+                                    value:
+                                        message: "Identifier must be exactly 10 digits!"
+                401:
+                    description: Unauthorized - Missing token
+                    content:
+                        application/json:
+                            example:
+                                message: "Missing token!"
+                403:
+                    description: Forbidden - Access denied
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /class/student/paginated:
+        post:
+            summary: Gets all students with pagination
+            tags: [ClassBook Student]
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/PaginationRequest"
+
+            responses:
+                200:
+                    description: Ok - Successfully retrieved students
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ClassBookPaginatedStudentResponse"
+                400:
+                    description: Bad Request - Invalid page or limit
+                    content:
+                        application/json:
+                            examples:
+                                invalidPage:
+                                    summary: Invalid page
+                                    value:
+                                        message: "Page cannot be less than 1!"
+                                invalidLimit:
+                                    summary: Invalid limit
+                                    value:
+                                        message: "Limit must be between 1 and 100!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /class/student/{studentId}:
+        get:
+            summary: Gets a student by ID
+            tags: [ClassBook Student]
+            parameters:
+                - in: path
+                  name: studentId
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the student (valid ObjectId - 24 characters)
+            responses:
+                200:
+                    description: Ok - Successfully retrieved student
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ClassBookSimpleStudent"
+                400:
+                    description: Bad Request - Invalid ID
+                    content:
+                        application/json:
+                            example:
+                                message: "Id must be a valid MongooseDB ObjectId!"
+                404:
+                    description: Not Found - Student does not exist
+                    content:
+                        application/json:
+                            example:
+                                message: "There is no student with this id!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+        put:
+            summary: Updates a student by ID
+            tags: [ClassBook Student]
+            description:
+                You can provide either clssToAdd or clssToRemove to update the student's assigned classes, but not both at the same time.
+
+                If clssToAdd is present, clssToRemove must be omitted.
+
+                If clssToRemove is present, clssToAdd must be omitted.
+
+                You may also omit both if no class change is needed.
+
+                ⚠️ If both fields are submitted in the same request, the operation will be rejected.
+            security:
+                - classBook: []
+            parameters:
+                - in: path
+                  name: studentId
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the student (valid ObjectId - 24 characters)
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/ClassBookEditStudentRequest"
+            responses:
+                201:
+                    description: Created - Student successfully updated
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ClassBookSimpleStudent"
+                400:
+                    description: Bad Request - Invalid data
+                    content:
+                        application/json:
+                            examples:
+                                invalidClssToAdd:
+                                    summary: Invalid class to add
+                                    value:
+                                        message: "Class must be a valid ObjectId!"
+                                invalidClssToRemove:
+                                    summary: Invalid class to remove
+                                    value:
+                                        message: "Class must be a valid ObjectId!"
+                                invalidGradesTeacher:
+                                    summary: Invalid grades teacher
+                                    value:
+                                        message: "Teacher must be a valid ObjectId!"
+                                invalidGradesClass:
+                                    summary: Invalid grades class
+                                    value:
+                                        message: "Class must be a valid ObjectId!"
+                                invalidGradesValue:
+                                    summary: Invalid grades value
+                                    value:
+                                        message: "Grade cannot be less than 2! or Grade cannot be greater than 6!"
+                                invalidGradesComment:
+                                    summary: Invalid grades comment
+                                    value:
+                                        message: "Comment must be a string!"
+                401:
+                    description: Unauthorized - Missing token
+                    content:
+                        application/json:
+                            example:
+                                message: "Missing token!"
+                403:
+                    description: Forbidden - Access denied
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid token!"
+                404:
+                    description: Not Found - Student does not exist
+                    content:
+                        application/json:
+                            example:
+                                message: "Student not found!"
+                500:
+                    description: Internal Server Error - Server error
+                    content:
+                        application/json:
+                            example:
+                                message: "Internal server error..."
+
+    /class/student/{studentId}/populate:
+        get:
+            summary: Gets a student by ID with populate data
+            tags: [ClassBook Student]
+            description: Gets a student by ID with populate data for grades, grades class and grades teacher.
+            parameters:
+                - in: path
+                  name: studentId
+                  required: true
+                  schema:
+                      type: string
+                  description: ID of the student (valid ObjectId - 24 characters)
+            responses:
+                200:
+                    description: Ok - Successfully retrieved student
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ClassBookPopulateStudent"
+                400:
+                    description: Bad Request - Invalid ID
+                    content:
+                        application/json:
+                            example:
+                                message: "Id must be a valid MongooseDB ObjectId!"
+                404:
+                    description: Not Found - Student does not exist
+                    content:
+                        application/json:
+                            example:
+                                message: "There is no student with this id!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -2001,3 +3149,482 @@ components:
                 likesCount:
                     type: integer
                     example: 10
+
+        ClassBookAuthRegisterRequest:
+            type: object
+            required:
+                - firstName
+                - lastName
+                - email
+                - password
+            properties:
+                firstName:
+                    type: string
+                    example: firstNameExample
+                lastName:
+                    type: string
+                    example: lastNameExample
+                email:
+                    type: string
+                    example: user@example.com
+                password:
+                    type: string
+                    example: 123456
+                secretKey:
+                    type: string
+                    example: teacher_secret_key
+                    description: Provide only if identifier is not used. Use "teacher_secret_key". Leave identifier empty and uncheck "Send empty value".
+                identifier:
+                    type: integer
+                    example: 1234567890
+                    description: Provide only if secretKey is not used. Leave secretKey empty and uncheck "Send empty value".
+                profilePicture:
+                    type: string
+                    format: binary
+                    description: Optional profile picture file upload. If you don't select a file uncheck "Send empty value".
+
+        ClassBookAuthProfileResponse:
+            type: object
+            properties:
+                _id:
+                    type: string
+                    example: 60c72b2f9b1e8b001c8e4d3a
+                firstName:
+                    type: string
+                    example: exampleFirstName
+                lastName:
+                    type: string
+                    example: exampleLastName
+                email:
+                    type: string
+                    example: user@example.com
+                role:
+                    type: string
+                    example: student
+                profilePicture:
+                    type: object
+                    properties:
+                        fileName:
+                            type: string
+                            example: profile.jpg
+                        fileUrl:
+                            type: string
+                            format: uri
+                            example: "https://example.com/profile.jpg"
+                dateCreated:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+                dateUpdate:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+
+        ClassBookAuthEditProfileRequest:
+            type: object
+            required:
+                - firstName
+                - lastName
+            properties:
+                firstName:
+                    type: string
+                    example: firstNameExample
+                lastName:
+                    type: string
+                    example: lastNameExample
+                profilePicture:
+                    type: string
+                    format: binary
+                    description: Optional profile picture file upload. If you don't select a file uncheck "Send empty value".
+
+        ClassBookClassArrayResponse:
+            type: array
+            items:
+                $ref: "#/components/schemas/ClassBookSimpleClass"
+
+        ClassBookSimpleClass:
+            type: object
+            properties:
+                _id:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                title:
+                    type: string
+                    example: "Class Title"
+                teacher:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                students:
+                    type: array
+                    items:
+                        type: string
+                        example: "60c72b2f9b1e8c001f8e4d3a"
+                _createdBy:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                createdAt:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+                updatedAt:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+
+        ClassBookCreateClassRequest:
+            type: object
+            required:
+                - title
+                - teacher
+            properties:
+                title:
+                    type: string
+                    example: "example Title"
+                teacher:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                students:
+                    type: array
+                    items:
+                        type: string
+                        example: "60c72b2f9b1e8c001f8e4d3b"
+
+        ClassBookPopulateClass:
+            type: object
+            properties:
+                _id:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                title:
+                    type: string
+                    example: "Class Title"
+                teacher:
+                    $ref: "#/components/schemas/ClassBookSimpleTeacher"
+                students:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/ClassBookSimpleStudent"
+                _createdBy:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                createdAt:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+                updatedAt:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+
+        ClassBookSimpleTeacher:
+            type: object
+            properties:
+                _id:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                firstName:
+                    type: string
+                    example: "TeacherFirstName"
+                lastName:
+                    type: string
+                    example: "TeacherLastName"
+                email:
+                    type: string
+                    example: "teacher@email.com"
+                clss:
+                    type: array
+                    items:
+                        type: string
+                        example: "60c72b2f9b1e8c001f8e4d3a"
+                _ownerId:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                dateCreated:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+                dateUpdate:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+                speciality:
+                    type: string
+                    example: "MathExample"
+
+        ClassBookSimpleStudent:
+            type: object
+            properties:
+                _id:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                firstName:
+                    type: string
+                    example: "TeacherFirstName"
+                lastName:
+                    type: string
+                    example: "TeacherLastName"
+                email:
+                    type: string
+                    example: "teacher@email.com"
+                identifier:
+                    type: string
+                    example: "1234567890"
+                clss:
+                    type: array
+                    items:
+                        type: string
+                        example: "60c72b2f9b1e8c001f8e4d3a"
+                _ownerId:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                grades:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/ClassBookSimpleGrades"
+                dateCreated:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+                dateUpdate:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+
+        ClassBookSimpleGrades:
+            type: object
+            properties:
+                teacher:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                class:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                value:
+                    type: integer
+                    example: "5"
+                comment:
+                    type: string
+                    example: "Example comment"
+                date:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+                _id:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+
+        ClassBookCreateSecretsRequest:
+            type: object
+            required:
+                - teacherKey
+                - directorKey
+            properties:
+                teacherKey:
+                    type: string
+                    example: "example teacherKey"
+                directorKey:
+                    type: string
+                    example: "example directorKey"
+
+        ClassBookCreateSecretsResponse:
+            type: object
+            properties:
+                _id:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                teacherKey:
+                    type: string
+                    example: "example secret key"
+                directorKey:
+                    type: string
+                    example: "example secret key"
+                createdAt:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+                updatedAt:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+
+        ClassBookEditTeacherRequest:
+            type: object
+            properties:
+                firstName:
+                    type: string
+                    example: editFirstName
+                lastName:
+                    type: string
+                    example: editLastName
+                speciality:
+                    type: string
+                    example: editSpeciality
+                clssToAdd:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                clssToRemove:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+
+        ClassBookStudentArrayResponse:
+            type: array
+            items:
+                $ref: "#/components/schemas/ClassBookSimpleStudent"
+
+        ClassBookCreateStudentRequest:
+            type: object
+            required:
+                - firstName
+                - lastName
+                - identifier
+            properties:
+                firstName:
+                    type: string
+                    example: FirstName
+                lastName:
+                    type: string
+                    example: LastName
+                identifier:
+                    type: string
+                    example: "1234567890"
+
+        ClassBookStudentWithoutEmail:
+            type: object
+            properties:
+                _id:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                firstName:
+                    type: string
+                    example: "TeacherFirstName"
+                lastName:
+                    type: string
+                    example: "TeacherLastName"
+                identifier:
+                    type: string
+                    example: "1234567890"
+                clss:
+                    type: array
+                    items:
+                        type: string
+                        example: "60c72b2f9b1e8c001f8e4d3a"
+                _ownerId:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                grades:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/ClassBookSimpleGrades"
+                dateCreated:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+                dateUpdate:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+
+        PaginationRequest:
+            type: object
+            required:
+                - page
+                - limit
+            properties:
+                page:
+                    type: integer
+                    example: 1
+                    description: Page number
+                limit:
+                    type: integer
+                    example: 9
+                    description: Number of students per page (default is 9)
+
+        ClassBookPaginatedStudentResponse:
+            type: object
+            properties:
+                students:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/ClassBookSimpleStudent"
+                totalCount:
+                    type: integer
+                    example: 100
+                totalPages:
+                    type: integer
+                    example: 10
+                currentPage:
+                    type: integer
+                    example: 1
+
+        ClassBookEditStudentRequest:
+            type: object
+            properties:
+                clssToAdd:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                clssToRemove:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                grades:
+                    type: array
+                    items:
+                        $ref: "#/components/schemas/ClassBookSimpleGrades"
+
+        ClassBookPopulateStudent:
+            type: object
+            properties:
+                _id:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                firstName:
+                    type: string
+                    example: "TeacherFirstName"
+                lastName:
+                    type: string
+                    example: "TeacherLastName"
+                email:
+                    type: string
+                    example: "teacher@email.com"
+                identifier:
+                    type: string
+                    example: "1234567890"
+                clss:
+                    type: array
+                    items:
+                        type: string
+                        example: "60c72b2f9b1e8c001f8e4d3a"
+                _ownerId:
+                    type: string
+                    example: "60c72b2f9b1e8c001f8e4d3a"
+                grades:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                            teacher:
+                                type: object
+                                $ref: "#/components/schemas/ClassBookSimpleTeacher"
+                            class:
+                                type: object
+                                $ref: "#/components/schemas/ClassBookSimpleClass"
+                            value:
+                                type: integer
+                                example: "5"
+                            commnet:
+                                type: string
+                                example: "Example"
+                            _id:
+                                type: string
+                                example: "60c72b2f9b1e8c001f8e4d3a"
+                            date:
+                                type: string
+                                format: date-time
+                                example: "2021-06-14T12:00:00Z"
+                dateCreated:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"
+                dateUpdate:
+                    type: string
+                    format: date-time
+                    example: "2021-06-14T12:00:00Z"

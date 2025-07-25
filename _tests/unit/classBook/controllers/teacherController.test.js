@@ -63,12 +63,32 @@ describe("Teacher Controller", () => {
         expect(typeof res.body.message).toBe("string");
     });
 
-    test("PUT /teacher/teacherId - should edit teacher", async () => {
+    test("PUT /teacher/teacherId - should edit teacher with class to add", async () => {
         const updatedTeacher = {
             firstName: "Firstname",
             lastName: "Lastname",
             speciality: "Mathematics",
             clssToAdd: validId,
+        };
+        mockTeacherService.edit.mockResolvedValue(updatedTeacher);
+
+        const res = await request(app)
+            .put(`/teacher/${validId}`)
+            .send(updatedTeacher);
+
+        expect(res.statusCode).toBe(201);
+        expect(res.body).toEqual(updatedTeacher);
+        expect(mockTeacherService.edit).toHaveBeenCalledWith(
+            validId,
+            updatedTeacher
+        );
+    });
+
+    test("PUT /teacher/teacherId - should edit teacher with class to remove", async () => {
+        const updatedTeacher = {
+            firstName: "Firstname",
+            lastName: "Lastname",
+            speciality: "Mathematics",
             clssToRemove: validId,
         };
         mockTeacherService.edit.mockResolvedValue(updatedTeacher);

@@ -438,7 +438,7 @@ describe("PUT /auth/profile without file upload", () => {
             .send(editedData);
 
         expect(res.statusCode).toBe(404);
-        expect(res.body.message).toBe("User not found");
+        expect(res.body.message).toBe("User not found!");
     });
 });
 

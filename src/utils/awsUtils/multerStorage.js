@@ -1,5 +1,6 @@
 //import os from "os";
 import multer from "multer";
+import { CustomError } from "../errorUtils/customError.js";
 
 const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
 const storage = multer.memoryStorage();
@@ -9,8 +10,9 @@ const fileFilter = (req, file, cb) => {
         cb(null, true);
     } else {
         cb(
-            new Error(
-                "Invalid file type. Only jpg, jpeg, and png files are allowed."
+            new CustomError(
+                "Invalid file type. Only jpg, jpeg, and png files are allowed!",
+                400
             ),
             false
         );

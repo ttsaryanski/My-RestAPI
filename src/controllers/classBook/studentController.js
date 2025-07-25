@@ -7,6 +7,7 @@ import {
     editStudentDto,
 } from "../../validators/classBook/studentDto.js";
 import { mongooseIdDto } from "../../validators/mongooseIdDto.js";
+import { paginationDto } from "../../validators/paginationDto.js";
 
 import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
 import { CustomError } from "../../utils/errorUtils/customError.js";
@@ -47,6 +48,11 @@ export function studentController(studentService) {
         "/paginated",
         asyncErrorHandler(async (req, res) => {
             const query = req.body;
+
+            const { error: dataError } = paginationDto.validate(query);
+            if (dataError) {
+                throw new CustomError(dataError.details[0].message, 400);
+            }
 
             const result = await studentService.getAllPaginated(query);
             const payload = {
