@@ -4,6 +4,7 @@ import { CustomError } from "../../utils/errorUtils/customError.js";
 import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
 
 import { mongooseIdDto } from "../../validators/mongooseIdDto.js";
+import { paginationPageDto } from "../../validators/paginationDto.js";
 
 export function adminController(authService, gameService, visitService) {
     const router = Router();
@@ -12,6 +13,11 @@ export function adminController(authService, gameService, visitService) {
         "/games",
         asyncErrorHandler(async (req, res) => {
             const query = req.query;
+
+            const { error: idError } = paginationPageDto.validate(query);
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
 
             const games = await gameService.getInfinity(query);
 
@@ -39,6 +45,11 @@ export function adminController(authService, gameService, visitService) {
         "/users",
         asyncErrorHandler(async (req, res) => {
             const query = req.query;
+
+            const { error: idError } = paginationPageDto.validate(query);
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
 
             const users = await authService.getAllUsers(query);
 
@@ -94,6 +105,11 @@ export function adminController(authService, gameService, visitService) {
         "/stats",
         asyncErrorHandler(async (req, res) => {
             const query = req.query;
+
+            const { error: idError } = paginationPageDto.validate(query);
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
 
             const result = await visitService.getStats(query);
             const payload = {

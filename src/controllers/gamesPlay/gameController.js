@@ -6,6 +6,7 @@ import Game from "../../models/gamesPlay/Game.js";
 
 import { gameDto } from "../../validators/gamesPlay/gameDto.js";
 import { mongooseIdDto } from "../../validators/mongooseIdDto.js";
+import { paginationPageDto } from "../../validators/paginationDto.js";
 
 import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
 import { CustomError } from "../../utils/errorUtils/customError.js";
@@ -28,6 +29,11 @@ export function gameController(gameService) {
         "/infinity",
         asyncErrorHandler(async (req, res) => {
             const query = req.query;
+
+            const { error: idError } = paginationPageDto.validate(query);
+            if (idError) {
+                throw new CustomError(idError.details[0].message, 400);
+            }
 
             const games = await gameService.getInfinity(query);
 

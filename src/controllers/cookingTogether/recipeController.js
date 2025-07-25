@@ -6,6 +6,7 @@ import Item from "../../models/cookingTogether/Recipe.js";
 
 import { recipeDto } from "../../validators/cookingTogether/recipeDto.js";
 import { mongooseIdDto } from "../../validators/mongooseIdDto.js";
+import { paginationDto } from "../../validators/paginationDto.js";
 
 import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
 import { CustomError } from "../../utils/errorUtils/customError.js";
@@ -52,6 +53,11 @@ export function recipeController(recipeService) {
         asyncErrorHandler(async (req, res) => {
             const query = req.query;
 
+            const { error: dataError } = paginationDto.validate(query);
+            if (dataError) {
+                throw new CustomError(dataError.details[0].message, 400);
+            }
+
             const result = await recipeService.getAllPaginated(query);
 
             const payload = {
@@ -86,6 +92,11 @@ export function recipeController(recipeService) {
                 throw new CustomError(idError.details[0].message, 400);
             }
 
+            const { error: dataError } = paginationDto.validate(query);
+            if (dataError) {
+                throw new CustomError(dataError.details[0].message, 400);
+            }
+
             const result = await recipeService.getByOwnerId(userId, query);
             const payload = {
                 items: result.items,
@@ -108,6 +119,11 @@ export function recipeController(recipeService) {
             const { error: idError } = mongooseIdDto.validate({ id: userId });
             if (idError) {
                 throw new CustomError(idError.details[0].message, 400);
+            }
+
+            const { error: dataError } = paginationDto.validate(query);
+            if (dataError) {
+                throw new CustomError(dataError.details[0].message, 400);
             }
 
             const result = await recipeService.getByLikedId(userId, query);
