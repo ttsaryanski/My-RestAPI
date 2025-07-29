@@ -65,20 +65,20 @@ describe("POST /authGame/register", () => {
         expect(res.body.message).toBe("This email already registered!");
     });
 
-    it("should return 400 if data is incorect", async () => {
-        const incorectUser = {
-            email: "incorectemail",
+    it("should return 400 if data is incorrect", async () => {
+        const incorrectUser = {
+            email: "incorrectemail",
             password: "Pa",
         };
 
         const res = await request(app)
             .post("/api/games_play/authGame/register")
-            .send(incorectUser);
+            .send(incorrectUser);
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toBeDefined();
 
-        const dbEntry = await UserGames.findOne({ email: incorectUser.email });
+        const dbEntry = await UserGames.findOne({ email: incorrectUser.email });
         expect(dbEntry).toBeNull();
     });
 });
@@ -121,15 +121,15 @@ describe("POST /authGame/login", () => {
         expect(cookie).toMatch(/Secure/);
     });
 
-    it("should return 400 if login data is incorect", async () => {
-        const incorectUser = {
-            email: "incorectemail",
+    it("should return 400 if login data is incorrect", async () => {
+        const incorrectUser = {
+            email: "incorrectemail",
             password: "Pa",
         };
 
         const res = await request(app)
             .post("/api/games_play/authGame/login")
-            .send(incorectUser);
+            .send(incorrectUser);
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toBeDefined();
@@ -152,7 +152,7 @@ describe("POST /authGame/login", () => {
     it("should return 401 if password not match", async () => {
         const loginData = {
             email: userData.email,
-            password: "incorectPassword",
+            password: "incorrectPassword",
         };
 
         const res = await request(app)

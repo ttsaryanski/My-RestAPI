@@ -4,6 +4,7 @@ import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
 import { editTeacherDto } from "../../validators/classBook/teacherDto.js";
 import { mongooseIdDto } from "../../validators/mongooseIdDto.js";
+import { searchEmailDto } from "../../validators/searchDto.js";
 
 import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
 import { CustomError } from "../../utils/errorUtils/customError.js";
@@ -15,6 +16,11 @@ export function teacherController(teacherService) {
         "/",
         asyncErrorHandler(async (req, res) => {
             const query = req.query;
+
+            const { error: dataError } = searchEmailDto.validate(query);
+            if (dataError) {
+                throw new CustomError(dataError.details[0].message, 400);
+            }
 
             const teachers = await teacherService.getAll(query);
 

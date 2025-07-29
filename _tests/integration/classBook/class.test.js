@@ -42,6 +42,64 @@ describe("GET /clss", () => {
         expect(res.body[0]).toHaveProperty("title");
         expect(res.body[0]).toHaveProperty("teacher");
     });
+
+    it("should return limit classes", async () => {
+        await Clss.create([
+            {
+                title: "Class One",
+                teacher: new mongoose.Types.ObjectId(),
+            },
+            {
+                title: "Class Two",
+                teacher: new mongoose.Types.ObjectId(),
+            },
+        ]);
+
+        const res = await request(app).get("/api/class/clss?limit=1");
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body.length).toBe(1);
+        expect(res.body[0]).toHaveProperty("title");
+        expect(res.body[0]).toHaveProperty("teacher");
+    });
+
+    it("should return searched classes", async () => {
+        await Clss.create([
+            {
+                title: "Class One",
+                teacher: new mongoose.Types.ObjectId(),
+            },
+            {
+                title: "Class Two",
+                teacher: new mongoose.Types.ObjectId(),
+            },
+            {
+                title: "Class Two2",
+                teacher: new mongoose.Types.ObjectId(),
+            },
+        ]);
+
+        const res = await request(app).get("/api/class/clss?search=two");
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body.length).toBe(2);
+        expect(res.body[0]).toHaveProperty("title");
+        expect(res.body[0]).toHaveProperty("teacher");
+    });
+
+    it("should return 400 if search value is incorrect", async () => {
+        const res = await request(app).get("/api/class/clss?search= ");
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toBe("Search value cannot be an empty value!");
+    });
+
+    it("should return 400 if limit value is incorrect", async () => {
+        const res = await request(app).get("/api/class/clss?limit=0");
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toBe("Limit cannot be less than 1!");
+    });
 });
 
 describe("POST /clss", () => {
@@ -69,8 +127,8 @@ describe("POST /clss", () => {
         expect(dbEntry).not.toBeNull();
     });
 
-    it("should return 400 if data is incorect", async () => {
-        const incorectData = {
+    it("should return 400 if data is incorrect", async () => {
+        const incorrectData = {
             title: "Cl",
             teacher: "teacherId",
             students: ["id1", "id2", "id3"],
@@ -78,7 +136,7 @@ describe("POST /clss", () => {
 
         const res = await request(app)
             .post("/api/class/clss")
-            .send(incorectData);
+            .send(incorrectData);
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toBeDefined();
@@ -202,7 +260,7 @@ describe("PUT /clss/:clssId", () => {
         ),
     };
 
-    const incorectData = {
+    const incorrectData = {
         title: "Cl",
         teacher: "teacherId",
         students: ["id1", "id2", "id3"],
@@ -231,7 +289,7 @@ describe("PUT /clss/:clssId", () => {
     it("should return 400 if invalid data", async () => {
         const res = await request(app)
             .put(`/api/class/clss/${clss._id}`)
-            .send(incorectData);
+            .send(incorrectData);
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toBeDefined();

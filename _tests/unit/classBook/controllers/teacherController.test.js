@@ -41,6 +41,30 @@ describe("Teacher Controller", () => {
         expect(mockTeacherService.getAll).toHaveBeenCalledWith({});
     });
 
+    test("GET /teacher?email=xxx - should return searches teacher", async () => {
+        const mockData = [{ email: "test@email.com" }];
+        mockTeacherService.getAll.mockResolvedValue(mockData);
+
+        const res = await request(app)
+            .get("/teacher")
+            .query({ email: "test@email.com" });
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body).toEqual(mockData);
+        expect(mockTeacherService.getAll).toHaveBeenCalledWith({
+            email: "test@email.com",
+        });
+    });
+
+    test("GET /teacher?email=xxx - should return 400 for invalid search parameter", async () => {
+        const res = await request(app)
+            .get("/teacher")
+            .query({ email: "test$email.com" });
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toBeDefined();
+    });
+
     test("GET /teacher/:teacherId - should return teacher by ID", async () => {
         const mockData = { _id: "id1", firstName: "Teacher 1" };
         mockTeacherService.getById.mockResolvedValue(mockData);

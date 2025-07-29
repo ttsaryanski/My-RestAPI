@@ -7,6 +7,7 @@ import Item from "../../models/cookingTogether/Recipe.js";
 import { recipeDto } from "../../validators/cookingTogether/recipeDto.js";
 import { mongooseIdDto } from "../../validators/mongooseIdDto.js";
 import { paginationDto } from "../../validators/paginationDto.js";
+import { searchDto } from "../../validators/searchDto.js";
 
 import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
 import { CustomError } from "../../utils/errorUtils/customError.js";
@@ -18,6 +19,11 @@ export function recipeController(recipeService) {
         "/",
         asyncErrorHandler(async (req, res) => {
             const query = req.query;
+
+            const { error: dataError } = searchDto.validate(query);
+            if (dataError) {
+                throw new CustomError(dataError.details[0].message, 400);
+            }
 
             const recipes = await recipeService.getAll(query);
 

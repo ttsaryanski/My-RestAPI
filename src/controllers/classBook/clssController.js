@@ -4,6 +4,7 @@ import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
 import { classDto } from "../../validators/classBook/classDto.js";
 import { mongooseIdDto } from "../../validators/mongooseIdDto.js";
+import { searchDto } from "../../validators/searchDto.js";
 
 import { asyncErrorHandler } from "../../utils/errorUtils/asyncErrorHandler.js";
 import { CustomError } from "../../utils/errorUtils/customError.js";
@@ -15,6 +16,11 @@ export function classController(classService) {
         "/",
         asyncErrorHandler(async (req, res) => {
             const query = req.query;
+
+            const { error: dataError } = searchDto.validate(query);
+            if (dataError) {
+                throw new CustomError(dataError.details[0].message, 400);
+            }
 
             const classes = await classService.getAll(query);
 

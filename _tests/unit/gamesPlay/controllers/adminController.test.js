@@ -116,7 +116,7 @@ describe("Admin Controller", () => {
         const res = await request(app).patch(`/admin/users/${validId}`);
 
         expect(res.statusCode).toBe(404);
-        expect(res.body.message).toBe("User not found");
+        expect(res.body.message).toBe("User not found!");
     });
 
     test("DELETE /user/:userId - should delete user", async () => {
@@ -150,7 +150,7 @@ describe("Admin Controller", () => {
         const res = await request(app).delete(`/admin/users/${validId}`);
 
         expect(res.statusCode).toBe(404);
-        expect(res.body.message).toBe("User not found");
+        expect(res.body.message).toBe("User not found!");
     });
 
     test("DELETE /users/:userId - should return 403 if user is admin", async () => {
@@ -162,7 +162,7 @@ describe("Admin Controller", () => {
         const res = await request(app).delete(`/admin/users/${validId}`);
 
         expect(res.statusCode).toBe(403);
-        expect(res.body.message).toBe("Cannot delete admin account");
+        expect(res.body.message).toBe("Cannot delete admin account!");
     });
 
     test("GET /stats - should return filtered stats and total count", async () => {

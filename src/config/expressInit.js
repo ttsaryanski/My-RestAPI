@@ -6,8 +6,8 @@ import helmet from "helmet";
 import { swaggerUi, swaggerDocument } from "../swagger.js";
 
 import { realIp } from "../middlewares/realIp.js";
-import { requestLogger } from "../middlewares/requestLogger.js";
-import morgan from "morgan";
+// import { requestLogger } from "../middlewares/requestLogger.js";
+// import morgan from "morgan";
 
 import { appLimiter } from "../utils/rateLimiter.js";
 

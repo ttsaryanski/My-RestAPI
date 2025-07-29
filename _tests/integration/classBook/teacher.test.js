@@ -46,6 +46,40 @@ describe("GET /teacher", () => {
         expect(res.body[0]).toHaveProperty("firstName");
         expect(res.body[0]).toHaveProperty("speciality");
     });
+
+    it("should return searches teacher", async () => {
+        await Teacher.create([
+            {
+                firstName: "firstname1",
+                lastName: "lastname1",
+                email: "teacher1@example.com",
+                speciality: "math",
+            },
+            {
+                firstName: "firstname2",
+                lastName: "lastname2",
+                email: "teacher2@example.com",
+                speciality: "history",
+            },
+        ]);
+
+        const res = await request(app).get(
+            "/api/class/teacher?email=teacher1@example.com"
+        );
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body.length).toBe(1);
+        expect(res.body[0].email).toMatch("teacher1@example.com");
+    });
+
+    it("should return 400 if searches email is incorrect", async () => {
+        const res = await request(app).get(
+            "/api/class/teacher?email=teacher1$example.com"
+        );
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toBe("Invalid email format!");
+    });
 });
 
 describe("GET /teacher/:teachertId", () => {
@@ -111,7 +145,7 @@ describe("PUT /teacher/:teacherId", () => {
         clssToAdd: new mongoose.Types.ObjectId(),
     };
 
-    const incorectData = {
+    const incorrectData = {
         firstName: "fi",
         lastName: "la",
         speciality: "ma",
@@ -143,7 +177,7 @@ describe("PUT /teacher/:teacherId", () => {
     it("should return 400 if invalid data", async () => {
         const res = await request(app)
             .put(`/api/class/teacher/${teacher._id}`)
-            .send(incorectData);
+            .send(incorrectData);
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toBeDefined();

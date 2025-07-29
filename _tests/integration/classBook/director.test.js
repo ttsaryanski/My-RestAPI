@@ -26,21 +26,21 @@ describe("POST /director", () => {
         expect(dbEntry).not.toBeNull();
     });
 
-    it("should return 400 if data is incorect", async () => {
-        const incorectData = {
+    it("should return 400 if data is incorrect", async () => {
+        const incorrectData = {
             teacherKey: "teacher",
             directorKey: "director",
         };
 
         const res = await request(app)
             .post("/api/class/director")
-            .send(incorectData);
+            .send(incorrectData);
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toBeDefined();
 
         const dbEntry = await Setting.findOne({
-            teacherKey: incorectData.teacherKey,
+            teacherKey: incorrectData.teacherKey,
         });
         expect(dbEntry).toBeNull();
     });

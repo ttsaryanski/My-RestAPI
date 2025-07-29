@@ -210,7 +210,7 @@ describe("PATCH /admin/users/:userId", () => {
         );
 
         expect(res.statusCode).toBe(404);
-        expect(res.body.message).toBe("User not found");
+        expect(res.body.message).toBe("User not found!");
     });
 });
 
@@ -280,7 +280,7 @@ describe("DELETE /admin/users/:userId", () => {
         );
 
         expect(res.statusCode).toBe(403);
-        expect(res.body.message).toBe("Cannot delete admin account");
+        expect(res.body.message).toBe("Cannot delete admin account!");
 
         const dbEntry = await UserGames.findOne({ email: "test2@email.com" });
         expect(dbEntry).not.toBeNull();

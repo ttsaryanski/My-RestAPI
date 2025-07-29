@@ -132,7 +132,7 @@ describe("authService/remove", () => {
 
         await expect(authService.remove("x")).rejects.toMatchObject({
             name: "CustomError",
-            message: "User not found",
+            message: "User not found!",
             statusCode: 404,
         });
     });

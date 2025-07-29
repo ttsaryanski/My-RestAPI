@@ -108,23 +108,23 @@ describe("POST /authAngular/register", () => {
         expect(res.body.message).toBe("rePasswords do not match!");
     });
 
-    it("should return 400 if data is incorect", async () => {
-        const incorectUser = {
+    it("should return 400 if data is incorrect", async () => {
+        const incorrectUser = {
             username: "ex",
-            email: "incorectemail",
+            email: "incorrectemail",
             password: "Pa",
             rePassword: "Pa",
         };
 
         const res = await request(app)
             .post("/api/cooking/authAngular/register")
-            .send(incorectUser);
+            .send(incorrectUser);
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toBeDefined();
 
         const dbEntry = await UserAngular.findOne({
-            email: incorectUser.email,
+            email: incorrectUser.email,
         });
         expect(dbEntry).toBeNull();
     });
@@ -192,15 +192,15 @@ describe("POST /authAngular/login", () => {
         expect(cookie).toMatch(/Secure/);
     });
 
-    it("should return 400 if login data is incorect", async () => {
-        const incorectUser = {
-            email: "incorectemail",
+    it("should return 400 if login data is incorrect", async () => {
+        const incorrectUser = {
+            email: "incorrectemail",
             password: "Pa",
         };
 
         const res = await request(app)
             .post("/api/cooking/authAngular/login")
-            .send(incorectUser);
+            .send(incorrectUser);
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toBeDefined();
@@ -223,7 +223,7 @@ describe("POST /authAngular/login", () => {
     it("should return 401 if password not match", async () => {
         const loginData = {
             email: userData.email,
-            password: "incorectPassword",
+            password: "incorrectPassword",
         };
 
         const res = await request(app)

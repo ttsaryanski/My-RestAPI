@@ -96,8 +96,8 @@ describe("POST /auth/register", () => {
         expect(res.body.message).toBe("This email already registered!");
     });
 
-    it("should return 400 if data is incorect", async () => {
-        const incorectUser = {
+    it("should return 400 if data is incorrect", async () => {
+        const incorrectUser = {
             firstName: "us",
             lastName: "ov",
             identifier: "9876543",
@@ -108,13 +108,13 @@ describe("POST /auth/register", () => {
 
         const res = await request(app)
             .post("/api/class/auth/register")
-            .send(incorectUser);
+            .send(incorrectUser);
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toBeDefined();
 
         const dbEntry = await User.findOne({
-            email: incorectUser.email,
+            email: incorrectUser.email,
         });
         expect(dbEntry).toBeNull();
     });
@@ -233,15 +233,15 @@ describe("POST /auth/login", () => {
         expect(cookie).toMatch(/Secure/);
     });
 
-    it("should return 400 if login data is incorect", async () => {
-        const incorectUser = {
-            email: "incorectemail",
+    it("should return 400 if login data is incorrect", async () => {
+        const incorrectUser = {
+            email: "incorrectemail",
             password: "Pa",
         };
 
         const res = await request(app)
             .post("/api/class/auth/login")
-            .send(incorectUser);
+            .send(incorrectUser);
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toBeDefined();
@@ -264,7 +264,7 @@ describe("POST /auth/login", () => {
     it("should return 401 if password not match", async () => {
         const loginData = {
             email: userData.email,
-            password: "incorectPassword",
+            password: "incorrectPassword",
         };
 
         const res = await request(app)

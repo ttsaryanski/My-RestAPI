@@ -44,6 +44,35 @@ describe("GET /student", () => {
         expect(res.body[0]).toHaveProperty("firstName");
         expect(res.body[0]).toHaveProperty("identifier");
     });
+
+    it("should return limit students", async () => {
+        await Student.create([
+            {
+                firstName: "firstname1",
+                lastName: "lastname1",
+                identifier: "0000000001",
+            },
+            {
+                firstName: "firstname2",
+                lastName: "lastname2",
+                identifier: "0000000002",
+            },
+        ]);
+
+        const res = await request(app).get("/api/class/student?limit=1");
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body.length).toBe(1);
+        expect(res.body[0]).toHaveProperty("firstName");
+        expect(res.body[0]).toHaveProperty("identifier");
+    });
+
+    it("should return 400 if limit value is incorrect", async () => {
+        const res = await request(app).get("/api/class/student?limit=0");
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toBe("Limit cannot be less than 1!");
+    });
 });
 
 describe("POST /student", () => {
@@ -70,8 +99,8 @@ describe("POST /student", () => {
         expect(dbEntry).not.toBeNull();
     });
 
-    it("should return 400 if data is incorect", async () => {
-        const incorectData = {
+    it("should return 400 if data is incorrect", async () => {
+        const incorrectData = {
             firstName: "Fi",
             lastName: "La",
             identifier: "abc",
@@ -79,7 +108,7 @@ describe("POST /student", () => {
 
         const res = await request(app)
             .post("/api/class/student")
-            .send(incorectData);
+            .send(incorrectData);
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toBeDefined();
@@ -264,7 +293,7 @@ describe("PUT /student/:studentId", () => {
         ],
     };
 
-    const incorectData = {
+    const incorrectData = {
         clssToAdd: "invalidId",
         grades: [
             {
@@ -301,7 +330,7 @@ describe("PUT /student/:studentId", () => {
     it("should return 400 if invalid data", async () => {
         const res = await request(app)
             .put(`/api/class/student/${student._id}`)
-            .send(incorectData);
+            .send(incorrectData);
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toBeDefined();

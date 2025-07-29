@@ -82,7 +82,7 @@ export const authService = {
         const result = await UserGames.findByIdAndDelete(userId);
 
         if (!result) {
-            throw new CustomError("User not found", 404);
+            throw new CustomError("User not found!", 404);
         }
     },
 
@@ -94,7 +94,7 @@ export const authService = {
         );
 
         if (!user) {
-            throw new CustomError("User not found", 404);
+            throw new CustomError("User not found!", 404);
         }
 
         return user;
@@ -111,7 +111,7 @@ export const authService = {
 
 export async function createAccessToken(user) {
     if (!process.env.JWT_SECRET) {
-        throw new CustomError("JWT secret is not configured", 500);
+        throw new CustomError("JWT secret is not configured!", 500);
     }
 
     const payload = {

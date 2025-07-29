@@ -44,6 +44,27 @@ describe("Student Controller", () => {
         expect(mockStudentService.getAll).toHaveBeenCalledWith({});
     });
 
+    test("GET /student?limit=2 - should return limited number of students", async () => {
+        const mockData = [
+            { firstName: "Student 1" },
+            { firstName: "Student 2" },
+        ];
+        mockStudentService.getAll.mockResolvedValue(mockData);
+
+        const res = await request(app).get("/student").query({ limit: 2 });
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body).toEqual(mockData);
+        expect(mockStudentService.getAll).toHaveBeenCalledWith({ limit: "2" });
+    });
+
+    test("GET /student?limit=0 - should return 400 for invalid limit parameter", async () => {
+        const res = await request(app).get("/student").query({ limit: 0 });
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toBeDefined();
+    });
+
     test("POST /student - should create a student", async () => {
         const newStudent = {
             firstName: "FirstName",

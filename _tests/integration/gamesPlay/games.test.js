@@ -126,8 +126,8 @@ describe("POST /games", () => {
         expect(dbEntry).not.toBeNull();
     });
 
-    it("should return 400 if data is incorect", async () => {
-        const incorectGame = {
+    it("should return 400 if data is incorrect", async () => {
+        const incorrectGame = {
             title: "Ga",
             category: "R",
             maxLevel: -10,
@@ -137,7 +137,7 @@ describe("POST /games", () => {
 
         const res = await request(app)
             .post("/api/games_play/games")
-            .send(incorectGame);
+            .send(incorrectGame);
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toBeDefined();

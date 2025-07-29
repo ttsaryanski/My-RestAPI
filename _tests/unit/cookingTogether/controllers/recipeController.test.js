@@ -53,6 +53,45 @@ describe("Game Controller", () => {
         expect(mockRecipeService.getAll).toHaveBeenCalledWith({});
     });
 
+    test("GET /recipes?search=xxx - should return all searches recipes", async () => {
+        const mockData = [{ title: "aaa" }, { title: "bbb" }];
+        mockRecipeService.getAll.mockResolvedValue(mockData);
+
+        const res = await request(app).get("/recipes").query({ search: "aaa" });
+
+        expect(res.statusCode).toBe(200);
+        expect(mockRecipeService.getAll).toHaveBeenCalledWith({
+            search: "aaa",
+        });
+    });
+
+    test("GET /recipes?limit=2 - should return limites number of recipes", async () => {
+        const mockData = [{ title: "aaa" }, { title: "bbb" }];
+        mockRecipeService.getAll.mockResolvedValue(mockData);
+
+        const res = await request(app).get("/recipes").query({ limit: 2 });
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body).toEqual(mockData);
+        expect(mockRecipeService.getAll).toHaveBeenCalledWith({
+            limit: "2",
+        });
+    });
+
+    test("GET /recipes?search= - should return 400 if search value is incorrect", async () => {
+        const res = await request(app).get("/recipes").query({ search: " " });
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toBeDefined();
+    });
+
+    test("GET /recipes?limit=0 - should return 400 for invalid limit parameter", async () => {
+        const res = await request(app).get("/recipes").query({ limit: 0 });
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toBeDefined();
+    });
+
     test("POST /recipes - should create a recipe", async () => {
         const newRecipe = {
             title: "New Recipe",

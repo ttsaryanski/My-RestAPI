@@ -55,6 +55,94 @@ describe("GET /recipes", () => {
         expect(res.body[0]).toHaveProperty("title");
         expect(res.body[0]).toHaveProperty("description");
     });
+
+    it("should return all searches recipes", async () => {
+        await Item.create([
+            {
+                title: "Recipe One",
+                description: "Description1",
+                ingredients: "Ingredients1",
+                instructions: "Instructions1",
+                imageUrl: "http://example.com/img1.jpg",
+                _ownerId: new mongoose.Types.ObjectId(),
+                likes: [],
+            },
+            {
+                title: "Recipe Two",
+                description: "Description2",
+                ingredients: "Ingredients2",
+                instructions: "Instructions2",
+                imageUrl: "http://example.com/img2.jpg",
+                _ownerId: new mongoose.Types.ObjectId(),
+                likes: [],
+            },
+            {
+                title: "Recipe Two2",
+                description: "Description2",
+                ingredients: "Ingredients2",
+                instructions: "Instructions2",
+                imageUrl: "http://example.com/img2.jpg",
+                _ownerId: new mongoose.Types.ObjectId(),
+                likes: [],
+            },
+        ]);
+
+        const res = await request(app).get("/api/cooking/recipes?search=two");
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body.length).toBe(2);
+    });
+
+    it("should return limited count recipes", async () => {
+        await Item.create([
+            {
+                title: "Recipe One",
+                description: "Description1",
+                ingredients: "Ingredients1",
+                instructions: "Instructions1",
+                imageUrl: "http://example.com/img1.jpg",
+                _ownerId: new mongoose.Types.ObjectId(),
+                likes: [],
+            },
+            {
+                title: "Recipe Two",
+                description: "Description2",
+                ingredients: "Ingredients2",
+                instructions: "Instructions2",
+                imageUrl: "http://example.com/img2.jpg",
+                _ownerId: new mongoose.Types.ObjectId(),
+                likes: [],
+            },
+            {
+                title: "Recipe Two2",
+                description: "Description2",
+                ingredients: "Ingredients2",
+                instructions: "Instructions2",
+                imageUrl: "http://example.com/img2.jpg",
+                _ownerId: new mongoose.Types.ObjectId(),
+                likes: [],
+            },
+        ]);
+
+        const res = await request(app).get("/api/cooking/recipes?limit=1");
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body.length).toBe(1);
+    });
+
+    it("should return 400 if search value is incorrect", async () => {
+        const res = await request(app).get("/api/cooking/recipes?search=");
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toBeDefined();
+    });
+
+    it("should return 400 if limit value is incorrect", async () => {
+        const res = await request(app).get("/api/cooking/recipes?limit=0");
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toBeDefined();
+    });
 });
 
 describe("POST /recipes", () => {
@@ -82,8 +170,8 @@ describe("POST /recipes", () => {
         expect(dbEntry).not.toBeNull();
     });
 
-    it("should return 400 if data is incorect", async () => {
-        const incorectRecipe = {
+    it("should return 400 if data is incorrect", async () => {
+        const incorrectRecipe = {
             title: "Re",
             description: "De",
             ingredients: "In",
@@ -93,7 +181,7 @@ describe("POST /recipes", () => {
 
         const res = await request(app)
             .post("/api/cooking/recipes")
-            .send(incorectRecipe);
+            .send(incorrectRecipe);
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toBeDefined();

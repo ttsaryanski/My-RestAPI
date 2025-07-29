@@ -229,8 +229,15 @@ paths:
                     description: Bad Request - Invalid page
                     content:
                         application/json:
-                            example:
-                                message: "Page cannot be less than 1!"
+                            examples:
+                                InvalidPageValue:
+                                    summary: Invalid page value
+                                    value:
+                                        message: "Page cannot be less than 1!"
+                                InvalidPageType:
+                                    summary: Invalid page value type
+                                    value:
+                                        message: "Page must be a number!"
                 401:
                     description: Unauthorized - Missing token
                     content:
@@ -322,8 +329,15 @@ paths:
                     description: Bad Request - Invalid page
                     content:
                         application/json:
-                            example:
-                                message: "Page cannot be less than 1!"
+                            examples:
+                                InvalidPageValue:
+                                    summary: Invalid page value
+                                    value:
+                                        message: "Page cannot be less than 1!"
+                                InvalidPageType:
+                                    summary: Invalid page value type
+                                    value:
+                                        message: "Page must be a number!"
                 401:
                     description: Unauthorized - Missing token
                     content:
@@ -386,7 +400,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "User not found"
+                                message: "User not found!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -428,7 +442,7 @@ paths:
                                 forbiddenAction:
                                     summary: Forbidden action
                                     value:
-                                        message: "Cannot delete admin account"
+                                        message: "Cannot delete admin account!"
                                 notAdmin:
                                     summary: Not an admin
                                     value:
@@ -438,7 +452,7 @@ paths:
                     content:
                         application/json:
                             example:
-                                message: "User not found"
+                                message: "User not found!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -471,8 +485,15 @@ paths:
                     description: Bad Request - Invalid page
                     content:
                         application/json:
-                            example:
-                                message: "Page cannot be less than 1!"
+                            examples:
+                                InvalidPageValue:
+                                    summary: Invalid page value
+                                    value:
+                                        message: "Page cannot be less than 1!"
+                                InvalidPageType:
+                                    summary: Invalid page value type
+                                    value:
+                                        message: "Page must be a number!"
                 401:
                     description: Unauthorized - Missing token
                     content:
@@ -646,6 +667,27 @@ paths:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/GamesPlayGamesGamesListResponse"
+                400:
+                    description: Bad Request - Invalid parameters
+                    content:
+                        application/json:
+                            examples:
+                                EmptySearchValue:
+                                    summary: Empty search value
+                                    value:
+                                        message: "Search value cannot be an empty value!"
+                                InvalidSearchValue:
+                                    summary: Invalid search value
+                                    value:
+                                        message: "Search value be at least 1 characters long!"
+                                InvalidMinLimit:
+                                    summary: Invalid min limit
+                                    value:
+                                        message: "Limit cannot be less than 1!"
+                                InvalidMaxLimit:
+                                    summary: Invalid max limit
+                                    value:
+                                        message: "Limit must be between 1 and 100!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -1178,11 +1220,26 @@ paths:
                             schema:
                                 $ref: "#/components/schemas/CookingRecipesArrayResponse"
                 400:
-                    description: Bad Request - Invalid limit
+                    description: Bad Request - Invalid parameters
                     content:
                         application/json:
-                            example:
-                                message: "Limit must be a positive integer!"
+                            examples:
+                                EmptySearchValue:
+                                    summary: Empty search value
+                                    value:
+                                        message: "Search value cannot be an empty value!"
+                                InvalidSearchValue:
+                                    summary: Invalid search value
+                                    value:
+                                        message: "Search value be at least 1 characters long!"
+                                InvalidMinLimit:
+                                    summary: Invalid min limit
+                                    value:
+                                        message: "Limit cannot be less than 1!"
+                                InvalidMaxLimit:
+                                    summary: Invalid max limit
+                                    value:
+                                        message: "Limit must be between 1 and 100!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -1918,6 +1975,7 @@ paths:
         get:
             summary: Gets all classes with optional search and limit
             tags: [ClassBook Class]
+            description: Search parameters and limit are optional. If not provided, the entire collection will be returned.
             parameters:
                 - in: query
                   name: search
@@ -1940,11 +1998,26 @@ paths:
                             schema:
                                 $ref: "#/components/schemas/ClassBookClassArrayResponse"
                 400:
-                    description: Bad Request - Invalid limit
+                    description: Bad Request - Invalid parameters
                     content:
                         application/json:
-                            example:
-                                message: "Limit must be a positive integer!"
+                            examples:
+                                EmptySearchValue:
+                                    summary: Empty search value
+                                    value:
+                                        message: "Search value cannot be an empty value!"
+                                InvalidSearchValue:
+                                    summary: Invalid search value
+                                    value:
+                                        message: "Search value be at least 1 characters long!"
+                                InvalidMinLimit:
+                                    summary: Invalid min limit
+                                    value:
+                                        message: "Limit cannot be less than 1!"
+                                InvalidMaxLimit:
+                                    summary: Invalid max limit
+                                    value:
+                                        message: "Limit must be between 1 and 100!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -2259,6 +2332,12 @@ paths:
                                 type: array
                                 items:
                                     $ref: "#/components/schemas/ClassBookSimpleTeacher"
+                400:
+                    description: Bad Request - Invalid email
+                    content:
+                        application/json:
+                            example:
+                                message: "Invalid email format!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -2409,8 +2488,15 @@ paths:
                     description: Bad Request - Invalid limit
                     content:
                         application/json:
-                            example:
-                                message: "Limit must be a positive integer!"
+                            examples:
+                                InvalidMinLimit:
+                                    summary: Invalid min limit
+                                    value:
+                                        message: "Limit cannot be less than 1!"
+                                InvalidMaxLimit:
+                                    summary: Invalid max limit
+                                    value:
+                                        message: "Limit must be between 1 and 100!"
                 500:
                     description: Internal Server Error - Server error
                     content:
@@ -3359,13 +3445,13 @@ components:
                     example: "60c72b2f9b1e8c001f8e4d3a"
                 firstName:
                     type: string
-                    example: "TeacherFirstName"
+                    example: "StudentFirstName"
                 lastName:
                     type: string
-                    example: "TeacherLastName"
+                    example: "StudentLastName"
                 email:
                     type: string
-                    example: "teacher@email.com"
+                    example: "student@email.com"
                 identifier:
                     type: string
                     example: "1234567890"

@@ -44,6 +44,31 @@ describe("Class Controller", () => {
         expect(mockClassService.getAll).toHaveBeenCalledWith({});
     });
 
+    test("GET /clss?;omit=2 - should return limites number of classes", async () => {
+        const mockData = [{ title: "Math 101" }, { title: "Math 102" }];
+        mockClassService.getAll.mockResolvedValue(mockData);
+
+        const res = await request(app).get("/clss").query({ limit: 2 });
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body).toEqual(mockData);
+        expect(mockClassService.getAll).toHaveBeenCalledWith({ limit: "2" });
+    });
+
+    test("GET /clss?limit=0 - should return 400 for invalid limit parameter", async () => {
+        const res = await request(app).get("/clss").query({ limit: 0 });
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toBeDefined();
+    });
+
+    test("GET /clss - should return 400 for invalid search parameter", async () => {
+        const res = await request(app).get("/clss?search=");
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toBeDefined();
+    });
+
     test("POST /clss - should create a new class", async () => {
         const newClass = {
             title: "Science 101",

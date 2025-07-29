@@ -100,15 +100,15 @@ describe("POST /comments", () => {
         expect(dbEntry).not.toBeNull();
     });
 
-    it("should return 400 if data is incorect", async () => {
-        const incorectComment = {
+    it("should return 400 if data is incorrect", async () => {
+        const incorrectComment = {
             gameId: "invalidId",
             content: "Co",
         };
 
         const res = await request(app)
             .post("/api/games_play/comments")
-            .send(incorectComment);
+            .send(incorrectComment);
 
         expect(res.statusCode).toBe(400);
         expect(res.body.message).toBeDefined();
