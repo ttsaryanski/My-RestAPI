@@ -144,6 +144,7 @@ npm-debug.log
 yarn-error.log
 
 HELP.md
+csp_not_use.md
+gcp_json_key.json
 .dockerignore
-any.md
 .VSCodeCounter

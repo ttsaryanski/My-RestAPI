@@ -13,6 +13,16 @@ jest.mock("../../../../src/middlewares/authMiddleware.js", () => ({
         next();
     }),
 }));
+jest.mock("../../../../src/middlewares/isDirectorMiddleware.js", () => ({
+    isDirector: (req, res, next) => {
+        next();
+    },
+}));
+jest.mock("../../../../src/middlewares/isNotForStudentMiddleware.js", () => ({
+    isNotForStudent: (req, res, next) => {
+        next();
+    },
+}));
 
 const mockStudentService = {
     getAll: jest.fn(),

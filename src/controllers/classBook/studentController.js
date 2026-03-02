@@ -1,6 +1,8 @@
 import { Router } from "express";
 
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
+import { isDirector } from "../../middlewares/isDirectorMiddleware.js";
+import { isNotForStudent } from "../../middlewares/isNotForStudentMiddleware.js";
 
 import {
     createStudentDto,
@@ -37,6 +39,7 @@ export function studentController(studentService) {
     router.post(
         "/",
         authMiddleware,
+        isDirector,
         asyncErrorHandler(async (req, res) => {
             const userId = req.user._id;
             const data = req.body;
@@ -113,6 +116,7 @@ export function studentController(studentService) {
     router.put(
         "/:studentId",
         authMiddleware,
+        isNotForStudent,
         asyncErrorHandler(async (req, res) => {
             const studentId = req.params.studentId;
             const data = req.body;

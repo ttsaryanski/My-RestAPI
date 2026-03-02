@@ -4,6 +4,12 @@ jest.mock("../../../src/middlewares/authMiddleware.js", () => ({
     authMiddleware: (req, res, next) => {
         req.user = { _id: mockUserId };
         req.isAuthenticated = true;
+        req.user.role = "director";
+        next();
+    },
+}));
+jest.mock("../../../src/middlewares/isDirectorMiddleware.js", () => ({
+    isDirector: (req, res, next) => {
         next();
     },
 }));

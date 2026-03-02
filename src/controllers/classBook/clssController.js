@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
+import { isDirector } from "../../middlewares/isDirectorMiddleware.js";
 
 import { classDto } from "../../validators/classBook/classDto.js";
 import { mongooseIdDto } from "../../validators/mongooseIdDto.js";
@@ -31,6 +32,7 @@ export function classController(classService) {
     router.post(
         "/",
         authMiddleware,
+        isDirector,
         asyncErrorHandler(async (req, res) => {
             const userId = req.user._id;
             const data = req.body;
@@ -86,6 +88,7 @@ export function classController(classService) {
     router.put(
         "/:clssId",
         authMiddleware,
+        isDirector,
         asyncErrorHandler(async (req, res) => {
             const clssId = req.params.clssId;
             const data = req.body;
@@ -109,6 +112,7 @@ export function classController(classService) {
     router.delete(
         "/:clssId",
         authMiddleware,
+        isDirector,
         asyncErrorHandler(async (req, res) => {
             const clssId = req.params.clssId;
 

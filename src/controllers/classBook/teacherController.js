@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import { authMiddleware } from "../../middlewares/authMiddleware.js";
+import { isNotForStudent } from "../../middlewares/isNotForStudentMiddleware.js";
 
 import { editTeacherDto } from "../../validators/classBook/teacherDto.js";
 import { mongooseIdDto } from "../../validators/mongooseIdDto.js";
@@ -49,6 +50,7 @@ export function teacherController(teacherService) {
     router.put(
         "/:teacherId",
         authMiddleware,
+        isNotForStudent,
         asyncErrorHandler(async (req, res) => {
             const teacherId = req.params.teacherId;
             const data = req.body;

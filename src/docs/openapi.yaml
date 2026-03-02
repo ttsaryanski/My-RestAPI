@@ -3582,10 +3582,10 @@ components:
                     example: "60c72b2f9b1e8c001f8e4d3a"
                 firstName:
                     type: string
-                    example: "TeacherFirstName"
+                    example: "StudentFirstName"
                 lastName:
                     type: string
-                    example: "TeacherLastName"
+                    example: "StudentLastName"
                 identifier:
                     type: string
                     example: "1234567890"
