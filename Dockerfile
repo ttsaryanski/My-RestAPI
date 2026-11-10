@@ -1,4 +1,4 @@
-FROM node:22
+FROM node:26.13.0-bookworm-slim
 
 ENV PORT=8080
 ENV HOST=0.0.0.0
